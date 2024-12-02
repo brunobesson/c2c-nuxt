@@ -10,6 +10,11 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "6.7.1",
+    "@fortawesome/free-brands-svg-icons": "6.7.1",
+    "@fortawesome/free-regular-svg-icons": "6.7.1",
+    "@fortawesome/free-solid-svg-icons": "6.7.1",
+    "@fortawesome/vue-fontawesome": "3.0.8",
     "nuxt": "^3.14.1592",
     "vue": "latest",
     "vue-router": "latest"
