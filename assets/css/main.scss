@@ -1,0 +1,29 @@
+// https://bulma.io/documentation/customize/with-modular-sass/
+
+// (c2c variables and utilities configured and imported through nuxt config file)
+
+@use 'bulma/sass/form' with (
+  $input-placeholder-color: rgb(160, 160, 160),
+  $input-icon-color: bulma.$grey-light
+);
+
+@use 'bulma/sass/components/pagination' with (
+  $pagination-current-background-color: bulma.$primary,
+  $pagination-current-border-color: bulma.$primary
+);
+
+// Import the components you need
+@forward 'bulma/sass/base';
+@forward 'bulma/sass/elements/button';
+@forward 'bulma/sass/elements/icon';
+// @forward "bulma/sass/components/card";
+// @forward "bulma/sass/components/modal";
+// @forward "bulma/sass/components/navbar";
+// @forward "bulma/sass/elements/content";
+// @forward "bulma/sass/elements/notification";
+// @forward "bulma/sass/elements/progress";
+// @forward "bulma/sass/elements/tag";
+// @forward "bulma/sass/layout/footer";
+
+// Import the themes so that all CSS variables have a value
+@forward 'bulma/sass/themes';
