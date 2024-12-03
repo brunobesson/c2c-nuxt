@@ -1,4 +1,10 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import fs from 'node:fs/promises';
+import { parseStringPromise } from 'xml2js';
+
+const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg$/;
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
@@ -16,6 +22,29 @@ export default defineNuxtConfig({
     '~/assets/css/main.scss',
   ],
   vite: {
+    plugins: [
+      {
+        name: 'svg-import',
+        transform: async (code: string, id: string) => {
+          const match = id.match(fileRegex);
+          if (!match) {
+            return null;
+          }
+          const content = await fs.readFile(id);
+          const { svg } = await parseStringPromise(content);
+          return {
+            code:
+              'export default ' +
+              JSON.stringify({
+                prefix: match[1],
+                iconName: match[2],
+                icon: [svg.$.width, svg.$.height, [], '', svg.path[0].$.d],
+              }),
+            map: { mappings: '' as const },
+          };
+        },
+      },
+    ],
     css: {
       preprocessorOptions: {
         scss: {
