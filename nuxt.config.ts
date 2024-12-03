@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
 
-const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg$/;
+const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg\?icon$/;
 
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
@@ -35,7 +35,7 @@ export default defineNuxtConfig({
           if (!match) {
             return null;
           }
-          const content = await fs.readFile(id);
+          const content = await fs.readFile(id.substring(0, id.length - 5));
           const { svg } = await parseStringPromise(content);
           return {
             code:
