@@ -8,6 +8,9 @@ const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg$/;
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
+
+  modules: ['@nuxtjs/google-fonts'],
+
   build: {
     transpile: [
       '@fortawesome/fontawesome-svg-core',
@@ -17,15 +20,17 @@ export default defineNuxtConfig({
       '@fortawesome/vue-fontawesome',
     ],
   },
+
   css: [
     '@fortawesome/fontawesome-svg-core/styles.css',
     '~/assets/css/main.scss',
   ],
+
   vite: {
     plugins: [
       {
         name: 'svg-import',
-        transform: async (code: string, id: string) => {
+        transform: async (_code: string, id: string) => {
           const match = id.match(fileRegex);
           if (!match) {
             return null;
@@ -79,6 +84,12 @@ export default defineNuxtConfig({
           ],
         },
       },
+    },
+  },
+
+  googleFonts: {
+    families: {
+      Inter: true,
     },
   },
 });
