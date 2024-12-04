@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/google-fonts'],
+  modules: ['@nuxtjs/google-fonts', '@nuxtjs/i18n'],
 
   build: {
     transpile: [
@@ -90,6 +90,29 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       Inter: true,
+    },
+  },
+
+  i18n: {
+    vueI18n: './i18n.config.ts',
+    baseUrl: 'https://www.camptocamp.org',
+    locales: [
+      { code: 'ca', language: 'ca', file: 'ca.json' },
+      { code: 'de', language: 'de', file: 'de.json' },
+      { code: 'en', language: 'en', file: 'en.json' },
+      { code: 'es', language: 'es', file: 'es.json' },
+      { code: 'eu', language: 'eu', file: 'eu.json' },
+      { code: 'fr', language: 'fr', file: 'fr.json' },
+      { code: 'hu', language: 'hu', file: 'hu.json' },
+      { code: 'it', language: 'it', file: 'it.json' },
+      { code: 'sl', language: 'sl', file: 'sl.json' },
+      { code: 'zh_CN', language: 'zh-CN', file: 'zh_CN.json' },
+    ],
+    defaultLocale: 'fr',
+    strategy: 'no_prefix',
+    lazy: true,
+    bundle: {
+      runtimeOnly: true,
     },
   },
 });
