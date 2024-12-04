@@ -33,6 +33,15 @@
 </template>
 
 <script setup lang="ts">
+const i18nHead = useLocaleHead();
+useHead(() => ({
+  htmlAttrs: {
+    lang: i18nHead.value.htmlAttrs!.lang,
+    dir: i18nHead.value.htmlAttrs!.dir,
+  },
+}));
+useSeoMeta({ title: 'Camptocamp.org', ogTitle: 'Camptocamp.org' }); // TODO
+
 const { isMobile, isTablet, isDesktop } = import.meta.client
   ? useScreen()
   : { isMobile: ref(false), isTablet: ref(false), isDesktop: ref(false) };
