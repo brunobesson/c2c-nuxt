@@ -9,7 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/google-fonts', '@nuxtjs/i18n'],
+  modules: ['@nuxtjs/google-fonts', '@nuxtjs/i18n', '@nuxt/image'],
 
   build: {
     transpile: [

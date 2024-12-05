@@ -379,6 +379,6 @@ library.add(
 );
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.component('fa-icon', FontAwesomeIcon);
-  nuxtApp.vueApp.component('fa-layers', FontAwesomeLayers);
+  nuxtApp.vueApp.component('FaIcon', FontAwesomeIcon);
+  nuxtApp.vueApp.component('FaLayers', FontAwesomeLayers);
 });

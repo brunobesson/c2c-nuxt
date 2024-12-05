@@ -3,7 +3,7 @@
 You can use them this way:
 
 ```javascript
-<fa-icon :icon="['activity', 'hiking']"></fa-icon>
+<FaIcon :icon="['activity', 'hiking']"></FaIcon>
 ```
 
 :warning: SVG file has one constraint: it must contains only one single path element.

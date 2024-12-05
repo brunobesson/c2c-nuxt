@@ -1,4 +1,5 @@
 {
   "welcome": "Bienvenue {toto}",
-  "bananas": "0 banane | 1 banane | {count} bananes"
+  "Help": "Aide",
+  "Join us": "Adhérer"
 }

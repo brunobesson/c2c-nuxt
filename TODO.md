@@ -8,6 +8,7 @@
   * shadow image while loading?
 * Styling
   * Remlacement des différents composants / plugins ?
+* dayjs
 * SEO useSeoMet + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools

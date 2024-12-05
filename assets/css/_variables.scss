@@ -9,10 +9,10 @@ $color-base-c2c-darker: #b26f1e;
 $color-base-c2c-lighter: rgb(255, 206, 158);
 $color-complementary-c2c: #337ab7; // must fit with c2c orange, and will be main color
 $color-complementary-c2c-lighter: #7699b8;
-$color-link: #337ab7; // We use the same blue as complementary-c2c
+$color-link: $color-complementary-c2c; // We use the same blue as complementary-c2c
 $color-text: #4a4a4a;
 
-$body-background-color: #fbfaf6; // if you modify this, please also modify it for spashscreen
+$body-background-color: #fbfaf6;
 
 // ---- Custom widths
 $navbarad-height: 90px;

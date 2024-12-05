@@ -1,5 +1,6 @@
 <template>
   <div
+    ref="root"
     id="app"
     :class="{
       'nav-dfm': !isHomePage && !isMobile && !isTablet && !isDesktop,
@@ -18,7 +19,7 @@
       v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
       class="ad"
     />
-    <SiteNotice ref="siteNotice no-print" class="no-print site-notice" />
+    <SiteNotice class="no-print site-notice" />
     <div
       v-if="alternativeSideMenu"
       class="alternative-side-menu-shader"
@@ -44,14 +45,46 @@ useSeoMeta({ title: 'Camptocamp.org', ogTitle: 'Camptocamp.org' }); // TODO
 
 const { isMobile, isTablet, isDesktop } = import.meta.client
   ? useScreen()
-  : { isMobile: ref(false), isTablet: ref(false), isDesktop: ref(false) };
-const route = useRoute();
-const alternativeSideMenu = ref(false);
+  : { isMobile: ref(true), isTablet: ref(false), isDesktop: ref(false) };
+
 const { isHomePage } = useHomePage();
 
+const root = useTemplateRef('root');
+const { tabletMin, desktopMin, fullhdMin, widescreenMin } = useBulma();
+
 onMounted(() => {
-  // TODO document.getElementById('splashscreen').style.display = 'none';
+  updateWidth();
+  window.addEventListener('resize', updateWidth);
 });
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateWidth);
+});
+
+function updateWidth() {
+  if (!root.value) {
+    return;
+  }
+  // allows reactive css when body width changes because map is pinned
+  // (unlike the css @media(max-width) this is replacing)
+
+  const width = root.value.offsetWidth;
+  if (width < tabletMin) {
+    root.value.dataset.width = 'mobile';
+  } else if (width < desktopMin) {
+    root.value.dataset.width = 'tablet';
+  } else if (width < widescreenMin) {
+    root.value.dataset.width = 'desktop';
+  } else if (width < fullhdMin) {
+    root.value.dataset.width = 'widescreen';
+  } else {
+    root.value.dataset.width = 'fullhd';
+  }
+}
+
+const route = useRoute();
+
+const alternativeSideMenu = ref(false);
 
 watch(route, hideSideMenuOnMobile);
 
@@ -193,7 +226,9 @@ body,
     }
   }
 
-  [data-width='desktop'] {
+  [data-width='desktop'],
+  [data-width='widescreen'],
+  [data-width='fullhd'] {
     .side-menu {
       left: 0;
     }
