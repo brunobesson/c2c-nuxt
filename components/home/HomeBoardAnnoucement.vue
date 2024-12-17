@@ -18,11 +18,8 @@ const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
 const hidden = ref(false);
 const contentEl = useTemplateRef('content');
-const lastAnnoucementRead = useStorage<ISODateTime | undefined>(
-  'boardAnnoucement.updatedAt',
-  undefined
-);
 const { data } = getBoardAnnouncement({ lazy: true, server: false });
+const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('boardAnnoucement.updatedAt', undefined);
 
 watch([data, contentEl], ([announcement]) => {
   if (
