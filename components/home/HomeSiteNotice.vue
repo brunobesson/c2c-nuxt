@@ -3,8 +3,7 @@
   <div
     v-show="hasAnnouncement && !hidden"
     class="site-notice has-background-info has-text-white no-print"
-    @click="showContent = !showContent"
-  >
+    @click="showContent = !showContent">
     <div class="p-5 is-info">
       <button class="delete" @click="hide" />
       <div ref="header" />
@@ -14,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
+import { type Announcement } from '~/api/forum.js';
 import type { ISODateTime } from '~/types/index.js';
-import { getAnnouncement } from '../../api/forum.js';
 
 const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
@@ -27,14 +26,17 @@ const { locale: lang } = useI18n();
 const headerEl = useTemplateRef('header');
 const contentEl = useTemplateRef('content');
 
-const { data } = getAnnouncement(lang.value, { lazy: true, server: false });
+const { data } = useForumFetch<Announcement>(
+  `/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang.value) ? 'en' : lang.value}.json`,
+  {
+    pick: ['tags', 'post_stream'],
+    lazy: true,
+    server: false,
+  },
+);
 
 watch([data, headerEl], ([announcement]) => {
-  if (
-    !headerEl.value ||
-    !announcement ||
-    !announcement.tags.includes('visible')
-  ) {
+  if (!headerEl.value || !announcement || !announcement.tags.includes('visible')) {
     return;
   }
   const lastPost = announcement.post_stream.posts?.[0];
@@ -55,7 +57,7 @@ watch([data, headerEl], ([announcement]) => {
   headerEl.value.innerHTML = '';
   headerEl.value.appendChild(header);
   contentEl.value!.innerHTML = '';
-  items.forEach((item) => contentEl.value!.appendChild(item));
+  items.forEach(item => contentEl.value!.appendChild(item));
 });
 
 const hide = () => {

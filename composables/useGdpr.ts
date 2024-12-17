@@ -25,11 +25,7 @@ export const useGdpr = () => {
   };
 
   const setAll = (accept: boolean) => {
-    set(
-      accept
-        ? { statistics: true, social: true }
-        : { statistics: false, social: false }
-    );
+    set(accept ? { statistics: true, social: true } : { statistics: false, social: false });
   };
 
   return { get, set, setAll };

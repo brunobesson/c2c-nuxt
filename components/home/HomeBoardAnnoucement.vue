@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-show="hasAnnouncement && !hidden"
-    class="publication has-background-info has-text-white no-print"
-  >
+  <div v-show="hasAnnouncement && !hidden" class="publication has-background-info has-text-white no-print">
     <div class="p-5 is-info">
       <button class="delete" @click="hide" />
       <div ref="content" />
@@ -12,25 +9,20 @@
 
 <script setup lang="ts">
 import type { ISODateTime } from '~/types/index.js';
-import { getBoardAnnouncement } from '../../api/forum.js';
+import type { Announcement } from '../../api/forum.js';
 
 const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
 const hidden = ref(false);
 const contentEl = useTemplateRef('content');
-const { data } = getBoardAnnouncement({ lazy: true, server: false });
+const { data } = useForumFetch<Announcement>('/t/publication-ca.json', { lazy: true, server: false });
 const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('boardAnnoucement.updatedAt', undefined);
 
 watch([data, contentEl], ([announcement]) => {
-  if (
-    !contentEl.value ||
-    !announcement ||
-    !announcement.tags.includes('visible')
-  ) {
+  if (!contentEl.value || !announcement || !announcement.tags.includes('visible')) {
     return;
   }
-  const lastPost =
-    announcement.post_stream.posts?.[announcement.posts_count - 1];
+  const lastPost = announcement.post_stream.posts?.[announcement.posts_count - 1];
   if (!lastPost) {
     return;
   }

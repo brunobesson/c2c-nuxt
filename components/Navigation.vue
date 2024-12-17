@@ -25,8 +25,6 @@
     <AdDfmLarge v-if="!isHomePage && !isMobile && !isTablet && !isDesktop" />
 
     <div class="navigation-end">
-      <button v-if="!authenticated" class="button" @click="login">Login</button>
-      <button v-else class="button" @click="logout">Logout</button>
       <NuxtLink
         to="/articles/106732"
         class="navigation-item has-text-centered"
@@ -121,7 +119,7 @@
             :key="lang.code"
             class="dropdown-item is-size-5"
             :class="{ 'is-active': lang.code === locale }"
-            @click="setLocale(lang.code)">
+            @click="configureLocale(lang.code)">
             {{ lang.name }}
           </a>
         </DropdownButton>
@@ -132,6 +130,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from '~/store/auth.js';
+import { isUiLang } from '../api/lang.js';
 import type DropdownButton from './DropdownButton.vue';
 
 const { isHomePage } = useHomePage();
@@ -141,14 +140,10 @@ const { isMobile, isTablet, isDesktop } = import.meta.client
 
 const hideSearchInput = ref(true); // only on small screen
 
-const { authenticate, logout: logoutUser } = useAuthStore();
+const { logout: logoutUser } = useAuthStore();
 const { authenticated, user } = storeToRefs(useAuthStore());
 
-const login = async () => {
-  authenticate({ username: 'emilys', password: 'emilyspass' }); // TODO check error too
-};
-
-const logout = () => {
+function logout() {
   logoutUser();
   const route = useRoute();
   const middleware = route.meta.middleware;
@@ -158,8 +153,19 @@ const logout = () => {
   ) {
     navigateTo('/');
   }
-};
+}
 const { t, locale, locales, setLocale } = useI18n();
+
+function configureLocale(lang: string) {
+  if (!isUiLang(lang)) {
+    return; // should not happen
+  }
+  setLocale(lang);
+  if (authenticated) {
+    useNuxtApp().$c2cFetch('/users/update_preferred_language', { method: 'POST', body: { lang } });
+  }
+}
+
 const userMenuLinks = computed(() =>
   user.value
     ? [

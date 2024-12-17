@@ -29,4 +29,5 @@
 * Tests
 * typescript typechecking when building in CI
 * 404
+* zod / valibot
 * What else?

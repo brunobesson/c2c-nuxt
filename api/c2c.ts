@@ -1,7 +1,4 @@
-import type { UseFetchOptions } from '#app';
 import type { ISODate } from '../types/index.js';
-
-const baseUrl = 'https://api.camptocamp.org'; // TODO
 
 export type LetterType = 'a' | 'c' | 'i' | 'm' | 'o' | 'r' | 'u' | 'w' | 'b' | 'x';
 type Geometry = {
@@ -38,10 +35,7 @@ type Xreport = BaseDocument & { type: 'x' }; // TODO
 export type Document = Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport;
 export type Documents<T extends Document> = { documents: T[]; total: number };
 
-export const getAllOutings = (options?: UseFetchOptions<Documents<Outing>>) =>
-  useFetch<Documents<Outing>>(`${baseUrl}/outings`, { ...options });
-
-export const allOutings = `${baseUrl}/outings`;
+export const OUTINGS = '/outings';
 
 export type UserPreferences =
   | {
@@ -68,4 +62,4 @@ export type UserPreferences =
       areas: never[];
       langs: never[];
     };
-export const userPreferences = `${baseUrl}/users/preferences`;
+export const USER_PREFERENCES = '/users/preferences';
