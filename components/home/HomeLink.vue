@@ -1,6 +1,6 @@
 <template>
   <LinkDocument :document="document" class="dashboard-link has-text-normal is-flex has-hover-background">
-    <activities
+    <Activities
       :activities="document.activities"
       class="is-size-3 activity-icons"
       :class="{ 'is-2-columns': isMultiActivities }" />

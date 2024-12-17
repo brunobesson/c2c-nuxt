@@ -1,6 +1,19 @@
 import type { ISODate } from '../types/index.js';
 
 export type LetterType = 'a' | 'c' | 'i' | 'm' | 'o' | 'r' | 'u' | 'w' | 'b' | 'x';
+
+export type Activity =
+  | 'skitouring'
+  | 'snow_ice_mixed'
+  | 'mountain_climbing'
+  | 'rock_climbing'
+  | 'ice_climbing'
+  | 'hiking'
+  | 'snowshoeing'
+  | 'paragliding'
+  | 'mountain_biking'
+  | 'via_ferrata'
+  | 'slacklining';
 type Geometry = {
   version: number;
   geom: string;

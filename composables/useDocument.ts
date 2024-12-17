@@ -1,9 +1,9 @@
-import type { Document, LetterType } from '~/api/c2c.js';
+import type { Document } from '~/api/c2c.js';
 
-export const useDocument = () => {
+export const useDocument = (document: Document) => {
   const { locale: currentLocale } = useI18n();
   // TODO
-  const documentTitle = (document: Document, lang: string): string => {
+  const documentTitle = (lang: string): string => {
     // profile does not have locale, get profile's name
     if (document.type === 'u') {
       return document.name ?? '';
@@ -16,7 +16,7 @@ export const useDocument = () => {
       return /* document.title ?? */ '';
     }
 
-    const locale = getLocaleSmart(document, lang);
+    const locale = getLocaleSmart(lang);
 
     if (locale.title_prefix) {
       return locale.title_prefix + ' : ' + locale.title;
@@ -25,7 +25,7 @@ export const useDocument = () => {
     return locale.title ?? '';
   };
 
-  const getLocaleStupid = (document: Document, lang: string) => {
+  const getLocaleStupid = (lang: string) => {
     if (!document.locales) {
       return null;
     }
@@ -42,23 +42,23 @@ export const useDocument = () => {
     return null;
   };
 
-  const getLocaleSmart = (document: Document, lang: string) => {
+  const getLocaleSmart = (lang: string) => {
     // first of all try to search asked lang
-    let result = lang ? getLocaleStupid(document, lang) : null;
+    let result = lang ? getLocaleStupid(lang) : null;
 
     if (result) {
       return result;
     }
 
     // else, search user lang
-    result = getLocaleStupid(document, currentLocale.value);
+    result = getLocaleStupid(currentLocale.value);
     if (result) {
       return result;
     }
 
     // else try langs by order // TODO langs
     for (const lang of ['fr', 'en', 'it', 'de', 'es', 'ca', 'eu', 'sl', 'zh']) {
-      result = getLocaleStupid(document, lang);
+      result = getLocaleStupid(lang);
       if (result) {
         return result;
       }
@@ -67,9 +67,9 @@ export const useDocument = () => {
     throw new Error('Impossible to find matching lang, should never happen');
   };
 
-  const documentType = (letter: LetterType) => {
+  function getDocumentType() {
     // TODO return constants.letterToDocumentType[letterType];
-    switch (letter) {
+    switch (document.type) {
       case 'a':
         return 'area';
       case 'b':
@@ -93,7 +93,8 @@ export const useDocument = () => {
       default:
         throw new Error('TODO');
     }
-  };
+  }
+  const documentType = getDocumentType();
 
   return { documentTitle, documentType };
 };
