@@ -1,9 +1,5 @@
 <template>
-  <NuxtLink
-    v-show="!authenticated"
-    :to="{ path: '/auth', query: { redirect } }"
-    class="button is-primary"
-  >
+  <NuxtLink v-show="!authenticated" :to="{ path: '/auth', query: { redirect: path } }" class="button is-primary">
     <slot>
       {{ $t('Login') }}
     </slot>
@@ -14,7 +10,6 @@
 import { useAuthStore } from '../../store/auth.js';
 
 const { authenticated } = storeToRefs(useAuthStore());
-const redirect = ref('/');
-const route = useRoute();
-watch(route, (to) => (redirect.value = to.fullPath));
+const { path } = toRefs(useRoute());
+const redirect = ref();
 </script>

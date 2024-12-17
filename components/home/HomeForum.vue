@@ -50,7 +50,10 @@
 </template>
 
 <script setup lang="ts">
-import { getAvatarUrl as getForumAvatarUrl, getLatest, type Topic } from '~/api/forum.js';
+import type { AsyncDataOptions, UseFetchOptions } from '#app';
+import { type Latest, type Topic } from '~/api/forum.js';
+
+const config = useRuntimeConfig();
 
 const EXCLUDED_CATEGORIES = [
   // https://forum.camptocamp.org/c/comments
@@ -114,9 +117,23 @@ const EXCLUDED_CATEGORIES = [
   // mobile application bugs reporting
   146,
 ];
-const { data, status, error } = getLatest(EXCLUDED_CATEGORIES, {
+const transform = (input: Latest) => {
+  const userAvatars = new Map<string, string>();
+  input.users.forEach(user => userAvatars.set(user.username, user.avatar_template));
+  return input.topic_list.topics.map(
+    topic =>
+      ({
+        ...topic,
+        last_poster_avatar_template: userAvatars.get(topic.last_poster_username),
+      } as AsyncDataOptions<Latest, Topic[]>),
+  );
+};
+const { data, status, error } = useForumFetch(`/latest.json`, {
+  query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
+  transform,
   lazy: true,
-});
+  server: false,
+} as UseFetchOptions<any>); // TODO
 
 const { wide = false, messageCount = -1 } = defineProps<{
   wide?: boolean;
@@ -133,11 +150,12 @@ const topics = computed(() => {
 const imgSize = computed(() => (wide ? 24 : 20));
 
 const getAvatarUrl = (avatarTemplate: string) => {
-  return getForumAvatarUrl(avatarTemplate, imgSize.value);
+  const template = avatarTemplate.startsWith('/') ? config.public.forumBase + avatarTemplate : avatarTemplate;
+  return template.replace('{size}', imgSize.value.toString());
 };
 
 const getTopicUrl = (topic: Topic) => {
-  return `https://forum.camptocamp.org/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`; // TODO configure baseurl
+  return `${config.public.forumBase}/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`;
 };
 </script>
 

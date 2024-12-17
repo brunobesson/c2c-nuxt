@@ -9,13 +9,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
 
-  modules: [
-    '@nuxtjs/google-fonts',
-    '@nuxtjs/i18n',
-    '@nuxt/image',
-    '@pinia/nuxt',
-    '@vueuse/nuxt',
-  ],
+  modules: ['@nuxtjs/google-fonts', '@nuxtjs/i18n', '@nuxt/image', '@pinia/nuxt', '@vueuse/nuxt'],
 
   build: {
     transpile: [
@@ -27,10 +21,7 @@ export default defineNuxtConfig({
     ],
   },
 
-  css: [
-    '@fortawesome/fontawesome-svg-core/styles.css',
-    '~/assets/css/main.scss',
-  ],
+  css: ['@fortawesome/fontawesome-svg-core/styles.css', '~/assets/css/main.scss'],
 
   vite: {
     plugins: [
@@ -82,12 +73,7 @@ export default defineNuxtConfig({
 );
 @use 'bulma/sass/utilities/mixins' as mixins;`,
           // bulma deprecation warnings
-          silenceDeprecations: [
-            'legacy-js-api',
-            'color-functions',
-            'import',
-            'global-builtin',
-          ],
+          silenceDeprecations: ['legacy-js-api', 'color-functions', 'import', 'global-builtin'],
         },
       },
     },
@@ -124,6 +110,13 @@ export default defineNuxtConfig({
     lazy: true,
     bundle: {
       runtimeOnly: true,
+    },
+  },
+
+  runtimeConfig: {
+    public: {
+      c2cApiBase: 'https://api.camptocamp.org/',
+      forumBase: 'https://forum.camptocamp.org/',
     },
   },
 });

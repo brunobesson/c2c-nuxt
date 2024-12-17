@@ -1,6 +1,6 @@
 import { useAuthStore } from '~/store/auth.js';
 
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(() => {
   const { authenticated } = storeToRefs(useAuthStore());
 
   if (!authenticated.value) {

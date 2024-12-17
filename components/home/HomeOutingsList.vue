@@ -16,6 +16,7 @@
       </NuxtLink>
     </h4>
     <div v-if="outingsByDate">
+      <!-- TODO skeleton -->
       <div v-for="(sortedOutings, date) of outingsByDate" :key="date">
         <p class="outing-date-header is-4 is-italic has-text-weight-bold">
           <NuxtLink :to="{ path: '/outings', query: { date: `${date},${date}` } }" class="is-capitlized">
@@ -47,8 +48,10 @@
 </template>
 
 <script setup lang="ts">
-import { allOutings, userPreferences, type Documents, type Outing, type UserPreferences } from '~/api/c2c.js';
+import { OUTINGS, USER_PREFERENCES, type Documents, type Outing, type UserPreferences } from '~/api/c2c.js';
 import type { ISODate } from '../../types/index.js';
+
+const { $c2cFetch } = useNuxtApp();
 
 const { isPersonal } = defineProps<{ isPersonal: boolean }>();
 
@@ -58,26 +61,23 @@ const { data: userPrefs } = await useAsyncData<UserPreferences | null>('user.pre
   if (!isPersonal) {
     return null;
   }
-  return $fetch<UserPreferences>(userPreferences);
+  return $c2cFetch<UserPreferences>(USER_PREFERENCES);
 });
-const outingsQuery = computed((): [string, Record<string, any>] => {
+const outingsQuery = computed((): Record<string, any> => {
   if (!isPersonal) {
-    return [allOutings, { limit: 40, qa: 'draft,great' }];
+    return { limit: 40, qa: 'draft,great' };
   }
-  return [
-    allOutings, // TODO
-    {
-      act: userPrefs.value?.activities.join(',') || undefined,
-      areas: userPrefs.value?.areas.map(({ document_id }) => document_id).join(',') || undefined,
-      bbox: undefined,
-      limit: 40,
-      qa: 'draft,great',
-    },
-  ];
+  return {
+    act: userPrefs.value?.activities.join(',') || undefined,
+    areas: userPrefs.value?.areas.map(({ document_id }) => document_id).join(',') || undefined,
+    bbox: undefined,
+    limit: 40,
+    qa: 'draft,great',
+  };
 });
 // TODO handle error & loading
-const { data, status, error } = await useFetch<Documents<Outing>>(outingsQuery.value[0], {
-  query: outingsQuery.value[1],
+const { data, status, error } = await useC2cFetch<Documents<Outing>>(OUTINGS, {
+  query: outingsQuery.value,
 });
 
 const outingsByDate = computed((): Record<ISODate, Outing[]> => {
