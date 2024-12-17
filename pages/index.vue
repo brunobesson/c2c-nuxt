@@ -86,7 +86,7 @@ const { isMobile } = import.meta.client ? useScreen() : { isMobile: true };
 const config = useCookie('home.config', {
   default: () => ({ feed: true, banner: true, personal: false }),
 });
-const { feed, banner, personal } = config.value;
+const { feed, banner, personal } = toRefs(config.value);
 const { authenticated } = storeToRefs(useAuthStore());
 const isPersonal = computed(() => authenticated.value && personal);
 </script>
