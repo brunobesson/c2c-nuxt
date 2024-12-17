@@ -1,11 +1,6 @@
 <template>
   <span>
-    <a
-      :href="helloAssoUrl"
-      :title="$t('Join us')"
-      target="_blank"
-      rel="noreferrer"
-    >
+    <a :href="helloAssoUrl" target="_blank" rel="noreferrer">
       <slot />
     </a>
   </span>

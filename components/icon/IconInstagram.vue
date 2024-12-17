@@ -11,7 +11,7 @@
         <stop stop-color="#285AEB" offset="0.9" />
       </radialGradient>
     </svg>
-    <FaIcon :icon="['fab', 'instagram']" class="instagram-icon" />
+    <Icon :icon="['fab', 'instagram']" class="instagram-icon" />
   </span>
 </template>
 

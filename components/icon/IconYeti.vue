@@ -1,11 +1,7 @@
 <template>
-  <FaIcon
-    class="icon-yeti"
-    icon="exclamation"
-    transform="shrink-6 rotate-45"
-    mask="square"
-    :fixed-width="fixedWidth"
-  />
+  <ClientOnly>
+    <Icon class="icon-yeti" icon="exclamation" transform="shrink-6 rotate-45" mask="square" :fixed-width="fixedWidth" />
+  </ClientOnly>
 </template>
 
 <script lang="ts" setup>

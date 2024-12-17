@@ -1,3 +1,3 @@
 <template>
-  <FaIcon icon="comments" fixed-width />
+  <Icon icon="comments" fixed-width />
 </template>

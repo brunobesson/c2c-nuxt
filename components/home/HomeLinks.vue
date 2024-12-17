@@ -1,49 +1,41 @@
 <template>
   <div class="box">
     <h4 class="title is-3">
-      <NuxtLink to="/article/107228">
-        {{ $t('Useful links') }}
+      <NuxtLink to="/articles/107228">
+        {{ $t('home.links.title') }}
       </NuxtLink>
     </h4>
     <div>
       <ul>
         <li>
-          <NuxtLink to="/article/107228">
-            {{ $t('Get ready for your climb') }}
+          <NuxtLink to="/articles/107228">
+            {{ $t('home.links.prepare') }}
           </NuxtLink>
         </li>
         <li>
           <NuxtLink to="/yeti">
-            {{ $t('Yeti: a tool to assess the avalanche risk') }}
+            {{ $t('home.links.yeti') }}
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink
-            external
-            href="https://www.metaskirando.ovh/"
-            title="Metaskirando"
-          >
-            {{ $t('Metaskirando: an aggregator of ski outings in Europe') }}
+          <NuxtLink href="https://www.metaskirando.ovh/" title="Metaskirando">
+            {{ $t('home.links.metaskirando') }}
           </NuxtLink>
         </li>
         <li>
           <NuxtLink to="/serac">
-            {{ $t('SERAC: accidents and incidents in the mountains') }}
+            {{ $t('home.links.serac') }}
           </NuxtLink>
         </li>
         <li>
-          <NuxtLink to="/article/106726">
-            {{ $t('Camptocamp Association') }}
+          <NuxtLink to="/articles/106726">
+            {{ $t('camptocamp-association') }}
           </NuxtLink>
         </li>
         <li>
-          <Nuxtlink
-            external
-            href="https://www.helloasso.com/associations/camptocamp-association/"
-            title="Helloasso"
-          >
-            {{ $t('Want to join us? Or donate?') }}'
-          </Nuxtlink>
+          <NuxtLink href="https://www.helloasso.com/associations/camptocamp-association/" title="Helloasso">
+            {{ $t('home.links.donate') }}
+          </NuxtLink>
         </li>
       </ul>
     </div>

@@ -1,30 +1,39 @@
 <template>
   <div class="box">
-    <h4 class="title is-3">
+    <h4 class="title is-3 is-capitalized">
       <NuxtLink to="forum">
-        <IconForum />
-        {{ $t('Forum') }}
+        <IconForum />&nbsp;
+        {{ $t('forum') }}
       </NuxtLink>
     </h4>
     <div :class="{ wide: wide }">
-      <div v-if="topics">
+      <div v-if="status === 'pending'">
+        <div class="skeleton" v-for="row in messageCount" :key="row">
+          <button class="delete is-skeleton forum-row" :class="{ 'is-medium': wide }"></button>
+          <div class="skeleton-lines">
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+      <div v-else-if="status === 'error'" class="notification is-danger">
+        <!-- TODO -->
+        {{ error?.message }}
+      </div>
+      <div v-else="topics">
         <NuxtLink
-          external
           class="forum-row"
           v-for="topic of topics"
           :key="topic.id"
           :href="getTopicUrl(topic)"
           target="_blank"
           rel="noopener"
-          :title="topic.last_poster_username"
-        >
-          <!-- TODO NuxtImg? -->
-          <img
-            :src="getAvatarUrl(topic.last_poster_user)"
+          :title="topic.last_poster_username">
+          <NuxtImg
+            :src="getAvatarUrl(topic.last_poster_avatar_template)"
             :style="'width:' + imgSize + 'px'"
             loading="lazy"
-            alt="Avatar"
-          />
+            alt="Avatar" />
           <span :class="{ 'is-ellipsed': !wide }">
             {{ topic.title }}
           </span>
@@ -34,13 +43,15 @@
     <hr />
     <h6 class="title is-6 has-text-centered">
       <NuxtLink to="forum">
-        {{ $t('See more') }}
+        {{ $t('more') }}
       </NuxtLink>
     </h6>
   </div>
 </template>
 
 <script setup lang="ts">
+import { getAvatarUrl as getForumAvatarUrl, getLatest, type Topic } from '~/api/forum.js';
+
 const EXCLUDED_CATEGORIES = [
   // https://forum.camptocamp.org/c/comments
   // document's comments
@@ -103,37 +114,29 @@ const EXCLUDED_CATEGORIES = [
   // mobile application bugs reporting
   146,
 ];
+const { data, status, error } = getLatest(EXCLUDED_CATEGORIES, {
+  lazy: true,
+});
 
 const { wide = false, messageCount = -1 } = defineProps<{
   wide?: boolean;
   messageCount?: number;
 }>();
 
-const topics = computed(
-  () =>
-    [] as {
-      id: string;
-      title: string;
-      last_poster_user: string;
-      last_poster_username: string;
-      highest_post_number: number;
-      slug: string;
-    }[]
-); // TODO
+const topics = computed(() => {
+  if (messageCount > 0 && data.value) {
+    return data.value.slice(0, messageCount);
+  }
+  return data.value;
+});
+
 const imgSize = computed(() => (wide ? 24 : 20));
 
-const getAvatarUrl = (_user: string) => {
-  return 'https://gravatar.com/avatar/27205e5c51cb03f862138b22bcb5dc20f94a342e744ff6df1b8dc8af3c865109'; // TODO forum.getAvatarUrl(user, imgSize);
+const getAvatarUrl = (avatarTemplate: string) => {
+  return getForumAvatarUrl(avatarTemplate, imgSize.value);
 };
 
-const getTopicUrl = (topic: {
-  id: string; // TODO
-  title: string;
-  last_poster_user: string;
-  last_poster_username: string;
-  highest_post_number: number;
-  slug: string;
-}) => {
+const getTopicUrl = (topic: Topic) => {
   return `https://forum.camptocamp.org/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`; // TODO configure baseurl
 };
 </script>
@@ -185,5 +188,15 @@ h6 > a {
 h4 > a:hover,
 h6 > a:hover {
   color: $color-link !important;
+}
+
+.skeleton {
+  display: flex;
+  gap: 0.5rem;
+  padding-bottom: 1rem;
+
+  & > div {
+    flex-grow: 1;
+  }
 }
 </style>

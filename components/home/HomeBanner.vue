@@ -3,100 +3,73 @@
     <div class="columns">
       <div class="column is-12-mobile">
         <div class="subtitle">
-          {{
-            $t(
-              `Camptocamp.org aims to facilitate information sharing between mountain addicts and contribute to the safety of mountain activities.`
-            )
-          }}
+          {{ $t('home.banner.title') }}
         </div>
         <div class="columns">
           <div class="column is-12-mobile">
             <div>
-              <p>{{ $t('All in store for you:') }}</p>
+              <p>{{ $t('home.banner.available') }}</p>
               <ul>
                 <li>
                   <IconDocument type="route" fixed-width />
-                  <NuxtLink to="routes">{{ $t('Routes to explore') }}</NuxtLink>
+                  <NuxtLink to="routes">{{ $t('home.banner.routes') }}</NuxtLink>
                 </li>
                 <li>
                   <IconDocument type="outing" fixed-width />
                   <NuxtLink to="outings">
-                    {{
-                      $t('Outings, with the latest conditions in the mountains')
-                    }}
+                    {{ $t('home.banner.outings') }}
                   </NuxtLink>
                 </li>
                 <li>
                   <IconDocument type="xreport" fixed-width />
-                  {{ $t('Accidents/Incidents database:') }}
+                  {{ $t('home.banner.xreports') }}
                   <NuxtLink to="serac">SERAC</NuxtLink>
                 </li>
                 <li>
                   <IconYeti fixed-width />
-                  {{ $t('Avalanche risk evaluation tool:') }}
+                  {{ $t('home.banner.yeti') }}
                   <NuxtLink to="yeti">YETI</NuxtLink>
                 </li>
                 <li class="with-circle">
-                  {{ $t('Library:') }}
-                  <IconDocument type="article" />
-                  <NuxtLink to="articles">{{ $t('articles') }}</NuxtLink>
-                  <!-- TODO use composition for i18n-->
-                  {{ $t('and') }}
-                  <IconBook />
-                  <NuxtLink to="books">{{ $t('books') }}</NuxtLink>
+                  <i18n-t keypath="home.banner.library">
+                    <template v-slot:articles>
+                      <IconDocument type="article" />
+                      <NuxtLink to="articles">{{ $t('articles') }}</NuxtLink>
+                    </template>
+                    <template v-slot:books>
+                      <IconDocument type="book" />
+                      <NuxtLink to="books">{{ $t('books') }}</NuxtLink>
+                    </template>
+                  </i18n-t>
                 </li>
                 <li>
                   <IconForum />
                   <NuxtLink to="forum">
-                    {{
-                      $t(
-                        'Forum: a place to chat about technical matters, or just petty talk'
-                      )
-                    }}
+                    {{ $t('home.banner.forum') }}
                   </NuxtLink>
                 </li>
               </ul>
             </div>
           </div>
           <div class="column is-12-mobile">
-            <p>
-              <NuxtLink to="/article/106726">
-                {{ $t('Camptocamp Association') }}
+            <i18n-t keypath="home.banner.camptocamp" tag="p">
+              <NuxtLink to="/articles/106726">
+                {{ $t('camptocamp-association') }}
               </NuxtLink>
-              <!-- TODO i18n composition -->
-              {{
-                $t(
-                  'is a non profit organization, where volunteers manage the camptocamp.org website'
-                )
-              }}
-            </p>
-            <NuxtLink to="/article/106726" class="menu-brand has-text-centered">
-              <img
-                src="@/assets/img/logo_asso.svg"
-                alt="Camptocamp Association"
-                class="logo-association"
-              />
+            </i18n-t>
+            <NuxtLink to="/articles/106726" class="menu-brand has-text-centered">
+              <img src="@/assets/img/logo_asso.svg" alt="Camptocamp Association" class="logo-association" />
             </NuxtLink>
             <ul>
               <li>
-                <a
-                  href="https://www.helloasso.com/associations/camptocamp-association"
-                  :title="$t('Join us')"
-                >
-                  {{ $t('Want to take part or get involved? Join us!') }}
+                <a href="https://www.helloasso.com/associations/camptocamp-association">
+                  {{ $t('home.banner.join') }}
                 </a>
               </li>
               <li>
-                <FaIcon icon="heart" class="donate-icon" />
-                <a
-                  href="https://www.helloasso.com/associations/camptocamp-association"
-                  :title="$t('Donate')"
-                >
-                  {{
-                    $t(
-                      'Want to contribute financially (hosting, developing...)? Donate!'
-                    )
-                  }}' >
+                <Icon icon="heart" class="donate-icon" />
+                <a href="https://www.helloasso.com/associations/camptocamp-association">
+                  {{ $t('home.banner.donate') }}
                 </a>
               </li>
             </ul>

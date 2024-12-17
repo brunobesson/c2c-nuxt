@@ -1,14 +1,13 @@
 <template>
-  <FaIcon v-if="type !== 'outing'" :icon="icon" :fixed-width="fixedWidth" />
-  <FaLayers v-else>
-    <FaIcon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
-    <FaIcon
-      icon="cloud"
-      :style="{ color: 'white' }"
-      transform="shrink-3 flip-h left-1 down-3"
-    />
-    <FaIcon icon="cloud" transform="shrink-5 flip-h left-1 down-3" />
-  </FaLayers>
+  <Icon v-if="type !== 'outing'" :icon="icon" :fixed-width="fixedWidth" />
+  <span class="icon" v-else>
+    <ClientOnly>
+      <FaLayers :fixed-width="fixedWidth">
+        <Icon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
+        <Icon icon="cloud" :style="{ color: 'white' }" transform="shrink-3 flip-h left-1 down-3" />
+        <Icon icon="cloud" transform="shrink-5 flip-h left-1 down-3" /> </FaLayers
+    ></ClientOnly>
+  </span>
 </template>
 
 <script lang="ts" setup>
@@ -18,22 +17,11 @@ const { type } = defineProps({
   type: {
     type: String,
     required: true,
-    validator: (value) => {
+    validator: value => {
       // TODO factorize
       return (
         typeof value === 'string' &&
-        [
-          'area',
-          'article',
-          'book',
-          'image',
-          'map',
-          'outing',
-          'profile',
-          'route',
-          'waypoint',
-          'xreport',
-        ].includes(value)
+        ['area', 'article', 'book', 'image', 'map', 'outing', 'profile', 'route', 'waypoint', 'xreport'].includes(value)
       );
     },
   },

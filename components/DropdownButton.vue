@@ -15,25 +15,18 @@
 </template>
 
 <script lang="ts" setup>
+import { onClickOutside } from '@vueuse/core';
+
 defineProps<{ disabled?: boolean }>();
 const isActive = ref(false);
 const id = useId();
 const el = useTemplateRef('root');
 
-onMounted(() => {
-  window.addEventListener('click', onClick);
+onClickOutside(el, () => {
+  isActive.value = false;
 });
 
-onBeforeUnmount(() => {
-  window.removeEventListener('click', onClick);
-});
-
-const onClick = (event: MouseEvent) => {
-  // close dropdown when clicked outside
-  if (event.target instanceof Node && !el.value!.contains(event.target)) {
-    isActive.value = false;
-  }
-};
+defineExpose({ isActive });
 </script>
 
 <style scoped lang="scss">

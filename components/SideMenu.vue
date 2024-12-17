@@ -7,140 +7,105 @@
       <span
         class="menu-item is-ellipsed"
         :class="{
-          'NuxtLink-active': [
-            'topoguide',
-            'routes',
-            'waypoints',
-            'areas',
-            'route',
-            'waypoint',
-            'area',
-          ].includes(route.path),
-        }"
-      >
-        <IconTopoguide fixed-width />
+          'router-link-active': ['topoguide', 'routes', 'waypoints', 'areas', 'route', 'waypoint', 'area'].some(p =>
+            route.path.startsWith(`/${p}`),
+          ),
+        }">
+        <IconTopoguide fixed-width />&nbsp;
         <span class="menu-item-text is-capitalized">
-          {{ $t('topoguide') }}
+          {{ $t('guidebook') }}
         </span>
       </span>
     </NuxtLink>
 
-    <!-- TODO lien + is-active -->
     <NuxtLink to="/outings">
       <span
         class="menu-item is-ellipsed"
         :class="{
-          'NuxtLink-active': ['outings', 'outing'].includes(route.path),
-        }"
-      >
-        <IconDocument type="outing" fixed-width />
+          'router-link-active': route.path.startsWith('/outings'),
+        }">
+        <IconDocument type="outing" fixed-width />&nbsp;
         <span class="menu-item-text is-capitalized"> {{ $t('outings') }} </span>
       </span>
     </NuxtLink>
 
-    <!-- TODO link -->
-    <NuxtLink to="/forum" external>
+    <NuxtLink to="/forum">
       <span class="menu-item is-ellipsed">
-        <IconForum />
+        <IconForum />&nbsp;
         <span class="menu-item-text is-capitalized"> {{ $t('forum') }} </span>
       </span>
     </NuxtLink>
 
-    <!-- TODO link -->
     <NuxtLink to="/serac">
-      <span class="menu-item is-ellipsed">
-        <IconDocument type="xreport" fixed-width />
-        <span class="menu-item-text is-capitalized">
-          {{ $t('accident database') }}
+      <span
+        class="menu-item is-ellipsed"
+        :class="{
+          'router-link-active': ['serac', 'xreports'].some(p => route.path.startsWith(`/${p}`)),
+        }">
+        <IconDocument type="xreport" fixed-width />&nbsp;
+        <span class="menu-item-text">
+          {{ $t('side-menu.serac') }}
         </span>
       </span>
     </NuxtLink>
 
-    <!-- TODO lien + is-active -->
     <NuxtLink to="/articles">
       <span
         class="menu-item is-ellipsed"
         :class="{
-          'NuxtLink-active': ['articles', 'article'].includes(route.path),
-        }"
-      >
-        <IconDocument type="article" fixed-width />
+          'router-link-active': route.path.startsWith('/articles'),
+        }">
+        <IconDocument type="article" fixed-width />&nbsp;
         <span class="menu-item-text is-capitalized">
           {{ $t('articles') }}
         </span>
       </span>
     </NuxtLink>
 
-    <!-- TODO lien + is-active -->
     <NuxtLink to="/yeti">
       <span
         class="menu-item is-ellipsed"
         :class="{
-          'NuxtLink-active': ['yeti'].includes(route.path),
-        }"
-      >
-        <IconYeti fixed-width />
-        <span class="menu-item-text is-capitalized"> {{ $t('YETI') }} </span>
+          'router-link-active': route.path.startsWith('/yeti'),
+        }">
+        <IconYeti fixed-width />&nbsp;
+        <span class="menu-item-text is-capitalized">YETI</span>
       </span>
     </NuxtLink>
 
-    <ul>
-      <li v-for="locale in availableLocales" :key="locale.code">
-        <a href="#" @click.prevent.stop="setLocale(locale.code)">
-          {{ locale.code }}
-        </a>
-      </li>
-    </ul>
-
     <div class="menu-footer is-size-7">
-      <Advertisement class="menu-add" v-if="hasHeightForAd" />
+      <AdFallback class="menu-add" v-if="hasHeightForAd" />
       <div class="has-text-centered menu-links">
-        <NuxtLink to="/article/106727">{{ $t('contact') }}</NuxtLink>
+        <NuxtLink to="/articles/106727">{{ $t('side-menu.contact') }}</NuxtLink>
         <span> &bull; </span>
-        <NuxtLink to="/article/106731">{{ $t('EULA') }}</NuxtLink>
+        <NuxtLink to="/articles/106731">{{ $t('side-menu.EULA') }}</NuxtLink>
         <span> &bull; </span>
-        <NuxtLink to="/article/106728">{{ $t('licenses') }}</NuxtLink>
+        <NuxtLink to="/articles/106728">{{ $t('side-menu.licenses') }}</NuxtLink>
         <br />
-        <NuxtLink to="/article/106726">{{ $t('association') }}</NuxtLink>
+        <NuxtLink to="/articles/106726">{{ $t('camptocamp-association') }}</NuxtLink>
         <span> &bull; </span>
-        <a @click="showGdpr">{{ $t('cookies') }}</a>
+        <a @click="showGdpr">{{ $t('side-menu.cookies') }}</a>
       </div>
 
       <div class="columns is-gapless has-text-centered is-mobile menu-socials">
         <div class="column">
-          <NuxtLink
-            external
-            href="https://www.instagram.com/camptocamp_org/"
-            title="Instagram"
-          >
+          <NuxtLink href="https://www.instagram.com/camptocamp_org/" title="Instagram">
             <IconInstagram class="instagram-icon" />
           </NuxtLink>
         </div>
         <div class="column">
-          <NuxtLink
-            external
-            href="https://www.facebook.com/camptocamp.org/"
-            title="Facebook"
-          >
-            <FaIcon :icon="['fab', 'facebook']" class="facebook-icon" />
+          <NuxtLink href="https://www.facebook.com/camptocamp.org/" title="Facebook">
+            <Icon :icon="['fab', 'facebook']" class="facebook-icon" />
           </NuxtLink>
         </div>
         <div class="column">
-          <NuxtLink
-            external
-            href="https://www.youtube.com/channel/UCllJ4-Ab7A0ZoqlAOAJtnCw"
-            title="Youtube"
-          >
-            <FaIcon :icon="['fab', 'youtube']" class="youtube-icon" />
+          <NuxtLink href="https://www.youtube.com/channel/UCllJ4-Ab7A0ZoqlAOAJtnCw" title="Youtube">
+            <Icon :icon="['fab', 'youtube']" class="youtube-icon" />
           </NuxtLink>
         </div>
         <div class="column">
-          <NuxtLink
-            external
-            href="https://www.helloasso.com/associations/camptocamp-association"
-            :title="$t('donate')"
-          >
-            <FaIcon icon="heart" class="donate-icon" />
+          <NuxtLink href="https://www.helloasso.com/associations/camptocamp-association" :title="$t('donate')">
+            <Icon icon="heart" class="donate-icon" />
           </NuxtLink>
         </div>
       </div>
@@ -149,20 +114,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useGdprStore } from '../store/gdpr.js';
+
 const route = useRoute();
-const { hasHeightForAd } = import.meta.client
-  ? useScreen()
-  : { hasHeightForAd: ref(false) };
+const { hasHeightForAd } = import.meta.client ? useScreen() : { hasHeightForAd: ref(false) };
 
 const showGdpr = () => {
-  // TODO
+  const { openGdprDialog } = useGdprStore();
+  openGdprDialog();
 };
-
-const { locale, locales, setLocale } = useI18n();
-
-const availableLocales = computed(() =>
-  locales.value.filter((l) => l.code !== locale.value)
-);
 </script>
 
 <style lang="scss" scoped>
@@ -202,7 +162,7 @@ aside {
     font-size: 1.1rem;
   }
 
-  &.NuxtLink-active {
+  &.router-link-active {
     border-left: 5px solid $color-base-c2c;
     font-weight: bold;
   }

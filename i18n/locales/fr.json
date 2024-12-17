@@ -1,5 +1,85 @@
 {
-  "welcome": "Bienvenue {toto}",
-  "Help": "Aide",
-  "Join us": "Adhérer"
+  "home": {
+    "intro": "Bienvenue sur Camptocamp ! La communauté des sports de montagne",
+    "banner": {
+      "title": "Camptocamp.org a pour but de faciliter le partage d'informations entre les pratiquants de sports de montagne et de contribuer à la sécurité des activités montagne.",
+      "available": "Vous trouverez ici :",
+      "routes": "des itinéraires à parcourir",
+      "outings": "des sorties pour avoir les dernières conditions",
+      "xreports": "Une base de données incidents/accidents :",
+      "yeti": "Une aide à la gestion du risque d’avalanche :",
+      "forum": "Un forum pour discuter de sujets techniques ou bavarder",
+      "library": "Une bibliothèque comportant des {articles} et des {books}",
+      "camptocamp": "{0} est la structure bénévole à but non lucratif assurant la gestion du site camptocamp.org",
+      "join": "Pour participer ou vous investir : rejoignez nous !",
+      "donate": "Pour soutenir financièrement (serveurs, développements…) : faites un don"
+    },
+    "links": {
+      "title": "Liens utiles",
+      "prepare": "Préparer sa course",
+      "yeti": "Yeti : un outil pour évaluer le risque d’avalanche",
+      "metaskirando": "Metaskirando : agrégateur de sorties ski en Europe",
+      "serac": "SERAC : accidents et incidents en montagne",
+      "donate": "Faire un don ou adhérer"
+    },
+    "feed": {
+      "personal": {
+        "on": "Fil personnel activé",
+        "off": "Fil personnel désacivé"
+      }
+    },
+    "activate-preferences": "Activer mes préférences",
+    "activate-dashboard": "Tableau de bord",
+    "activate-feed": "Fil d'activité"
+  },
+  "gdpr": {
+    "banner": {
+      "title": "Contrôlez l'utilisation de vos données personnelles",
+      "message": "Notre site Web utilise des cookies fournis par nous et par des tiers. Certains cookies sont nécessaires au fonctionnement du site Web, tandis que d'autres peuvent être ajustés par vous à tout moment, en particulier ceux qui nous permettent de comprendre les performances de notre site Web et de vous fournir des fonctionnalités de médias sociaux. Vous pouvez les accepter ou les refuser tous ou bien {0}.",
+      "configure": "paramétrer vos choix",
+      "denyall": "Tout refuser",
+      "allowall": "Tout accepter"
+    },
+    "modal": {
+      "header": "Paramétrage des cookies",
+      "necessary-cookies": "Cookies nécessaires",
+      "necessary-cookies-details": "Les cookies nécessaires sont indispensables au bon fonctionnement de notre site Web et ne peuvent pas être désactivés. Ils sont envoyés à votre ordinateur ou à votre appareil lorsque vous demandez une action ou un service spécifiques, par exemple lorsque vous vous connectez, remplissez un formulaire ou définissez vos préférences en matière de cookies. Si vous configurez votre navigateur de façon à bloquer ces cookies ou à vous avertir de l'existence de ces derniers, notre site Web ne fonctionnera pas intégralement.",
+      "statistical-cookies-details": "Grâce aux cookies statistiques ou analytiques, fournis par nous et d'autres sociétés, nous pouvons compter les visites sur notre site Web et connaître les sources de trafic. Les données que nous obtenons nous aident à comprendre ce que les visiteurs aiment et améliorer le site Web. Si vous ne les acceptez pas, nous ne pourrons pas améliorer votre expérience.",
+      "statistical-cookies": "Cookies statistiques",
+      "social-cookies": "Cookies sociaux",
+      "social-cookies-details": "Ces cookies permettent d’interagir depuis le site camptocamp.org avec les modules sociaux et de partager les contenus du site avec d’autres personnes ou de les informer de votre consultation ou opinion sur celui-ci, lorsque vous cliquez sur le module \\\"Partager\\\" par exemple. En désactivant ces cookies, vous ne pourrez plus partager les contenus de camptocamp.org depuis le site camptocamp.org sur les réseaux sociaux."
+    }
+  },
+  "side-menu": {
+    "serac": "Incidents et accidents",
+    "contact": "Contact",
+    "EULA": "CGU",
+    "licenses": "Licences",
+    "cookies": "Cookies"
+  },
+  "guidebook": "topoguide",
+  "articles": "articles",
+  "books": "livres",
+  "outings": "sorties",
+  "forum": "forum",
+  "more": "Voir plus",
+  "help": "aide",
+  "camptocamp-association": "Camptocamp Association",
+  "navigation": {
+    "join": "Adhérer",
+    "my-profile": "Mon profile",
+    "account": "Mon compte",
+    "preferences": "Mes préférences",
+    "activity-trackers": "Traqueurs d'activité",
+    "my-outings": "Mes sorties",
+    "my-statistics": "Mes statistiques",
+    "my-changes": "Mes contributions",
+    "followed-users": "Mes amis",
+    "bookmarks": "Mes favoris"
+  },
+  "login": "Se connecter",
+  "logout": "Me déconnecter",
+  "cancel": "Annuler",
+  "submit": "Enregistrer et continuer",
+  "images": "images"
 }

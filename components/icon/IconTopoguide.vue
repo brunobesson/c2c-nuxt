@@ -1,5 +1,5 @@
 <template>
-  <FaIcon icon="arrow-right" :fixed-width="fixedWidth" />
+  <Icon icon="arrow-right" :fixed-width="fixedWidth" />
 </template>
 
 <script lang="ts" setup>

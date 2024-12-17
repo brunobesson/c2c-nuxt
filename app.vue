@@ -5,35 +5,25 @@
     :class="{
       'nav-dfm': !isHomePage && !isMobile && !isTablet && !isDesktop,
       'home-topoguide': isHomePage,
-    }"
-  >
-    <SideMenu
-      class="side-menu no-print"
-      :class="{ 'alternative-side-menu': alternativeSideMenu }"
-    />
-    <Navigation
-      class="navigation no-print"
-      @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu"
-    />
-    <DfmAdLarge
-      v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
-      class="ad"
-    />
-    <SiteNotice class="no-print site-notice" />
-    <div
-      v-if="alternativeSideMenu"
-      class="alternative-side-menu-shader"
-      @click="alternativeSideMenu = false"
-    />
+    }">
+    <SideMenu class="side-menu no-print" :class="{ 'alternative-side-menu': alternativeSideMenu }" />
+    <Navigation class="navigation no-print" @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu" />
+    <AdDfmLarge v-if="!isHomePage && (isMobile || isTablet || isDesktop)" class="ad" />
+    <HomeSiteNotice class="no-print site-notice" />
+    <div v-if="alternativeSideMenu" class="alternative-side-menu-shader" @click="alternativeSideMenu = false" />
 
     <div class="page-content is-block-print">
       <NuxtPage />
     </div>
-    <GdprBanner />
+    <ClientOnly>
+      <GdprBanner />
+    </ClientOnly>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useResizeObserver } from '@vueuse/core';
+
 const i18nHead = useLocaleHead();
 useHead(() => ({
   htmlAttrs: {
@@ -52,13 +42,10 @@ const { isHomePage } = useHomePage();
 const root = useTemplateRef('root');
 const { tabletMin, desktopMin, fullhdMin, widescreenMin } = useBulma();
 
+useResizeObserver(root, updateWidth);
+
 onMounted(() => {
   updateWidth();
-  window.addEventListener('resize', updateWidth);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateWidth);
 });
 
 function updateWidth() {

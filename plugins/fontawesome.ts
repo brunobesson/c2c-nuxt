@@ -1,18 +1,6 @@
 import { config, library } from '@fortawesome/fontawesome-svg-core';
-import {
-  faCreativeCommons,
-  faFacebook,
-  faGoogle,
-  faInstagram,
-  faYoutube,
-} from '@fortawesome/free-brands-svg-icons';
-import {
-  faCircle,
-  faClock,
-  faHourglass,
-  faTrashAlt,
-  faWindowMaximize,
-} from '@fortawesome/free-regular-svg-icons';
+import { faCreativeCommons, faFacebook, faGoogle, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faCircle, faClock, faHourglass, faTrashAlt, faWindowMaximize } from '@fortawesome/free-regular-svg-icons';
 import {
   faAngleDown,
   faArrowLeft,
@@ -89,6 +77,7 @@ import {
   faMapMarkerAlt,
   faMinus,
   faNewspaper,
+  faNotdef,
   faObjectGroup,
   faPen,
   faPlug,
@@ -101,6 +90,7 @@ import {
   faRotate,
   faRoute,
   faRuler,
+  faCircle as fasCircle,
   faSearch,
   faShareAlt,
   faSignInAlt,
@@ -128,10 +118,7 @@ import {
   faUserShield,
   faWrench,
 } from '@fortawesome/free-solid-svg-icons';
-import {
-  FontAwesomeIcon,
-  FontAwesomeLayers,
-} from '@fortawesome/vue-fontawesome';
+import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 import activity_hiking from '~/assets/font-awesome-custom/activity/hiking.svg?icon';
 import activity_ice_climbing from '~/assets/font-awesome-custom/activity/ice_climbing.svg?icon';
 import activity_mountain_biking from '~/assets/font-awesome-custom/activity/mountain_biking.svg?icon';
@@ -273,7 +260,7 @@ library.add(
   faChevronRight,
   faChevronUp,
   faChevronDown,
-  faCircle,
+  fasCircle,
   faCircleNotch,
   faCloud,
   faCode,
@@ -324,6 +311,7 @@ library.add(
   faMapMarkerAlt,
   faMinus,
   faNewspaper,
+  faNotdef,
   faObjectGroup,
   faPen,
   faPlug,
@@ -375,10 +363,10 @@ library.add(
   faFacebook,
   faGoogle,
   faInstagram,
-  faYoutube
+  faYoutube,
 );
 
-export default defineNuxtPlugin((nuxtApp) => {
+export default defineNuxtPlugin(nuxtApp => {
   nuxtApp.vueApp.component('FaIcon', FontAwesomeIcon);
   nuxtApp.vueApp.component('FaLayers', FontAwesomeLayers);
 });
