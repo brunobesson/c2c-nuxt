@@ -1,23 +1,37 @@
 // https://bulma.io/documentation/customize/with-modular-sass/
 
 // (c2c variables and utilities configured and imported through nuxt config file)
+@forward "./scrollbar";
+@forward "./mixins";
 
-@use 'bulma/sass/form' with (
+@use "bulma/sass/form" with (
   $input-placeholder-color: rgb(160, 160, 160),
   $input-icon-color: bulma.$grey-light
 );
 
-@use 'bulma/sass/components/pagination' with (
+@use "bulma/sass/components/pagination" with (
   $pagination-current-background-color: bulma.$primary,
   $pagination-current-border-color: bulma.$primary
 );
 
 // Import the components you need
-@forward 'bulma/sass/base';
-@forward 'bulma/sass/elements/button';
-@forward 'bulma/sass/elements/icon';
+@forward "bulma/sass/base" with (
+  $body-size: 14px !default
+);
+@forward "bulma/sass/base/skeleton";
+@forward "bulma/sass/elements/box" with (
+  $box-radius: 0,
+  $box-shadow: "rgba(10, 10, 10, 0.1) 0 2px 3px 0, rgba(10, 10, 10, 0.1) 0 0 0 1px"
+);
+@forward "bulma/sass/elements/button";
+@forward "bulma/sass/elements/delete";
+@forward "bulma/sass/elements/icon";
+@forward "bulma/sass/elements/title";
+@forward "bulma/sass/components/dropdown";
+@forward "bulma/sass/components/modal";
+@forward "bulma/sass/grid/columns";
+@forward "bulma/sass/helpers";
 // @forward "bulma/sass/components/card";
-// @forward "bulma/sass/components/modal";
 // @forward "bulma/sass/components/navbar";
 // @forward "bulma/sass/elements/content";
 // @forward "bulma/sass/elements/notification";
@@ -26,4 +40,115 @@
 // @forward "bulma/sass/layout/footer";
 
 // Import the themes so that all CSS variables have a value
-@forward 'bulma/sass/themes';
+@forward "bulma/sass/themes";
+
+// TODO reorganize in @foward + group per type
+
+.has-hover-background:hover {
+  background: var(--bulma-background);
+}
+
+// force nowrap
+.is-nowrap {
+  white-space: nowrap;
+}
+
+// Force a inline element to nowrap, and ellipse overflow
+.is-ellipsed {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@include mixins.tablet {
+  .is-ellipsed-tablet {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.has-cursor-pointer {
+  cursor: pointer;
+}
+
+.card-icon {
+  color: bulma.$text;
+}
+
+.has-text-secondary {
+  color: $color-base-c2c;
+}
+
+.has-background-secondary {
+  background-color: $color-base-c2c;
+}
+
+.has-text-normal {
+  color: bulma.$text;
+}
+
+.has-rounded-corner {
+  border-radius: bulma.$radius;
+}
+
+.is-disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media not print {
+  .print-only {
+    display: none !important;
+  }
+}
+
+@media print {
+  /* print styles go here */
+
+  /* Printing from Firefox with content display:flex will print only the first page.
+    https://bugzilla.mozilla.org/show_bug.cgi?id=1241323
+    */
+  .is-block-print {
+    display: block !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-image .no-print.image-box {
+    display: block !important;
+  }
+
+  .print-image .no-print.image-box .swiper-wrapper {
+    flex-wrap: wrap !important;
+    justify-content: space-evenly !important;
+  }
+
+  .has-background-white-print {
+    background-color: white !important;
+  }
+
+  .box {
+    padding: 0;
+    box-shadow: none;
+    border-bottom: 1px solid lightGrey;
+  }
+
+  .is-12-print {
+    width: 100% !important;
+  }
+
+  @media print {
+    .print-no-columns {
+      display: block !important;
+
+      @each $size in 1, 2, 3, 4, 5, 6, 7, 9, 10, 11 {
+        .is-#{$size} {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

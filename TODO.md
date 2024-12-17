@@ -1,13 +1,14 @@
 # TODO
 
 * Modules
-  * @nuxt/image
   * @nuxt/eslint
   * @vite/pwa
 * vue query (tanstack) - <https://tanstack.com/query/v4/docs/framework/vue/guides/ssr>
   * shadow image while loading?
 * Styling
   * Remlacement des différents composants / plugins ?
+* cookie security configuration
+* nuxtloadingindicator
 * SEO useSeoMet + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools
@@ -21,9 +22,11 @@
 * swiper (module nuxt-swiper)
 * Forms
   * vee validate? (cf module)
+* scrolltotop (<https://nuxt.com/docs/api/utils/define-page-meta>)
 * Ads
 * Media print
 * Configuration sur demo // env demo vs prod, etc
 * Tests
 * typescript typechecking when building in CI
+* 404
 * What else?
