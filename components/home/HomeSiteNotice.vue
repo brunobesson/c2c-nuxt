@@ -19,7 +19,7 @@ import { getAnnouncement } from '../../api/forum.js';
 
 const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
-const lastAnnoucementRead = useStorage<ISODateTime | undefined>('annoucement.updatedAt', undefined);
+const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('annoucement.updatedAt', undefined);
 const hidden = ref(false);
 const showContent = false;
 const { locale: lang } = useI18n();
