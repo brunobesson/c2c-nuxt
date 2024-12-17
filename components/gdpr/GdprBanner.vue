@@ -27,7 +27,7 @@ import GdprModal from './GdprModal.vue';
 const userHasInteracted = ref(false);
 const gdprModal = useTemplateRef<InstanceType<typeof GdprModal>>('gdprModal');
 const { get: getGdpr, setAll } = useGdpr();
-const active = computed(() => !getGdpr() && userHasInteracted);
+const active = computed(() => getGdpr().date === 0 && userHasInteracted);
 
 onBeforeMount(() => {
   window.addEventListener('scroll', firstUserInteraction);
