@@ -1,9 +1,8 @@
 <template>
-  <span>
-    <a :href="helloAssoUrl" target="_blank" rel="noreferrer">
-      <slot />
-    </a>
-  </span>
+  <Button as="a" :href="helloAssoUrl" class="text-center" target="_blank" rel="noopener noreferrer">
+    <IconJoinUs fixed-width />
+    <span class="max-mobile:hidden capitalize">{{ $t('navigation.join') }}</span>
+  </Button>
 </template>
 
 <script lang="ts" setup>

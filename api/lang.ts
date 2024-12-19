@@ -1,6 +1,5 @@
-export const uiLangs = ['fr', 'it', 'de', 'en', 'es', 'ca', 'eu', 'hu', 'zh_CN', 'sl'];
-export const apiLangs = ['fr', 'it', 'de', 'en', 'es', 'ca', 'eu', 'zh', 'sl'];
+export const UI_LANGS = ['fr', 'it', 'de', 'en', 'es', 'ca', 'eu', 'hu', 'zh_CN', 'sl'] as const;
+export const API_LANGS = ['fr', 'it', 'de', 'en', 'es', 'ca', 'eu', 'zh', 'sl'] as const;
 
-export function isUiLang(lang: string): lang is 'fr' | 'it' | 'de' | 'en' | 'es' | 'ca' | 'eu' | 'hu' | 'zh_CN' | 'sl' {
-  return uiLangs.includes(lang);
-}
+export type UiLang = (typeof UI_LANGS)[number];
+export type ApiLang = (typeof API_LANGS)[number];

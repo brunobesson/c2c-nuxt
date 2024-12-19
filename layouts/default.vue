@@ -1,0 +1,90 @@
+<template>
+  <div
+    ref="root"
+    id="app"
+    :class="{
+      'nav-dfm': !isHomePage && !isMobile && !isTablet && !isDesktop,
+      'home-topoguide': isHomePage,
+    }">
+    <SideMenu
+      class="fixed w-[--sidemenu-width] h-screen top-0 z-30 transition-[left] duration-300 max-tablet:left-[calc(-1*var(--sidemenu-width))] print:hidden"
+      :class="{ '!left-0': alternativeSideMenu }" />
+    <Navigation
+      class="fixed top-0 left-0 right-0 z-25 print:hidden"
+      @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu" />
+    <AdDfmLarge
+      v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
+      class="ml-0 pt-[--navbar-height] tablet:ml-[--sidemenu-width] print:hidden" />
+    <HomeSiteNotice
+      class="absolute top-[--navbar-height] w-full z-20 shadow-md tablet:ml-[--sidemenu-width] tablet:w-[calc(100%-var(--sidemenu-width))] print:hidden" />
+    <div
+      v-if="alternativeSideMenu"
+      class="fixed top-0 left-0 z-29 w-screen h-screen bg-black/20"
+      @click="alternativeSideMenu = false" />
+
+    <div
+      class="page-content min-h-screen flex flex-col pt-[--navbar-height] tablet:ml-[--sidemenu-width] print:block print:pt-0">
+      <slot />
+    </div>
+
+    <GdprBanner />
+  </div>
+</template>
+
+<script setup lang="ts">
+const { isMobile, isTablet, isDesktop } = import.meta.client
+  ? useScreen()
+  : { isMobile: ref(true), isTablet: ref(false), isDesktop: ref(false) };
+
+const { isHomePage } = useHomePage();
+
+const root = useTemplateRef('root');
+const { tabletMin, desktopMin, fullhdMin, widescreenMin } = useBulma();
+
+useResizeObserver(root, updateWidth);
+
+onMounted(() => {
+  updateWidth();
+});
+
+function updateWidth() {
+  if (!root.value) {
+    return;
+  }
+  // TODO
+  // allows reactive css when body width changes because map is pinned
+  // (unlike the css @media(max-width) this is replacing)
+
+  const width = root.value.offsetWidth;
+  if (width < tabletMin) {
+    root.value.dataset.width = 'mobile';
+  } else if (width < desktopMin) {
+    root.value.dataset.width = 'tablet';
+  } else if (width < widescreenMin) {
+    root.value.dataset.width = 'desktop';
+  } else if (width < fullhdMin) {
+    root.value.dataset.width = 'widescreen';
+  } else {
+    root.value.dataset.width = 'fullhd';
+  }
+}
+
+const route = useRoute();
+
+const alternativeSideMenu = ref(false);
+
+watch(route, hideSideMenuOnMobile);
+
+function hideSideMenuOnMobile() {
+  alternativeSideMenu.value = false;
+}
+</script>
+
+<!-- TODO modifier la variable plutôt ? -->
+<style lang="css" scoped>
+.nav-dfm {
+  .page-content {
+    padding-top: var(--navbarad-height);
+  }
+}
+</style>

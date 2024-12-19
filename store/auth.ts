@@ -1,5 +1,3 @@
-import { isUiLang } from '~/api/lang.js';
-
 type UserPayload = {
   username: string;
   password: string;
@@ -29,6 +27,7 @@ type User = {
 };
 
 export const useAuthStore = defineStore('auth', () => {
+  const { isUiLang } = useLang();
   const userInfo = useCookie<User | null | undefined>('user', { maxAge: 60 * 60 * 24 * 30 });
   const user = computed(() => userInfo.value);
   const authenticated = computed(() => !!userInfo.value);

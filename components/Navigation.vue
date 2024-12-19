@@ -1,127 +1,111 @@
 <template>
   <nav
-    class="is-size-5"
-    :class="{
-      'with-ad': isHomePage && !isMobile && !isTablet && !isDesktop,
-    }">
+    class="max-w-screen h-[--navbar-height] flex bg-white shadow-nav"
+    :class="{ 'with-ad': !isHomePage && (isWidescreen || isFullHD) }">
+    <!-- TODO ad-->
     <span
       v-if="isMobile || isTablet"
-      class="navigation-item"
-      :class="{ 'is-hidden-mobile': !hideSearchInput }"
-      @click="$emit('toggle-side-menu')">
-      <span class="button">
+      class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3"
+      :class="{ 'max-mobile:hidden': !hideSearchInput }"
+      @click="$emit('toggleSideMenu')">
+      <Button>
         <Icon icon="bars" />
-      </span>
+      </Button>
     </span>
-
     <NuxtLink
       v-if="isMobile || isTablet"
       to="/"
-      class="navigation-item navigation-brand has-text-centered"
-      :class="{ 'is-hidden-mobile': !hideSearchInput }">
-      <img src="~/assets/img/logo.svg" alt="Camptocamp.org" />
+      class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 text-center"
+      :class="{ 'max-mobile:hidden': !hideSearchInput }">
+      <img
+        src="~/assets/img/logo.svg"
+        alt="Camptocamp.org"
+        class="ml-0 tablet:ml-[5px] h-[calc(var(--navbar-height)_-_8px)]" />
     </NuxtLink>
 
     <AdDfmLarge v-if="!isHomePage && !isMobile && !isTablet && !isDesktop" />
-
-    <div class="navigation-end">
+    <div class="flex justify-end items-center ml-auto mr-[5px] desktop:mr-4">
       <NuxtLink
         to="/articles/106732"
-        class="navigation-item has-text-centered"
-        :class="{ 'is-hidden-mobile': !hideSearchInput }">
+        class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 text-center"
+        :class="{ 'max-mobile:hidden': !hideSearchInput }">
         <IconHelp fixed-width />
-        <span class="is-hidden-mobile is-capitalized">
+        <span class="max-mobile:hidden capitalize">
           {{ $t('help') }}
         </span>
       </NuxtLink>
-      <!-- TODO -->
-      <div class="navigation-item search-input">Search input</div>
-      <div class="navigation-item">
-        <LinkJoinUs class="has-text-centered button" :class="{ 'is-hidden-mobile': !hideSearchInput }">
-          <IconJoinUs fixed-width />
-          <span class="is-hidden-mobile is-capitalized">{{ $t('navigation.join') }}</span>
-        </LinkJoinUs>
+      <div ref="searchInputContainer">
+        <!-- TODO -->
+        <InputText
+          :placeholder="$t('navigation.search')"
+          :class="{ 'max-mobile:hidden': hideSearchInput }"
+          class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 w-[160px] widescreen:w-[250px] widescreen:mr-[50px] widescreen:hover:w-[300px] widescreen:hover:mr-0 widescreen:transition-[width,margin-right] widescreen:duration-500" />
+      </div>
 
-        <div class="navigation-item">
-          <DropdownButton class="is-right add-button">
-            <template #trigger>
-              <button class="button is-success">
-                <Icon icon="plus" />
-              </button>
-            </template>
-            <LinkAdd
-              v-for="documentType of ['outing', 'route', 'waypoint', 'article', 'book', 'xreport']"
-              :key="documentType"
-              :document-type="documentType"
-              class="dropdown-item is-size-5 is-ellipsed">
-              <IconDocument :type="documentType" fixed-width />
+      <div class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
+        <LinkJoinUs :class="{ 'max-mobile:hidden': !hideSearchInput }" />
+      </div>
+
+      <div class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
+        <DropdownButton :items="addMenuItems">
+          <template #trigger>
+            <Icon icon="plus" />
+          </template>
+          <template #item="{ item }">
+            <LinkAdd :document-type="item.documentType" class="text-ellipsis">
+              <IconDocument :type="item.documentType" fixed-width />
               <span>TODO</span>
             </LinkAdd>
-          </DropdownButton>
-        </div>
-      </div>
-
-      <div v-if="!authenticated" class="navigation-item">
-        <ButtonLogin class="is-link">
-          <span class="is-hidden-touch">{{ $t('login') }}</span>
-          &nbsp;
-          <Icon icon="sign-in-alt" />
-        </ButtonLogin>
-      </div>
-
-      <div v-else class="navigation-item">
-        <DropdownButton class="is-right" ref="userMenu">
-          <template #trigger>
-            <span class="button">
-              <NuxtImg
-                width="24"
-                height="24"
-                alt="Avatar"
-                :src="
-                  `https://forum.camptocamp.org` + // TODO
-                  '/user_avatar/forum.camptocamp.org/' +
-                  user?.forumUsername +
-                  '/24/1_1.png'
-                " />
-              <span class="has-text-weight-bold is-hidden-mobile"> &nbsp;{{ user?.name }} </span>
-            </span>
           </template>
-
-          <NuxtLink
-            v-for="item of userMenuLinks"
-            :key="item.text"
-            :to="item.to"
-            class="dropdown-item is-size-5"
-            @click.native="userMenu!.isActive = false">
-            <Icon v-if="item.icon" :icon="item.icon" fixed-width />
-            <IconDocument v-else :type="item.documentType!" fixed-width />
-            {{ item.text }}
-          </NuxtLink>
-
-          <hr class="dropdown-divider" />
-
-          <a class="dropdown-item is-size-5" @click="logout()">
-            <Icon icon="sign-out-alt" fixed-width />
-            {{ $t('logout') }}
-          </a>
         </DropdownButton>
       </div>
 
-      <div v-if="!authenticated" class="navigation-item">
-        <DropdownButton class="is-right">
+      <div v-if="!authenticated" class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
+        <ButtonLogin>
+          <span class="max-tablet:hidden">{{ $t('login') }}</span> <Icon icon="sign-in-alt" />
+        </ButtonLogin>
+      </div>
+
+      <div v-else class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
+        <DropdownButton :items="userMenuItems">
           <template #trigger>
-            <button class="button">
-              {{ locale }}
-            </button>
+            <!-- display: inline -->
+            <NuxtImg
+              width="24"
+              height="24"
+              :src="`${config.public.forumBase}/user_avatar/forum.camptocamp.org/${user?.forumUsername}/24/1_1.png`" />&nbsp;<span
+              class="font-bold max-mobile:hidden">
+              {{ user?.name }}
+            </span>
           </template>
-          <a
-            v-for="lang in locales"
-            :key="lang.code"
-            class="dropdown-item is-size-5"
-            :class="{ 'is-active': lang.code === locale }"
-            @click="configureLocale(lang.code)">
-            {{ lang.name }}
-          </a>
+          <template #item="{ item }">
+            <a v-if="item.logout" @click="logout()">
+              <Icon icon="sign-out-alt" fixed-width />
+              {{ $t('logout') }}
+            </a>
+            <NuxtLink v-else :to="item.to">
+              <Icon v-if="item.icon" :icon="item.icon" fixed-width />
+              <IconDocument v-else :type="item.documentType!" fixed-width />
+              {{ item.text }}
+            </NuxtLink>
+          </template>
+        </DropdownButton>
+      </div>
+
+      <div v-if="!authenticated" class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
+        <DropdownButton :items="locales">
+          <template #trigger>
+            {{ locale }}
+          </template>
+          <template #item="{ item }" class="toto">
+            <a
+              :key="item.code"
+              class="w-full block"
+              :class="{ 'bg-[--p-menu-item-focus-background]': item.code === locale }"
+              @click="configureLocale(item.code)">
+              {{ item.name }}
+            </a>
+          </template>
         </DropdownButton>
       </div>
     </div>
@@ -129,16 +113,26 @@
 </template>
 
 <script setup lang="ts">
+import type { MenuItem } from 'primevue/menuitem';
 import { useAuthStore } from '~/store/auth.js';
-import { isUiLang } from '../api/lang.js';
-import type DropdownButton from './DropdownButton.vue';
 
+const config = useRuntimeConfig();
 const { isHomePage } = useHomePage();
-const { isMobile, isTablet, isDesktop } = import.meta.client
+const { isMobile, isTablet, isDesktop, isWidescreen, isFullHD } = import.meta.client
   ? useScreen()
   : { isMobile: ref(false), isTablet: ref(false), isDesktop: ref(false) };
 
 const hideSearchInput = ref(true); // only on small screen
+
+// TODO types Activity
+const addMenuItems: { documentType: string }[] = [
+  { documentType: 'outing' },
+  { documentType: 'route' },
+  { documentType: 'waypoint' },
+  { documentType: 'article' },
+  { documentType: 'book' },
+  { documentType: 'xreport' },
+];
 
 const { logout: logoutUser } = useAuthStore();
 const { authenticated, user } = storeToRefs(useAuthStore());
@@ -155,6 +149,7 @@ function logout() {
   }
 }
 const { t, locale, locales, setLocale } = useI18n();
+const { isUiLang } = useLang();
 
 function configureLocale(lang: string) {
   if (!isUiLang(lang)) {
@@ -166,7 +161,7 @@ function configureLocale(lang: string) {
   }
 }
 
-const userMenuLinks = computed(() =>
+const userMenuItems = computed((): MenuItem[] =>
   user.value
     ? [
         {
@@ -217,14 +212,16 @@ const userMenuLinks = computed(() =>
           text: t('navigation.bookmarks'),
           icon: 'star',
         },
+        { separator: true },
+        {
+          logout: true,
+        },
       ]
     : [],
 );
-
-const userMenu = useTemplateRef<InstanceType<typeof DropdownButton>>('userMenu');
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 nav {
   max-width: 100vw;
   height: $navbar-height;
@@ -246,7 +243,7 @@ nav {
   display: flex;
 }
 
-.navigation-item {
+.flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 {
   display: flex;
   align-items: center;
   line-height: 1.5;
@@ -259,4 +256,4 @@ nav {
     max-width: 100%;
   }
 }
-</style>
+</style> -->

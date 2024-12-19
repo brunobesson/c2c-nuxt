@@ -1,82 +1,10 @@
 <template>
-  <div class="p-5">
-    <div class="columns">
-      <div
-        class="column is-12-mobile"
-        :class="feed ? 'is-7-tablet is-7-desktop is-8-widescreen is-9-fullhd' : 'is-7 is-8-fullhd'">
-        <!-- Association and website introduction -->
-        <div class="box intro">
-          <div class="feed-title has-cursor-pointer">
-            <span class="title is-4" :class="{ 'is-marginless': !banner }">
-              {{ $t('home.intro') }}
-            </span>
-            <Icon
-              class="is-size-6 no-print accordion-icon mt-2"
-              icon="angle-down"
-              :rotation="banner ? 180 : undefined"
-              @click="banner = !banner" />
-          </div>
-          <HomeBanner v-show="banner" />
-        </div>
-        <HomeBoardAnnoucement v-if="isMobile" />
-        <AdDfmSmall v-if="isMobile" />
-        <!-- Switchs -->
-        <div class="field">
-          <span>
-            <label class="toggle-container">
-              <span :class="[feed ? '' : 'is-active']" @click="feed = false">
-                {{ $t('home.activate-dashboard') }}
-              </span>
-              <span :class="[feed ? 'is-active' : '']" @click="feed = true">
-                {{ $t('home.activate-feed') }}
-              </span>
-            </label>
-          </span>
-          <span class="preference-switch">
-            <span v-if="authenticated">
-              <input
-                id="c2c-personal-feed"
-                :class="{ 'switch is-rtl is-rounded': !isMobile }"
-                type="checkbox"
-                v-model="isPersonal"
-                @click="isPersonal = !isPersonal" />
-              <label
-                for="c2c-personal-feed"
-                :title="isPersonal ? $t('home.feed.personal.on') : $t('home.feed.personal.off')">
-                <span>{{ $t('home.activate-preferences') }}</span>
-              </label>
-            </span>
-            <NuxtLink to="preferences" class="has-text-normal" :title="$t('navigation.preferences')">
-              <Icon icon="gears" />
-            </NuxtLink>
-          </span>
-        </div>
-        <!-- Feed/Dashboard -->
-        <div class="feed-view" v-if="feed">
-          <HomeFeed :type="isPersonal && authenticated ? 'personal' : 'default'" hide-empty-documents />
-        </div>
-        <div v-if="!feed">
-          <HomeImagesGallery v-if="!isMobile" />
-          <HomeOutingsList :is-personal="isPersonal ?? false" />
-          <HomeImagesGallery v-if="isMobile" />
-          <HomeRoutesList />
-          <HomeArticlesList v-if="isMobile" />
-          <HomeLinks v-if="isMobile" />
-          <HomeForum :message-count="20" v-if="isMobile" />
-        </div>
-      </div>
-      <div
-        v-if="!isMobile"
-        class="column"
-        :class="feed ? 'is-5-tablet is-5-desktop is-4-widescreen is-3-fullhd' : 'is-5 is-4-fullhd'">
-        <HomeBoardAnnoucement />
-        <AdDfmSmall />
-        <HomeLinks />
-        <HomeForum :message-count="20" />
-        <HomeArticlesList v-if="!feed" />
-      </div>
-    </div>
-  </div>
+  <main>
+    <h1 class="font-bold">Content</h1>
+    <p>Blah blh blh</p>
+    <Button>Toto</Button>
+    <!-- TODO for switching use select button -->
+  </main>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +19,7 @@ const { authenticated } = storeToRefs(useAuthStore());
 const isPersonal = computed(() => authenticated.value && personal);
 </script>
 
-<style lang="scss" scoped>
+<!-- <style lang="scss" scoped>
 @include mixins.mobile {
   .feed-view {
     padding-left: 0;
@@ -185,4 +113,4 @@ const isPersonal = computed(() => authenticated.value && personal);
 .ams-ad {
   margin-bottom: var(--bulma-size-7);
 }
-</style>
+</style> -->

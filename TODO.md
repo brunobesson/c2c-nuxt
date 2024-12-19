@@ -13,7 +13,7 @@
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools
 * API handling
-* auth / middleware
+* auth / middleware => cookie security!
 * i18n
   * extract keys (vue-i18n-extract to custommize in order to save ?)
   * load files from transifex => custom message format (JSON with ICU ?) + problem du . comme séparateur
@@ -30,4 +30,5 @@
 * typescript typechecking when building in CI
 * 404
 * zod / valibot
+* husky
 * What else?

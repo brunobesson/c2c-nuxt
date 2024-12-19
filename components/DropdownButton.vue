@@ -1,38 +1,24 @@
 <template>
-  <div class="dropdown" :class="{ 'is-active': isActive }" ref="root">
-    <div class="dropdown-trigger" @click="isActive = !isActive && !disabled">
-      <span aria-haspopup="true" :aria-controls="'dropdown-menu-' + id">
-        <slot name="trigger" />
-      </span>
-    </div>
-
-    <div :id="'dropdown-menu-' + id" class="dropdown-menu" role="menu">
-      <div class="dropdown-content">
-        <slot />
-      </div>
-    </div>
-  </div>
+  <!-- TODO rename component to dropdownmenu -->
+  <Button type="button" @click="toggle" aria-haspopup="true" aria-controls="'dropdown-menu-' + id" :disabled="disabled">
+    <slot name="trigger" />
+  </Button>
+  <Menu ref="menu" :id="'dropdown-menu-' + id" :popup="true" :model="items" class="mobile:max-w-ful">
+    <template #item="{ item, props }">
+      <slot name="item" :item="item" :props="props" />
+    </template>
+  </Menu>
 </template>
 
 <script lang="ts" setup>
-import { onClickOutside } from '@vueuse/core';
+import type { MenuItem } from 'primevue/menuitem';
 
-defineProps<{ disabled?: boolean }>();
-const isActive = ref(false);
+defineProps<{ items: MenuItem[]; disabled?: boolean }>();
+const menu = useTemplateRef('menu');
+
 const id = useId();
-const el = useTemplateRef('root');
 
-onClickOutside(el, () => {
-  isActive.value = false;
-});
-
-defineExpose({ isActive });
-</script>
-
-<style scoped lang="scss">
-.dropdown-menu {
-  @include mixins.mobile {
-    max-width: 100%;
-  }
+function toggle(event: Event) {
+  menu.value?.toggle(event);
 }
-</style>
+</script>

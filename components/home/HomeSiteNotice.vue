@@ -2,10 +2,12 @@
   <!-- TODO styling -->
   <div
     v-show="hasAnnouncement && !hidden"
-    class="site-notice has-background-info has-text-white no-print"
+    class="site-notice bg-green-700 text-white"
     @click="showContent = !showContent">
-    <div class="p-5 is-info">
-      <button class="delete" @click="hide" />
+    <div class="p-5">
+      <Button variant="text" rounded class="!absolute top-1 right-1 text-xs" @click="hide">
+        <Icon icon="xmark" />
+      </Button>
       <div ref="header" />
       <div v-show="showContent" ref="content" />
     </div>
@@ -14,7 +16,7 @@
 
 <script setup lang="ts">
 import { type Announcement } from '~/api/forum.js';
-import type { ISODateTime } from '~/types/index.js';
+import { type ISODateTime } from '~/types/index.js';
 
 const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
@@ -36,7 +38,7 @@ const { data } = useForumFetch<Announcement>(
 );
 
 watch([data, headerEl], ([announcement]) => {
-  if (!headerEl.value || !announcement || !announcement.tags.includes('visible')) {
+  if (!headerEl.value || !announcement /*|| !announcement.tags.includes('visible')*/) {
     return;
   }
   const lastPost = announcement.post_stream.posts?.[0];

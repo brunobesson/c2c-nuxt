@@ -1,0 +1,8 @@
+@import "./base.css";
+@import "./print.css";
+
+:root {
+  --navbar-height: 3.25rem;
+  --navbarad-height: 90px;
+  --sidemenu-width: 200px;
+}

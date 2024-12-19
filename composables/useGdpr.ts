@@ -13,7 +13,7 @@ export const useGdpr = () => {
     gdpr.value = noChoice;
   }
 
-  const get = () => gdpr.value;
+  const get = () => gdpr;
 
   const set = (newValue: Omit<GdprChoice, 'date'>) => {
     gdpr.value = newValue ? { ...newValue, date: Date.now() } : noChoice;

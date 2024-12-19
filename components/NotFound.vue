@@ -10,38 +10,23 @@
         {{ $t('The page you are looking for does not exist or is broken.') }}
       </p>
       <p>
-        <a href="javascript:history.go(-1)">{{
-          $t('Go to the previous page')
-        }}</a>
-        <span>&nbsp;</span>
+        <!-- prettier-ignore -->
+        <a href="javascript:history.go(-1)">{{ $t('Go to the previous page') }}</a>
         <span>{{ $t('or try the following pages:') }}</span>
       </p>
     </div>
 
     <div class="notfound-buttons">
-      <NuxtLink
-        to="/"
-        class="is-size-4 has-text-normal has-hover-background has-text-weight-bold"
-      >
+      <NuxtLink to="/" class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <Icon icon="home" class="has-text-secondary is-size-1" />
         <div class="is-capitalized">
           {{ $t('home') }}
         </div>
       </NuxtLink>
       <NuxtLink
-        v-for="docType of [
-          'outing',
-          'waypoint',
-          'route',
-          'article',
-          'book',
-          'xreport',
-          'image',
-          'area',
-        ]"
+        v-for="docType of ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area']"
         :to="`/${docType}s`"
-        class="is-size-4 has-text-normal has-hover-background has-text-weight-bold"
-      >
+        class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <IconDocument :type="docType" class="has-text-secondary is-size-1" />
         <div class="is-capitalized">
           {{ $t(docType) }}
@@ -56,16 +41,7 @@
 <script setup lang="ts">
 useSeoMeta({ robots: { noindex: true } });
 
-const button = [
-  'outing',
-  'waypoint',
-  'route',
-  'article',
-  'book',
-  'xreport',
-  'image',
-  'area',
-].map((type) => ({}));
+const button = ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area'].map(type => ({}));
 </script>
 
 <style lang="scss" scoped>

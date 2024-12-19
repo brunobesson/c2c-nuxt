@@ -117,6 +117,7 @@ import {
   faUsers,
   faUserShield,
   faWrench,
+  faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon, FontAwesomeLayers } from '@fortawesome/vue-fontawesome';
 import activity_hiking from '~/assets/font-awesome-custom/activity/hiking.svg?icon';
@@ -350,6 +351,7 @@ library.add(
   faUsers,
   faUserShield,
   faWrench,
+  faXmark,
 
   // regular icons
   faCircle,

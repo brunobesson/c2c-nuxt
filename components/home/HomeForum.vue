@@ -1,10 +1,7 @@
 <template>
   <div class="box">
     <h4 class="title is-3 is-capitalized">
-      <NuxtLink to="forum">
-        <IconForum />&nbsp;
-        {{ $t('forum') }}
-      </NuxtLink>
+      <NuxtLink to="forum"><IconForum /> {{ $t('forum') }}</NuxtLink>
     </h4>
     <div :class="{ wide: wide }">
       <div v-if="status === 'pending'">

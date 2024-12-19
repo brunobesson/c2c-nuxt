@@ -1,35 +1,42 @@
 <template>
-  <div class="no-print">
-    <div class="gdpr-content" :class="{ active: active }">
-      <h4 class="title">{{ $t('gdpr.banner.title') }}</h4>
-      <div class="message has-text-justified">
-        <i18n-t keypath="gdpr.banner.message">
-          <a @click="showGdprModal()">{{ $t('gdpr.banner.configure') }}</a>
-        </i18n-t>
+  <Drawer
+    v-model:visible="visible"
+    position="top"
+    :dismissable="false"
+    :show-close-icon="false"
+    :header="$t('gdpr.banner.title')"
+    class="!h-auto print:hidden tablet:!w-1/2">
+    <i18n-t keypath="gdpr.banner.message">
+      <a href="#" @click="showGdprModal()">{{ $t('gdpr.banner.configure') }}</a>
+    </i18n-t>
+    <template #footer>
+      <div class="flex justify-center gap-2">
+        <Button :label="$t('gdpr.banner.denyall')" severity="danger" @click="acceptGdpr(false)" />
+        <Button :label="$t('gdpr.banner.allowall')" @click="acceptGdpr(true)" />
       </div>
-      <div class="buttons mt-2 is-flex is-justify-content-flex-end">
-        <button @click="acceptGdpr(false)" class="button is-danger">
-          {{ $t('gdpr.banner.denyall') }}
-        </button>
-        <button @click="acceptGdpr(true)" class="button is-primary">
-          {{ $t('gdpr.banner.allowall') }}
-        </button>
-      </div>
-    </div>
-    <GdprModal ref="gdprModal"></GdprModal>
-  </div>
+    </template>
+  </Drawer>
+  <GdprModal ref="gdprModal" @close="visible = false"></GdprModal>
 </template>
 
 <script setup lang="ts">
-import { useGdprStore } from '../../store/gdpr.js';
-import GdprModal from './GdprModal.vue';
+import { useGdprStore } from '~/store/gdpr.js';
+import type GdprModal from './GdprModal.vue';
 
 const userHasInteracted = ref(false);
 const gdprModal = useTemplateRef<InstanceType<typeof GdprModal>>('gdprModal');
 const { get: getGdpr, setAll } = useGdpr();
-const active = computed(() => getGdpr().date === 0 && userHasInteracted);
+const visible = ref(false);
+watch(
+  userHasInteracted,
+  () => {
+    visible.value = getGdpr().value.date === 0 && userHasInteracted.value;
+  },
+  { once: true },
+);
 
 onBeforeMount(() => {
+  // TODO add mouse move ?
   window.addEventListener('scroll', firstUserInteraction);
   window.addEventListener('keydown', firstUserInteraction);
   window.addEventListener('resize', firstUserInteraction);
@@ -57,6 +64,7 @@ const showGdprModal = () => {
 
 const acceptGdpr = (accept: boolean) => {
   setAll(accept);
+  visible.value = false;
 };
 
 const firstUserInteraction = () => {
@@ -68,35 +76,3 @@ const firstUserInteraction = () => {
   userHasInteracted.value = true;
 };
 </script>
-
-<style lang="scss" scoped>
-.gdpr-content {
-  z-index: 30;
-  position: fixed;
-  top: 0;
-  padding: 10px;
-
-  margin: 0 auto;
-  flex-direction: column;
-  display: flex;
-  background-color: white;
-  box-shadow: none;
-  transform: translateY(-100%);
-  transition: transform 0.25s ease-in-out;
-
-  &.active {
-    box-shadow: rgba(0, 0, 0, 0.3) 1px 1px 6px 0;
-    transform: translateY(0);
-  }
-}
-
-@include mixins.desktop {
-  .gdpr-content {
-    width: 50%;
-    left: calc(25% - 10px);
-
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-  }
-}
-</style>

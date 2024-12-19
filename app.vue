@@ -1,5 +1,5 @@
 <template>
-  <div
+  <!--<div
     ref="root"
     id="app"
     :class="{
@@ -19,11 +19,13 @@
       <GdprBanner />
     </ClientOnly>
   </div>
+  -->
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import { useResizeObserver } from '@vueuse/core';
-
 const i18nHead = useLocaleHead();
 useHead(() => ({
   htmlAttrs: {
@@ -32,55 +34,9 @@ useHead(() => ({
   },
 }));
 useSeoMeta({ title: 'Camptocamp.org', ogTitle: 'Camptocamp.org' }); // TODO
-
-const { isMobile, isTablet, isDesktop } = import.meta.client
-  ? useScreen()
-  : { isMobile: ref(true), isTablet: ref(false), isDesktop: ref(false) };
-
-const { isHomePage } = useHomePage();
-
-const root = useTemplateRef('root');
-const { tabletMin, desktopMin, fullhdMin, widescreenMin } = useBulma();
-
-useResizeObserver(root, updateWidth);
-
-onMounted(() => {
-  updateWidth();
-});
-
-function updateWidth() {
-  if (!root.value) {
-    return;
-  }
-  // allows reactive css when body width changes because map is pinned
-  // (unlike the css @media(max-width) this is replacing)
-
-  const width = root.value.offsetWidth;
-  if (width < tabletMin) {
-    root.value.dataset.width = 'mobile';
-  } else if (width < desktopMin) {
-    root.value.dataset.width = 'tablet';
-  } else if (width < widescreenMin) {
-    root.value.dataset.width = 'desktop';
-  } else if (width < fullhdMin) {
-    root.value.dataset.width = 'widescreen';
-  } else {
-    root.value.dataset.width = 'fullhd';
-  }
-}
-
-const route = useRoute();
-
-const alternativeSideMenu = ref(false);
-
-watch(route, hideSideMenuOnMobile);
-
-function hideSideMenuOnMobile() {
-  alternativeSideMenu.value = false;
-}
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 $body-height: calc(100vh - #{$navbar-height});
 
 html {
@@ -243,4 +199,4 @@ body,
     font-size: 12px !important;
   }
 }
-</style>
+</style> -->

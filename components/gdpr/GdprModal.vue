@@ -1,47 +1,32 @@
 <template>
-  <ModalWindow ref="modalWindow">
+  <Dialog v-model:visible="visible" modal class="max-w-[1024px]">
     <template #header>
-      <div class="has-text-centered">
-        <Icon icon="user-shield" />
-        <span>{{ $t('gdpr.modal.header') }}</span>
-      </div>
+      <h1 class="text-center text-xl font-bold grow">
+        <Icon icon="user-shield" /> <span>{{ $t('gdpr.modal.header') }}</span>
+      </h1>
     </template>
 
-    <div class="columns">
-      <div class="column">
-        <div class="is-flex is-justify-content-space-between is-align-items-baseline">
-          <h2 class="is-size-3">{{ $t('gdpr.modal.necessary-cookies') }}</h2>
-          <div class="field">
-            <input type="checkbox" id="necessary" name="necessary" class="switch is-rounded" checked disabled />
-            <label for="necessary"></label>
-          </div>
+    <div class="mobile:grid mobile:grid-cols-2 mobile:gap-2">
+      <div>
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl">{{ $t('gdpr.modal.necessary-cookies') }}</h2>
+          <ToggleSwitch v-model="checked" disabled />
         </div>
         <p>
           {{ $t('gdpr.modal.necessary-cookies-details') }}
         </p>
       </div>
-      <div class="column">
-        <div class="is-flex is-justify-content-space-between is-align-items-baseline">
-          <h2 class="is-size-3">{{ $t('gdpr.modal.statistical-cookies') }}</h2>
-          <div class="field">
-            <input
-              type="checkbox"
-              id="statistics"
-              name="statistics"
-              class="switch is-rounded"
-              v-model="gdpr.statistics" />
-            <label for="statistics"></label>
-          </div>
+      <div>
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl">{{ $t('gdpr.modal.statistical-cookies') }}</h2>
+          <ToggleSwitch v-model="gdpr.statistics" />
         </div>
         <p>
           {{ $t('gdpr.modal.statistical-cookies-details') }}
         </p>
-        <div class="is-flex is-justify-content-space-between is-align-items-baseline">
-          <h2 class="is-size-3">{{ $t('gdpr.modal.social-cookies') }}</h2>
-          <div class="field">
-            <input type="checkbox" id="social" name="social" class="switch is-rounded" v-model="gdpr.social" />
-            <label for="social"></label>
-          </div>
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl">{{ $t('gdpr.modal.social-cookies') }}</h2>
+          <ToggleSwitch v-model="gdpr.social" />
         </div>
         <p>
           {{ $t('gdpr.modal.social-cookies-details') }}
@@ -50,28 +35,26 @@
     </div>
 
     <template #footer>
-      <div class="buttons is-flex is-justify-content-flex-end">
-        <button class="button" @click="hide">{{ $t('cancel') }}</button>
-        <button class="button is-primary" @click="submit">
-          {{ $t('submit') }}
-        </button>
-      </div>
+      <Button severity="secondary" @click="hide">{{ $t('cancel') }}</Button>
+      <Button @click="submit" autofocus>
+        {{ $t('submit') }}
+      </Button>
     </template>
-  </ModalWindow>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
-import ModalWindow from '../modal/ModalWindow.vue';
-
-const modalWindow = useTemplateRef<InstanceType<typeof ModalWindow>>('modalWindow');
+const emit = defineEmits(['close']);
 const { get: getGdpr, set: setGdpr } = useGdpr();
-const gdpr = computed(() => getGdpr() ?? { statistics: false, social: false });
+const gdpr = getGdpr();
+const visible = ref(false);
 const show = () => {
-  modalWindow.value?.show();
+  visible.value = true;
 };
 
 const hide = () => {
-  modalWindow.value?.hide();
+  visible.value = false;
+  emit('close');
 };
 
 const submit = () => {
@@ -80,4 +63,6 @@ const submit = () => {
 };
 
 defineExpose({ show, hide });
+
+const checked = ref(true);
 </script>
