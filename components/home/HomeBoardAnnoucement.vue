@@ -1,7 +1,9 @@
 <template>
-  <div v-show="hasAnnouncement && !hidden" class="publication has-background-info has-text-white no-print">
-    <div class="p-5 is-info">
-      <button class="delete" @click="hide" />
+  <div v-show="hasAnnouncement && !hidden" class="board-publication bg-green-700 text-white print:hidden">
+    <div class="p-6">
+      <Button variant="text" rounded class="!absolute top-1 right-1 text-xs" @click="hide">
+        <Icon icon="xmark" />
+      </Button>
       <div ref="content" />
     </div>
   </div>
@@ -19,10 +21,10 @@ const { data } = useForumFetch<Announcement>('/t/publication-ca.json', { lazy: t
 const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('boardAnnoucement.updatedAt', undefined);
 
 watch([data, contentEl], ([announcement]) => {
-  if (!contentEl.value || !announcement || !announcement.tags.includes('visible')) {
+  if (!contentEl.value || !announcement?.tags.includes('visible')) {
     return;
   }
-  const lastPost = announcement.post_stream.posts?.[announcement.posts_count - 1];
+  const lastPost = announcement.post_stream.posts?.at(-1);
   if (!lastPost) {
     return;
   }
@@ -45,27 +47,19 @@ const hide = () => {
 };
 </script>
 
-<style lang="scss">
-.meta {
-  display: none;
-}
-
-.publication {
+<style lang="css">
+.board-publication {
   position: relative;
-  margin-bottom: var(--bulma-size-7);
-
-  a,
-  a:hover {
-    color: currentColor;
-    text-decoration: underline;
-  }
+  margin-bottom: 0.75rem;
 }
-</style>
 
-<style lang="scss" scoped>
-.delete {
-  position: absolute;
-  top: var(--bulma-size-7);
-  right: var(--bulma-size-7);
+.board-publication a,
+.board-publication a:hover {
+  color: currentColor;
+  text-decoration: underline;
+}
+
+.board-publication .meta {
+  display: none;
 }
 </style>

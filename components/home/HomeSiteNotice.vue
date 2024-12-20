@@ -2,9 +2,9 @@
   <!-- TODO styling -->
   <div
     v-show="hasAnnouncement && !hidden"
-    class="site-notice bg-green-700 text-white"
+    class="site-notice bg-green-700 text-white print:hidden"
     @click="showContent = !showContent">
-    <div class="p-5">
+    <div class="p-6">
       <Button variant="text" rounded class="!absolute top-1 right-1 text-xs" @click="hide">
         <Icon icon="xmark" />
       </Button>
