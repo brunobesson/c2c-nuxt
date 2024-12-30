@@ -1,7 +1,7 @@
 <template>
   <section class="p-5 has-text-centered">
     <!-- TODO <html-header :title="$t('Page not found')" /> -->
-
+    <!-- TODO styling -->
     <div class="content">
       <h1>{{ $t('Ooops') }}</h1>
       <h3>{{ $t('Page not found') }}</h3>
@@ -10,9 +10,8 @@
         {{ $t('The page you are looking for does not exist or is broken.') }}
       </p>
       <p>
-        <!-- prettier-ignore -->
-        <a href="javascript:history.go(-1)">{{ $t('Go to the previous page') }}</a>
-        <span>{{ $t('or try the following pages:') }}</span>
+        <a href="javascript:history.go(-1)">{{ $t('Go to the previous page') }}</a
+        >{{ $t('or try the following pages:') }}
       </p>
     </div>
 

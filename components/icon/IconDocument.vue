@@ -2,11 +2,12 @@
   <Icon v-if="type !== 'outing'" :icon="icon" :fixed-width="fixedWidth" />
   <span class="icon" v-else>
     <ClientOnly>
-      <FaLayers :fixed-width="fixedWidth">
-        <Icon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
-        <Icon icon="cloud" :style="{ color: 'white' }" transform="shrink-3 flip-h left-1 down-3" />
-        <Icon icon="cloud" transform="shrink-5 flip-h left-1 down-3" /> </FaLayers
-    ></ClientOnly>
+      <fa-layers :fixed-width="fixedWidth">
+        <fa-icon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
+        <fa-icon icon="cloud" :style="{ color: 'white' }" transform="shrink-3 flip-h left-1 down-3" />
+        <fa-icon icon="cloud" transform="shrink-5 flip-h left-1 down-3" />
+      </fa-layers>
+    </ClientOnly>
   </span>
 </template>
 
@@ -49,7 +50,7 @@ const icon = computed(() => {
     case 'xreport':
       return 'flag-checkered';
     default:
-      return undefined;
+      return 'notdef';
   }
 });
 </script>

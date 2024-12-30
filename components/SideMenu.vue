@@ -1,15 +1,14 @@
 <template>
-  <!-- TODO replace with drawer? -->
-  <aside class="bg-white shadow-[0_1px_4px_0_rgba(0,0,0,0.2)]">
-    <NuxtLink to="/" class="block text-center">
+  <aside class="bg-white shadow-card">
+    <NuxtLink to="/" class="grid place-content-center">
       <img src="~/assets/img/logo.svg" class="h-[70px] my-[5px]" />
     </NuxtLink>
     <NuxtLink to="/topoguide">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
         :class="{
-          'router-link-active': ['topoguide', 'routes', 'waypoints', 'areas', 'route', 'waypoint', 'area'].some(p =>
-            route.path.startsWith(`/${p}`),
+          '!border-primary font-bold': ['topoguide', 'routes', 'waypoints', 'areas', 'route', 'waypoint', 'area'].some(
+            p => route.path.startsWith(`/${p}`),
           ),
         }">
         <IconTopoguide fixed-width /> <span class="ml-0 capitalize">{{ $t('guidebook') }}</span>
@@ -18,9 +17,9 @@
 
     <NuxtLink to="/outings">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
         :class="{
-          'router-link-active': route.path.startsWith('/outings'),
+          '!border-primary font-bold': route.path.startsWith('/outings'),
         }">
         <IconDocument type="outing" fixed-width /> <span class="ml-0 capitalize">{{ $t('outings') }}</span>
       </span>
@@ -28,26 +27,26 @@
 
     <NuxtLink to="/forum">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green">
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300">
         <IconForum /> <span class="ml-0 capitalize">{{ $t('forum') }}</span>
       </span>
     </NuxtLink>
 
     <NuxtLink to="/serac">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
         :class="{
-          'router-link-active': ['serac', 'xreports'].some(p => route.path.startsWith(`/${p}`)),
+          '!border-primary font-bold': ['serac', 'xreports'].some(p => route.path.startsWith(`/${p}`)),
         }">
-        <IconDocument type="xreport" fixed-width /> <span class="menu-item-text">{{ $t('side-menu.serac') }}</span>
+        <IconDocument type="xreport" fixed-width /> <span class="ml-0 capitalize">{{ $t('side-menu.serac') }}</span>
       </span>
     </NuxtLink>
 
     <NuxtLink to="/articles">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
         :class="{
-          'router-link-active': route.path.startsWith('/articles'),
+          '!border-primary font-bold': route.path.startsWith('/articles'),
         }">
         <IconDocument type="article" fixed-width /> <span class="ml-0 capitalize">{{ $t('articles') }}</span>
       </span>
@@ -55,9 +54,9 @@
 
     <NuxtLink to="/yeti">
       <span
-        class="block py-[6px] px-[10px] border-l-[5px] border-solid border-white text-sky-800 hover:bg-green-600 hover:text-green"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
         :class="{
-          'router-link-active': route.path.startsWith('/yeti'),
+          '!border-primary font-bold': route.path.startsWith('/yeti'),
         }"
         >&nbsp;<IconYeti fixed-width /> <span class="ml-0 capitalize">YETI</span>
       </span>
@@ -66,15 +65,15 @@
     <div class="absolute w-full bottom-0 text-xs">
       <AdFallback class="h-[320p] mx-[20px] mb-[15px]" v-if="hasHeightForAd" />
       <div class="text-center mb-[15px]">
-        <NuxtLink to="/articles/106727">{{ $t('side-menu.contact') }}</NuxtLink>
+        <NuxtLink to="/articles/106727" class="link">{{ $t('side-menu.contact') }}</NuxtLink>
         <span> &bull; </span>
-        <NuxtLink to="/articles/106731">{{ $t('side-menu.EULA') }}</NuxtLink>
+        <NuxtLink to="/articles/106731" class="link">{{ $t('side-menu.EULA') }}</NuxtLink>
         <span> &bull; </span>
-        <NuxtLink to="/articles/106728">{{ $t('side-menu.licenses') }}</NuxtLink>
+        <NuxtLink to="/articles/106728" class="link">{{ $t('side-menu.licenses') }}</NuxtLink>
         <br />
-        <NuxtLink to="/articles/106726">{{ $t('camptocamp-association') }}</NuxtLink>
+        <NuxtLink to="/articles/106726" class="link">{{ $t('camptocamp-association') }}</NuxtLink>
         <span> &bull; </span>
-        <a @click="showGdpr">{{ $t('side-menu.cookies') }}</a>
+        <a @click="showGdpr" class="link">{{ $t('side-menu.cookies') }}</a>
       </div>
 
       <div class="flex justify-evenly mb-[15px] text-center">

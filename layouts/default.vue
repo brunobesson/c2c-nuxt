@@ -10,7 +10,7 @@
       class="fixed w-[--sidemenu-width] h-screen top-0 z-30 transition-[left] duration-300 max-tablet:left-[calc(-1*var(--sidemenu-width))] print:hidden"
       :class="{ '!left-0': alternativeSideMenu }" />
     <Navigation
-      class="fixed top-0 left-0 right-0 z-25 print:hidden"
+      class="fixed top-0 left-0 right-0 z-[25] print:hidden"
       @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu" />
     <AdDfmLarge
       v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
@@ -19,11 +19,11 @@
       class="absolute top-[--navbar-height] w-full z-20 shadow-md tablet:ml-[--sidemenu-width] tablet:w-[calc(100%-var(--sidemenu-width))] print:hidden" />
     <div
       v-if="alternativeSideMenu"
-      class="fixed top-0 left-0 z-29 w-screen h-screen bg-black/20"
+      class="fixed top-0 left-0 z-[28] w-screen h-screen bg-black/20"
       @click="alternativeSideMenu = false" />
 
     <div
-      class="page-content min-h-screen flex flex-col pt-[--navbar-height] tablet:ml-[--sidemenu-width] print:block print:pt-0">
+      class="page-content min-h-screen flex flex-col pt-[--navbar-height] tablet:ml-[--sidemenu-width] bg-body print:block print:pt-0 print:bg-white">
       <slot />
     </div>
 

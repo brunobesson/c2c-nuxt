@@ -1,7 +1,7 @@
 import type { Document } from '~/api/c2c.js';
+import { UI_LANGS, type UiLang } from '~/api/lang.js';
 
 export const useDocument = (document: Document) => {
-  const { locale: currentLocale } = useI18n();
   // TODO
   const documentTitle = (lang: string): string => {
     // profile does not have locale, get profile's name
@@ -9,7 +9,7 @@ export const useDocument = (document: Document) => {
       return document.name ?? '';
     }
 
-    // TODO
+    // TODO typing
     // document object returned by whatsnew does not have locale either
     // but provides title property
     if (!document.locales) {
@@ -27,11 +27,11 @@ export const useDocument = (document: Document) => {
 
   const getLocaleStupid = (lang: string) => {
     if (!document.locales) {
-      return null;
+      return undefined;
     }
 
-    const { apiLang } = useApiLang();
-    const locale = apiLang(lang);
+    const { apiLang } = useLang();
+    const locale = apiLang(lang as UiLang); // TODO
 
     for (const result of document.locales) {
       if (result.lang === locale) {
@@ -39,25 +39,25 @@ export const useDocument = (document: Document) => {
       }
     }
 
-    return null;
+    return undefined;
   };
 
   const getLocaleSmart = (lang: string) => {
     // first of all try to search asked lang
-    let result = lang ? getLocaleStupid(lang) : null;
+    let result = lang ? getLocaleStupid(lang) : undefined;
 
     if (result) {
       return result;
     }
 
-    // else, search user lang
-    result = getLocaleStupid(currentLocale.value);
+    // TODO else, search user lang
+    /* result = getLocaleStupid(currentLocale);
     if (result) {
       return result;
-    }
+    } */
 
     // else try langs by order // TODO langs
-    for (const lang of ['fr', 'en', 'it', 'de', 'es', 'ca', 'eu', 'sl', 'zh']) {
+    for (const lang of UI_LANGS) {
       result = getLocaleStupid(lang);
       if (result) {
         return result;

@@ -75,7 +75,8 @@
     "my-statistics": "Mes statistiques",
     "my-changes": "Mes contributions",
     "followed-users": "Mes amis",
-    "bookmarks": "Mes favoris"
+    "bookmarks": "Mes favoris",
+    "search": "Rechercher…"
   },
   "login": "Se connecter",
   "logout": "Me déconnecter",

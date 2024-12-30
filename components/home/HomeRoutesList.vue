@@ -1,1 +1,1 @@
-<template><div class="box">TODO routes list</div></template>
+<template><Box>TODO routes list</Box></template>

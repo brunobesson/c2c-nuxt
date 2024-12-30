@@ -3,6 +3,7 @@
 </template>
 
 <script setup lang="ts">
+import type { UiLang } from '../api/lang.js';
 import { requiredDocumentProps } from '../props/required-document.js';
 
 const { document } = defineProps({
@@ -12,5 +13,5 @@ const { document } = defineProps({
 
 const { documentTitle } = useDocument(document);
 const { params } = useRoute();
-const title = computed(() => documentTitle(params.lang as string));
+const title = computed(() => documentTitle(params.lang as UiLang));
 </script>

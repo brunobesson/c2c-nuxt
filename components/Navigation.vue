@@ -8,7 +8,7 @@
       class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3"
       :class="{ 'max-mobile:hidden': !hideSearchInput }"
       @click="$emit('toggleSideMenu')">
-      <Button>
+      <Button severity="secondary" variant="outlined">
         <Icon icon="bars" />
       </Button>
     </span>
@@ -39,7 +39,7 @@
         <InputText
           :placeholder="$t('navigation.search')"
           :class="{ 'max-mobile:hidden': hideSearchInput }"
-          class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 w-[160px] widescreen:w-[250px] widescreen:mr-[50px] widescreen:hover:w-[300px] widescreen:hover:mr-0 widescreen:transition-[width,margin-right] widescreen:duration-500" />
+          class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 w-[160px] widescreen:w-[250px] widescreen:mr-[50px] widescreen:hover:w-[300px] widescreen:hover:mr-0 widescreen:!transition-[width,margin-right] widescreen:!duration-500" />
       </div>
 
       <div class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
@@ -47,9 +47,11 @@
       </div>
 
       <div class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
-        <DropdownButton :items="addMenuItems">
+        <DropdownMenu :items="addMenuItems">
           <template #trigger>
-            <Icon icon="plus" />
+            <Button type="button" severity="success">
+              <Icon icon="plus" />
+            </Button>
           </template>
           <template #item="{ item }">
             <LinkAdd :document-type="item.documentType" class="text-ellipsis">
@@ -57,7 +59,7 @@
               <span>TODO</span>
             </LinkAdd>
           </template>
-        </DropdownButton>
+        </DropdownMenu>
       </div>
 
       <div v-if="!authenticated" class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
@@ -67,16 +69,18 @@
       </div>
 
       <div v-else class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
-        <DropdownButton :items="userMenuItems">
+        <DropdownMenu :items="userMenuItems">
           <template #trigger>
-            <!-- display: inline -->
-            <NuxtImg
-              width="24"
-              height="24"
-              :src="`${config.public.forumBase}/user_avatar/forum.camptocamp.org/${user?.forumUsername}/24/1_1.png`" />&nbsp;<span
-              class="font-bold max-mobile:hidden">
-              {{ user?.name }}
-            </span>
+            <Button type="button" severity="secondary" variant="outlined">
+              <!-- display: inline -->
+              <NuxtImg
+                width="24"
+                height="24"
+                :src="`${config.public.forumBase}/user_avatar/forum.camptocamp.org/${user?.forumUsername}/24/1_1.png`" />&nbsp;<span
+                class="font-bold max-mobile:hidden">
+                {{ user?.name }}
+              </span>
+            </Button>
           </template>
           <template #item="{ item }">
             <a v-if="item.logout" @click="logout()">
@@ -89,13 +93,15 @@
               {{ item.text }}
             </NuxtLink>
           </template>
-        </DropdownButton>
+        </DropdownMenu>
       </div>
 
       <div v-if="!authenticated" class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3">
-        <DropdownButton :items="locales">
+        <DropdownMenu :items="locales">
           <template #trigger>
-            {{ locale }}
+            <Button type="button" severity="secondary" variant="outlined">
+              {{ locale }}
+            </Button>
           </template>
           <template #item="{ item }" class="toto">
             <a
@@ -106,7 +112,7 @@
               {{ item.name }}
             </a>
           </template>
-        </DropdownButton>
+        </DropdownMenu>
       </div>
     </div>
   </nav>
@@ -149,13 +155,15 @@ function logout() {
   }
 }
 const { t, locale, locales, setLocale } = useI18n();
-const { isUiLang } = useLang();
+const { isUiLang, setPrimeUiLang } = useLang();
 
 function configureLocale(lang: string) {
   if (!isUiLang(lang)) {
     return; // should not happen
   }
   setLocale(lang);
+  setPrimeUiLang(lang);
+
   if (authenticated) {
     useNuxtApp().$c2cFetch('/users/update_preferred_language', { method: 'POST', body: { lang } });
   }
@@ -220,40 +228,3 @@ const userMenuItems = computed((): MenuItem[] =>
     : [],
 );
 </script>
-
-<!-- <style lang="scss">
-nav {
-  max-width: 100vw;
-  height: $navbar-height;
-  background-color: var(--bulma-white);
-  box-shadow: 0 2px 0 $color-base-c2c;
-  display: flex;
-}
-
-.navigation-brand {
-  padding: 4px 5px !important;
-  img {
-    height: calc(#{$navbar-height} - 8px);
-  }
-}
-
-.navigation-end {
-  justify-content: flex-end;
-  margin-left: auto;
-  display: flex;
-}
-
-.flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 {
-  display: flex;
-  align-items: center;
-  line-height: 1.5;
-}
-
-@include mixins.mobile {
-  .add-button .dropdown-content {
-    position: fixed;
-    right: 0;
-    max-width: 100%;
-  }
-}
-</style> -->

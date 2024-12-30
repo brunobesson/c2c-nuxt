@@ -1,42 +1,86 @@
 <template>
-  <main class="p-5">
-    <HomeBanner />
-    <ClientOnly>
-      <HomeBoardAnnoucement v-if="isMobile" />
-      <AdDfmSmall v-if="isMobile" />
-    </ClientOnly>
-    <div class="flex items-center">
-      <SelectButton
-        v-model="config.feed"
-        :options="feedOptions"
-        :optionLabel="option => $t(option.text)"
-        :optionValue="option => option.value" />
-      <span class="grow flex justify-end items-center gap-2">
-        <span v-if="authenticated" class="flex items-center gap-1">
-          <label
-            for="c2c-personal-feed"
-            :title="isPersonal ? $t('home.feed.personal.on') : $t('home.feed.personal.off')">
-            {{ $t('home.activate-preferences') }}
-          </label>
-          <ToggleSwitch v-model="config.personal" id="c2c-personal-feed" />
-        </span>
-        <NuxtLink to="preferences" class="has-text-normal" :title="$t('navigation.preferences')">
-          <Icon icon="gears" />
-        </NuxtLink>
-      </span>
+  <main class="home-layout" :class="{ feed: config.feed }">
+    <div class="flex flex-col gap-5">
+      <HomeBanner class="order-1" />
+      <!-- TODO fallback + deffered from prime? -->
+      <ClientOnly v-if="isMobile">
+        <HomeBoardAnnoucement class="order-2" />
+      </ClientOnly>
+      <ClientOnly v-if="isMobile">
+        <AdDfmSmall class="order-3" />
+      </ClientOnly>
+      <ClientOnly>
+        <div class="flex items-center order-4">
+          <SelectButton
+            v-model="config.feed"
+            :options="feedOptions"
+            :optionLabel="option => $t(option.text)"
+            :optionValue="option => option.value"
+            :pt="{
+              root: {
+                class: 'border border-primary rounded-full',
+              },
+              pcToggleButton: {
+                root: {
+                  class:
+                    '!rounded-full !rounded-s-full bg-transparent border-none before:shadow-none before:!rounded-full before:[&.p-togglebutton-checked]:bg-primary [&.p-togglebutton-checked]:text-white',
+                },
+              },
+            }" />
+          <span class="grow flex justify-end items-center gap-2">
+            <span v-if="authenticated" class="flex items-center gap-1">
+              <label
+                for="c2c-personal-feed"
+                :title="isPersonal ? $t('home.feed.personal.on') : $t('home.feed.personal.off')">
+                {{ $t('home.activate-preferences') }}
+              </label>
+              <ToggleSwitch v-model="config.personal" id="c2c-personal-feed" />
+            </span>
+            <NuxtLink to="preferences" class="has-text-normal" :title="$t('navigation.preferences')">
+              <Icon icon="gears" />
+            </NuxtLink>
+          </span>
+        </div>
+      </ClientOnly>
+      <ClientOnly v-if="config.feed">
+        <HomeFeed class="order-5" />
+      </ClientOnly>
+      <ClientOnly>
+        <HomeOutingsList v-if="!config.feed" :is-personal="isPersonal" class="order-6" />
+      </ClientOnly>
+      <ClientOnly v-if="!config.feed">
+        <HomeImagesGallery class="order-7 mobile:order-5" />
+      </ClientOnly>
+      <ClientOnly v-if="!config.feed">
+        <HomeRoutesList class="order-8" />
+      </ClientOnly>
+      <ClientOnly v-if="!config.feed && isMobile">
+        <HomeArticlesList class="order-8" />
+      </ClientOnly>
+      <ClientOnly v-if="!config.feed && isMobile">
+        <HomeLinks class="order-9" />
+      </ClientOnly>
+      <ClientOnly v-if="!config.feed && isMobile">
+        <HomeForum :message-count="20" class="order-10" />
+      </ClientOnly>
     </div>
-    <HomeFeed v-if="config.feed" />
-    <template v-else>
-      <!-- TODO clientonly ? -->
-      <HomeImagesGallery v-if="!isMobile" />
-      <HomeOutingsList :is-personal="isPersonal" />
-      <!-- TODO could use order to have a single one-->
-      <HomeImagesGallery v-if="isMobile" />
-      <HomeRoutesList />
-      <HomeArticlesList v-if="isMobile" />
-      <HomeLinks v-if="isMobile" />
-      <HomeForum :message-count="20" v-if="isMobile" />
-    </template>
+    <div v-if="!isMobile" class="flex flex-col gap-5">
+      <ClientOnly>
+        <HomeBoardAnnoucement />
+      </ClientOnly>
+      <ClientOnly>
+        <AdDfmSmall />
+      </ClientOnly>
+      <ClientOnly>
+        <HomeLinks />
+      </ClientOnly>
+      <ClientOnly>
+        <HomeForum :message-count="20" />
+      </ClientOnly>
+      <ClientOnly>
+        <HomeArticlesList />
+      </ClientOnly>
+    </div>
   </main>
 </template>
 

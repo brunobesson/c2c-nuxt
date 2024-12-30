@@ -1,1 +1,1 @@
-<template><div class="box">TODO Images gallery</div></template>
+<template><Box>TODO Images gallery</Box></template>

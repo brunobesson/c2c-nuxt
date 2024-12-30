@@ -9,8 +9,10 @@
       <slot />
     </template>
     <template #footer v-if="$slots.more">
-      <div class="flex items-center justify-center border-t-2">
-        <slot name="more" />
+      <div class="flex items-center justify-center border-t">
+        <div class="pt-3 font-medium">
+          <slot name="more" />
+        </div>
       </div>
     </template>
   </Card>

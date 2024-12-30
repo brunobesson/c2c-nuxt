@@ -3,83 +3,78 @@
   <Box>
     <Accordion v-model:value="panelValue">
       <AccordionPanel value="intro" class="!border-none">
-        <AccordionHeader>{{ $t('home.intro') }}</AccordionHeader>
+        <AccordionHeader class="!text-xl">{{ $t('home.intro') }}</AccordionHeader>
         <AccordionContent>
-          <div class="columns">
-            <div class="column is-12-mobile">
-              <div class="subtitle">
-                {{ $t('home.banner.title') }}
-              </div>
-              <div class="columns">
-                <div class="column is-12-mobile">
-                  <div>
-                    <p>{{ $t('home.banner.available') }}</p>
-                    <ul>
-                      <li>
-                        <IconDocument type="route" fixed-width />
-                        <NuxtLink to="routes">{{ $t('home.banner.routes') }}</NuxtLink>
-                      </li>
-                      <li>
-                        <IconDocument type="outing" fixed-width />
-                        <NuxtLink to="outings">
-                          {{ $t('home.banner.outings') }}
-                        </NuxtLink>
-                      </li>
-                      <li>
-                        <IconDocument type="xreport" fixed-width />
-                        {{ $t('home.banner.xreports') }}
-                        <NuxtLink to="serac">SERAC</NuxtLink>
-                      </li>
-                      <li>
-                        <IconYeti fixed-width />
-                        {{ $t('home.banner.yeti') }}
-                        <NuxtLink to="yeti">YETI</NuxtLink>
-                      </li>
-                      <li class="with-circle">
-                        <i18n-t keypath="home.banner.library">
-                          <template v-slot:articles>
-                            <IconDocument type="article" />
-                            <NuxtLink to="articles">{{ $t('articles') }}</NuxtLink>
-                          </template>
-                          <template v-slot:books>
-                            <IconDocument type="book" />
-                            <NuxtLink to="books">{{ $t('books') }}</NuxtLink>
-                          </template>
-                        </i18n-t>
-                      </li>
-                      <li>
-                        <IconForum />
-                        <NuxtLink to="forum">
-                          {{ $t('home.banner.forum') }}
-                        </NuxtLink>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="column is-12-mobile">
-                  <i18n-t keypath="home.banner.camptocamp" tag="p">
-                    <NuxtLink to="/articles/106726">
-                      {{ $t('camptocamp-association') }}
+          <div class="text-lg">
+            {{ $t('home.banner.title') }}
+          </div>
+          <div class="mobile:grid mobile:grid-cols-2 mobile:gap-4">
+            <div>
+              <div>
+                <p>{{ $t('home.banner.available') }}</p>
+                <ul>
+                  <li>
+                    <IconDocument type="route" fixed-width />&nbsp;<NuxtLink to="routes" class="link">{{
+                      $t('home.banner.routes')
+                    }}</NuxtLink>
+                  </li>
+                  <li>
+                    <IconDocument type="outing" fixed-width />&nbsp;<NuxtLink to="outings" class="link">
+                      {{ $t('home.banner.outings') }}
                     </NuxtLink>
-                  </i18n-t>
-                  <NuxtLink to="/articles/106726" class="menu-brand has-text-centered">
-                    <img src="@/assets/img/logo_asso.svg" alt="Camptocamp Association" class="logo-association" />
-                  </NuxtLink>
-                  <ul>
-                    <li>
-                      <a href="https://www.helloasso.com/associations/camptocamp-association">
-                        {{ $t('home.banner.join') }}
-                      </a>
-                    </li>
-                    <li>
-                      <Icon icon="heart" class="donate-icon" />
-                      <a href="https://www.helloasso.com/associations/camptocamp-association">
-                        {{ $t('home.banner.donate') }}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                  </li>
+                  <li>
+                    <IconDocument type="xreport" fixed-width />
+                    {{ $t('home.banner.xreports') }}
+                    <NuxtLink to="serac" class="link">SERAC</NuxtLink>
+                  </li>
+                  <li>
+                    <IconYeti fixed-width />
+                    {{ $t('home.banner.yeti') }}
+                    <NuxtLink to="yeti" class="link">YETI</NuxtLink>
+                  </li>
+                  <li class="list-disc ml-6">
+                    <i18n-t keypath="home.banner.library">
+                      <template v-slot:articles>
+                        <IconDocument type="article" />&nbsp;<NuxtLink to="articles" class="link">{{
+                          $t('articles')
+                        }}</NuxtLink>
+                      </template>
+                      <template v-slot:books>
+                        <IconDocument type="book" />&nbsp;<NuxtLink to="books" class="link">{{ $t('books') }}</NuxtLink>
+                      </template>
+                    </i18n-t>
+                  </li>
+                  <li>
+                    <IconForum />&nbsp;<NuxtLink to="forum" class="link">
+                      {{ $t('home.banner.forum') }}
+                    </NuxtLink>
+                  </li>
+                </ul>
               </div>
+            </div>
+            <div>
+              <i18n-t keypath="home.banner.camptocamp" tag="p">
+                <NuxtLink to="/articles/106726" class="link">
+                  {{ $t('camptocamp-association') }}
+                </NuxtLink>
+              </i18n-t>
+              <NuxtLink to="/articles/106726" class="menu-brand has-text-centered">
+                <img src="@/assets/img/logo_asso.svg" alt="Camptocamp Association" class="max-w-[35%] mx-auto" />
+              </NuxtLink>
+              <ul>
+                <li>
+                  <a href="https://www.helloasso.com/associations/camptocamp-association" class="link">
+                    {{ $t('home.banner.join') }}
+                  </a>
+                </li>
+                <li>
+                  <Icon icon="heart" class="donate-icon" />&nbsp;
+                  <a href="https://www.helloasso.com/associations/camptocamp-association" class="link">
+                    {{ $t('home.banner.donate') }}
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
         </AccordionContent>

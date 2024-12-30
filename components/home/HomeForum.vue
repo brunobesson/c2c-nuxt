@@ -1,12 +1,12 @@
 <template>
-  <div class="box">
-    <h4 class="title is-3 is-capitalized">
+  <Box>
+    <template #title>
       <NuxtLink to="forum"><IconForum /> {{ $t('forum') }}</NuxtLink>
-    </h4>
-    <div :class="{ wide: wide }">
+    </template>
+    <div>
       <div v-if="status === 'pending'">
         <div class="skeleton" v-for="row in messageCount" :key="row">
-          <button class="delete is-skeleton forum-row" :class="{ 'is-medium': wide }"></button>
+          <button class="delete is-skeleton forum-row"></button>
           <div class="skeleton-lines">
             <div></div>
             <div></div>
@@ -18,32 +18,34 @@
         {{ error?.message }}
       </div>
       <div v-else="topics">
-        <NuxtLink
-          class="forum-row"
-          v-for="topic of topics"
-          :key="topic.id"
-          :href="getTopicUrl(topic)"
-          target="_blank"
-          rel="noopener"
-          :title="topic.last_poster_username">
-          <NuxtImg
-            :src="getAvatarUrl(topic.last_poster_avatar_template)"
-            :style="'width:' + imgSize + 'px'"
-            loading="lazy"
-            alt="Avatar" />
-          <span :class="{ 'is-ellipsed': !wide }">
-            {{ topic.title }}
-          </span>
-        </NuxtLink>
+        <ul>
+          <li v-for="topic of topics" :key="topic.id">
+            <!-- TODO ellipsis not working because  whitespace-nowrap overflow-hidden does no respect fractioning -->
+            <NuxtLink
+              class="flex gap-1 pb-1 w-full hover:bg-gray-100"
+              :href="getTopicUrl(topic)"
+              target="_blank"
+              rel="noopener"
+              :title="topic.last_poster_username">
+              <NuxtImg
+                :src="getAvatarUrl(topic.last_poster_avatar_template)"
+                class="rounded-full align-top h-full shrink-0 w-[20px]"
+                loading="lazy"
+                alt="Avatar" />
+              <span class="align-top whitespace-nowrap overflow-hidden text-ellipsis">
+                {{ topic.title }}
+              </span>
+            </NuxtLink>
+          </li>
+        </ul>
       </div>
     </div>
-    <hr />
-    <h6 class="title is-6 has-text-centered">
+    <template #more>
       <NuxtLink to="forum">
         {{ $t('more') }}
       </NuxtLink>
-    </h6>
-  </div>
+    </template>
+  </Box>
 </template>
 
 <script setup lang="ts">
@@ -132,10 +134,7 @@ const { data, status, error } = useForumFetch(`/latest.json`, {
   server: false,
 } as UseFetchOptions<any>); // TODO
 
-const { wide = false, messageCount = -1 } = defineProps<{
-  wide?: boolean;
-  messageCount?: number;
-}>();
+const { messageCount = -1 } = defineProps<{ messageCount?: number }>();
 
 const topics = computed(() => {
   if (messageCount > 0 && data.value) {
@@ -144,74 +143,12 @@ const topics = computed(() => {
   return data.value;
 });
 
-const imgSize = computed(() => (wide ? 24 : 20));
-
 const getAvatarUrl = (avatarTemplate: string) => {
   const template = avatarTemplate.startsWith('/') ? config.public.forumBase + avatarTemplate : avatarTemplate;
-  return template.replace('{size}', imgSize.value.toString());
+  return template.replace('{size}', '20');
 };
 
 const getTopicUrl = (topic: Topic) => {
   return `${config.public.forumBase}/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`;
 };
 </script>
-
-<style scoped lang="scss">
-.forum-row {
-  display: flex;
-  color: $color-text;
-  padding-bottom: 0.2rem;
-
-  img {
-    border-radius: 50%;
-    vertical-align: top;
-    height: 100%;
-    flex-shrink: 0;
-  }
-
-  span {
-    vertical-align: top;
-  }
-}
-
-.forum-row:hover {
-  background: var(--bulma-background);
-}
-
-.wide {
-  .forum-row {
-    padding: 1rem;
-    border-bottom: 1px solid #eee;
-
-    img {
-      margin-right: 0.5rem;
-    }
-  }
-}
-
-:not(.wide) {
-  span {
-    padding-left: 0.5rem;
-  }
-}
-
-h4 > a,
-h6 > a {
-  color: $color-text !important;
-}
-
-h4 > a:hover,
-h6 > a:hover {
-  color: $color-link !important;
-}
-
-.skeleton {
-  display: flex;
-  gap: 0.5rem;
-  padding-bottom: 1rem;
-
-  & > div {
-    flex-grow: 1;
-  }
-}
-</style>

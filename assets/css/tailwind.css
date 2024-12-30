@@ -3,14 +3,30 @@
 @import "./primevue/tailwind.css";
 @import "tailwindcss/utilities";
 
-@layer base {
-  a {
-    @apply cursor-pointer text-blue-500 hover:text-neutral-700;
-  }
+html {
+  @apply text-[87.5%] text-[--p-text-color]; /* ensure base font of 14px instead of 16px */
 }
 
-@layer components {
-  .p-toggleswitch.p-disabled.p-toggleswitch-checked .p-toggleswitch-slider {
-    @apply opacity-70 !bg-primary;
+@layer utilities {
+  .direction-rtl {
+    direction: rtl;
+  }
+
+  .link {
+    @apply cursor-pointer text-blue-700 hover:text-[--p-text-hover-color];
+  }
+
+  .home-layout {
+    @apply flex flex-col gap-4 p-5 mobile:grid mobile:grid-cols-[7fr_5fr] widescreen:grid-cols-[8fr_4fr];
+  }
+
+  .home-layout.feed {
+    @apply desktop:grid-cols-[8fr_4fr] widescreen:grid-cols-[9fr_3fr];
+  }
+
+  .home-layout div:first-child {
+  }
+
+  .home-layout div:last-child {
   }
 }

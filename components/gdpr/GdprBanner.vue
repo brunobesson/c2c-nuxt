@@ -6,7 +6,8 @@
     :show-close-icon="false"
     :header="$t('gdpr.banner.title')"
     class="!h-auto print:hidden tablet:!w-1/2">
-    <i18n-t keypath="gdpr.banner.message">
+    <i18n-t keypath="gdpr.banner.message" class="prose">
+      <!-- TODO style -->
       <a href="#" @click="showGdprModal()">{{ $t('gdpr.banner.configure') }}</a>
     </i18n-t>
     <template #footer>

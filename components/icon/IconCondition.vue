@@ -6,7 +6,7 @@
 defineProps<{ condition?: string }>();
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="css">
 .icon-condition-excellent {
   color: green;
 }

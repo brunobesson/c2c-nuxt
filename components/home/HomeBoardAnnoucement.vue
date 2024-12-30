@@ -1,7 +1,7 @@
 <template>
-  <div v-show="hasAnnouncement && !hidden" class="board-publication bg-green-700 text-white print:hidden">
+  <div v-show="hasAnnouncement && !hidden" class="relative bg-secondary-500 text-white print:hidden">
     <div class="p-6">
-      <Button variant="text" rounded class="!absolute top-1 right-1 text-xs" @click="hide">
+      <Button rounded severity="secondary" size="small" class="!absolute top-1 right-1" @click="hide">
         <Icon icon="xmark" />
       </Button>
       <div ref="content" />
@@ -47,19 +47,18 @@ const hide = () => {
 };
 </script>
 
-<style lang="css">
-.board-publication {
-  position: relative;
-  margin-bottom: 0.75rem;
+<style scoped lang="css">
+:deep(strong) {
+  color: var(--p-text-color);
 }
 
-.board-publication a,
-.board-publication a:hover {
-  color: currentColor;
+:deep(a),
+:deep(a:hover) {
+  color: var(--p-text-color);
   text-decoration: underline;
 }
 
-.board-publication .meta {
+:deep(.meta) {
   display: none;
 }
 </style>

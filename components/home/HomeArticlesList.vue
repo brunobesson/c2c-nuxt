@@ -1,1 +1,1 @@
-<template><div class="box">TODO Articles list</div></template>
+<template><Box>TODO Articles list</Box></template>

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import type { UiLang } from '~/api/lang.js';
 
-export const useDate = () => {
+export const useDate = (lang: Ref<UiLang>) => {
   const locales = {
     // TODO factorize
     ca: 'ca',
@@ -15,7 +16,6 @@ export const useDate = () => {
     en: 'en-gb',
   };
 
-  const { locale: lang } = useI18n();
   const locale = computed(() => locales[lang.value]);
 
   const longOutingDateFormat = computed(() => {
@@ -44,8 +44,7 @@ export const useDate = () => {
     }
   });
 
-  const longOutingDate = (date: string) =>
-    dayjs(date).locale(locale.value).format(longOutingDateFormat.value);
+  const longOutingDate = (date: string) => dayjs(date).locale(locale.value).format(longOutingDateFormat.value);
 
   return {
     longOutingDate,

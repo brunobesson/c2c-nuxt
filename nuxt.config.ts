@@ -1,6 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
-import Aura from '@primevue/themes/aura';
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
 
@@ -41,9 +38,7 @@ export default defineNuxtConfig({
 
   primevue: {
     options: {
-      theme: {
-        preset: Aura,
-      },
+      theme: 'none',
     },
   },
 

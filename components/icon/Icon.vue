@@ -1,6 +1,6 @@
 <template>
   <span class="icon">
-    <FaIcon :icon="icon" :transform="transform" :mask="mask" :fixed-width="fixedWidth" />
+    <fa-icon :icon="icon" :transform="transform" :mask="mask" :fixed-width="fixedWidth" />
   </span>
 </template>
 

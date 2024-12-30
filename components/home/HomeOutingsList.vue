@@ -1,6 +1,6 @@
 <template>
-  <div class="box">
-    <h4 class="title is-3 is-capitalized">
+  <Box>
+    <template #title>
       <NuxtLink
         :to="{
           path: '/outings',
@@ -10,27 +10,30 @@
             limit: 100,
           },
         }"
-        class="is-capitalized">
+        class="capitalize">
         <IconDocument type="outing" />
         {{ $t('outings') }}
       </NuxtLink>
-    </h4>
+    </template>
     <div v-if="outingsByDate">
       <!-- TODO skeleton -->
-      <div v-for="(sortedOutings, date) of outingsByDate" :key="date">
-        <p class="outing-date-header is-4 is-italic has-text-weight-bold">
-          <NuxtLink :to="{ path: '/outings', query: { date: `${date},${date}` } }" class="is-capitlized">
+      <ul>
+        <li v-for="(sortedOutings, date) of outingsByDate" :key="date">
+          <NuxtLink
+            :to="{ path: '/outings', query: { date: `${date},${date}` } }"
+            class="block mt-4 mb-3 border-b-2 border-primary font-semibold italic text-lg capitalize">
             <!-- TODO -->
             {{ longOutingDate(date + '') }}
           </NuxtLink>
-        </p>
-        <div class="dashboard-list">
-          <HomeOutingLink v-for="outing of sortedOutings" :key="outing.document_id" :outing="outing" />
-        </div>
-      </div>
+          <ul>
+            <li v-for="outing of sortedOutings" :key="outing.document_id" class="[&:nth-child(even)]:bg-gray-50">
+              <HomeOutingLink :outing="outing" />
+            </li>
+          </ul>
+        </li>
+      </ul>
     </div>
-    <hr />
-    <h6 class="title is-6 has-text-centered">
+    <template #more>
       <NuxtLink
         :to="{
           path: '/outings',
@@ -43,8 +46,8 @@
         }">
         {{ $t('more') }}
       </NuxtLink>
-    </h6>
-  </div>
+    </template>
+  </Box>
 </template>
 
 <script setup lang="ts">
@@ -55,7 +58,8 @@ const { $c2cFetch } = useNuxtApp();
 
 const { isPersonal } = defineProps<{ isPersonal: boolean }>();
 
-const { longOutingDate } = useDate();
+const { locale } = useI18n();
+const { longOutingDate } = useDate(locale);
 
 const { data: userPrefs } = await useAsyncData<UserPreferences | null>('user.preferences', async () => {
   if (!isPersonal) {

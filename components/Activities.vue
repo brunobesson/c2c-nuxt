@@ -24,11 +24,11 @@ const { activities } = defineProps({
 const sortedActivities = computed(() => activities.slice(0).sort());
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="css">
 @media print {
   /* write the activity's title instead of the icon */
   .replace-icon-by-names-on-print {
-    color: bulma.$text !important;
+    color: var(--p-text-color) !important;
   }
 
   .replace-icon-by-names-on-print:not(:last-child):after {

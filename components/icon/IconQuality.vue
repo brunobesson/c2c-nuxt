@@ -1,5 +1,5 @@
 <template>
-  <FaIcon :icon="['quality', quality]" :fixed-width="fixedWidth" />
+  <fa-icon :icon="['quality', quality]" :fixed-width="fixedWidth" />
 </template>
 
 <script setup lang="ts">

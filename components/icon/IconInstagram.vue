@@ -1,6 +1,5 @@
 <template>
   <span>
-    <!-- TODO -->
     <!-- hack to be able to apply gradient on font awesome 5 icons: https://stackoverflow.com/questions/47800574/gradient-over-instagram-svg-of-fontawesome-5 -->
     <svg width="0" height="0">
       <radialGradient id="rg" r="150%" cx="30%" cy="107%">
@@ -15,7 +14,7 @@
   </span>
 </template>
 
-<style lang="scss" scoped>
+<style lang="css" scoped>
 .instagram-icon * {
   fill: url(#rg);
 }

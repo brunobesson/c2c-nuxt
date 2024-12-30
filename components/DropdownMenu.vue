@@ -1,9 +1,8 @@
 <template>
-  <!-- TODO rename component to dropdownmenu -->
-  <Button type="button" @click="toggle" aria-haspopup="true" aria-controls="'dropdown-menu-' + id" :disabled="disabled">
+  <div @click="toggle" aria-haspopup="true" aria-controls="'dropdown-menu-' + id">
     <slot name="trigger" />
-  </Button>
-  <Menu ref="menu" :id="'dropdown-menu-' + id" :popup="true" :model="items" class="mobile:max-w-ful">
+  </div>
+  <Menu ref="menu" :id="'dropdown-menu-' + id" :popup="true" :model="items" class="mobile:max-w-full">
     <template #item="{ item, props }">
       <slot name="item" :item="item" :props="props" />
     </template>
@@ -13,7 +12,7 @@
 <script lang="ts" setup>
 import type { MenuItem } from 'primevue/menuitem';
 
-defineProps<{ items: MenuItem[]; disabled?: boolean }>();
+defineProps<{ items: MenuItem[] }>();
 const menu = useTemplateRef('menu');
 
 const id = useId();

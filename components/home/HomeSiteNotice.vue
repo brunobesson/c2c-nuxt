@@ -2,10 +2,10 @@
   <!-- TODO styling -->
   <div
     v-show="hasAnnouncement && !hidden"
-    class="site-notice bg-green-700 text-white print:hidden"
+    class="relative bg-secondary-500 text-white print:hidden"
     @click="showContent = !showContent">
     <div class="p-6">
-      <Button variant="text" rounded class="!absolute top-1 right-1 text-xs" @click="hide">
+      <Button rounded severity="secondary" size="small" class="!absolute top-1 right-1" @click="hide">
         <Icon icon="xmark" />
       </Button>
       <div ref="header" />
@@ -67,3 +67,11 @@ const hide = () => {
   lastAnnoucementRead.value = updatedAt.value;
 };
 </script>
+
+<style scoped lang="css">
+:deep(a),
+:deep(a:hover) {
+  color: var(--p-text-color);
+  text-decoration: underline;
+}
+</style>
