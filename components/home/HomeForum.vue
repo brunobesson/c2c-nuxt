@@ -1,44 +1,39 @@
 <template>
   <Box>
     <template #title>
-      <NuxtLink to="forum"><IconForum /> {{ $t('forum') }}</NuxtLink>
+      <NuxtLink to="forum"><IconForum /> {{ capitalize($t('forum')) }}</NuxtLink>
     </template>
     <div>
-      <div v-if="status === 'pending'">
-        <div class="skeleton" v-for="row in messageCount" :key="row">
-          <button class="delete is-skeleton forum-row"></button>
-          <div class="skeleton-lines">
-            <div></div>
-            <div></div>
+      <LoadDataError v-if="status === 'error'" />
+      <ul>
+        <li
+          v-if="status === 'pending'"
+          v-for="n in messageCount"
+          class="flex gap-1 items-center w-full mb-2 print:hidden">
+          <Skeleton shape="circle" size="20px" class="shrink-0" />
+          <div class="flex flex-col gap-1 w-full">
+            <Skeleton class="w-full" />
           </div>
-        </div>
-      </div>
-      <div v-else-if="status === 'error'" class="notification is-danger">
-        <!-- TODO -->
-        {{ error?.message }}
-      </div>
-      <div v-else="topics">
-        <ul>
-          <li v-for="topic of topics" :key="topic.id">
-            <!-- TODO ellipsis not working because  whitespace-nowrap overflow-hidden does no respect fractioning -->
-            <NuxtLink
-              class="flex gap-1 pb-1 w-full hover:bg-gray-100"
-              :href="getTopicUrl(topic)"
-              target="_blank"
-              rel="noopener"
-              :title="topic.last_poster_username">
-              <NuxtImg
-                :src="getAvatarUrl(topic.last_poster_avatar_template)"
-                class="rounded-full align-top h-full shrink-0 w-[20px]"
-                loading="lazy"
-                alt="Avatar" />
-              <span class="align-top whitespace-nowrap overflow-hidden text-ellipsis">
-                {{ topic.title }}
-              </span>
-            </NuxtLink>
-          </li>
-        </ul>
-      </div>
+        </li>
+        <li v-for="topic of topics" :key="topic.id">
+          <!-- TODO ellipsis not working because  whitespace-nowrap overflow-hidden does no respect fractioning -->
+          <NuxtLink
+            class="flex gap-1 pb-1 w-full hover:bg-gray-100"
+            :href="getTopicUrl(topic)"
+            target="_blank"
+            rel="noopener"
+            :title="topic.last_poster_username">
+            <NuxtImg
+              :src="getAvatarUrl(topic.last_poster_avatar_template)"
+              class="rounded-full align-top h-full shrink-0 w-[20px]"
+              loading="lazy"
+              alt="Avatar" />
+            <span class="align-top whitespace-nowrap overflow-hidden text-ellipsis">
+              {{ topic.title }}
+            </span>
+          </NuxtLink>
+        </li>
+      </ul>
     </div>
     <template #more>
       <NuxtLink to="forum">

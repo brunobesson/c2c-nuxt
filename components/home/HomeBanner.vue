@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO styling -->
   <Box>
     <Accordion v-model:value="panelValue">
       <AccordionPanel value="intro" class="!border-none">

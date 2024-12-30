@@ -55,7 +55,8 @@
     "contact": "Contact",
     "EULA": "CGU",
     "licenses": "Licences",
-    "cookies": "Cookies"
+    "cookies": "Cookies",
+    "donate": "Faire un don à l'association Camptocamp"
   },
   "guidebook": "topoguide",
   "articles": "articles",
@@ -82,5 +83,46 @@
   "logout": "Me déconnecter",
   "cancel": "Annuler",
   "submit": "Enregistrer et continuer",
-  "images": "images"
+  "images": "images",
+  "quality": "qualité du document",
+  "quality-values": {
+    "empty": "vide",
+    "draft": "ébauche",
+    "great": "excellent",
+    "fine": "bon",
+    "medium": "moyen"
+  },
+  "condition_rating": "évaluation des conditions",
+  "condition_rating-values": {
+    "awful": "excécrables",
+    "poor": "mauvaises",
+    "average": "moyennes",
+    "good": "bonnes",
+    "excellent": "excellentes"
+  },
+  "activity-values": {
+    "hiking": "randonnée / trail",
+    "ice_climbing": "cascade de glace",
+    "mountain_biking": "VTT",
+    "mountain_climbing": "rocher haute montagne",
+    "paragliding": "parapente",
+    "rock_climbing": "escalade",
+    "skitouring": "ski, surf",
+    "slacklining": "slackline / highine",
+    "snow_ice_mixed": "neige, glace, mixte",
+    "snowshoeing": "raquette",
+    "via_ferrata": "via ferrata"
+  },
+  "colon": "{0} : {1}",
+  "marker": {
+    "soft-mobility-outing": "Sortie en mobilité douce",
+    "gps-track": "Trace GPS"
+  },
+  "routes": "itinéraires",
+  "error": {
+    "message": {
+      "default": "Une erreur est survenue lors de la récupération des données. Vous pouvez essayer de {0} la page",
+      "reload": "recharger"
+    }
+  }
 }

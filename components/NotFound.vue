@@ -18,8 +18,8 @@
     <div class="notfound-buttons">
       <NuxtLink to="/" class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <Icon icon="home" class="has-text-secondary is-size-1" />
-        <div class="is-capitalized">
-          {{ $t('home') }}
+        <div>
+          {{ capitalize($t('home')) }}
         </div>
       </NuxtLink>
       <NuxtLink
@@ -27,8 +27,8 @@
         :to="`/${docType}s`"
         class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <IconDocument :type="docType" class="has-text-secondary is-size-1" />
-        <div class="is-capitalized">
-          {{ $t(docType) }}
+        <div>
+          {{ capitalize($t(docType)) }}
         </div>
       </NuxtLink>
     </div>

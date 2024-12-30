@@ -1,5 +1,5 @@
 <template>
-  <span :title="$t('GPS Track')">
+  <span :title="$t('marker.gps-track')">
     <IconGeometryDetail />
   </span>
 </template>

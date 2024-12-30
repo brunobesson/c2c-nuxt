@@ -1,5 +1,5 @@
 <template>
-  <span :title="$t('quality') + $t('colon') + $t(quality, 'quality_types')">
+  <span :title="capitalize($t('colon', [$t('quality'), $t(`quality-values.${quality}`)]))">
     <IconQuality :quality="quality" />
   </span>
 </template>

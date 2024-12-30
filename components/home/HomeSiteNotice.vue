@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO styling -->
   <div
     v-show="hasAnnouncement && !hidden"
     class="relative bg-secondary-500 text-white print:hidden"

@@ -3,7 +3,7 @@
     <span
       v-for="activity of sortedActivities"
       :key="activity"
-      :title="$t(activity)"
+      :title="$t(`activity-values.${activity}`)"
       class="replace-icon-by-names-on-print">
       <IconActivity :activity="activity" />
     </span>

@@ -1,4 +1,14 @@
 import dayjs from 'dayjs';
+import 'dayjs/locale/ca';
+import 'dayjs/locale/de';
+import 'dayjs/locale/en-gb';
+import 'dayjs/locale/es';
+import 'dayjs/locale/eu';
+import 'dayjs/locale/fr';
+import 'dayjs/locale/hu';
+import 'dayjs/locale/it';
+import 'dayjs/locale/sl';
+import 'dayjs/locale/zh-cn';
 import type { UiLang } from '~/api/lang.js';
 
 export const useDate = (lang: Ref<UiLang>) => {

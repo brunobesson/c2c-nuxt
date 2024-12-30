@@ -9,21 +9,31 @@
             offset: 0,
             limit: 100,
           },
-        }"
-        class="capitalize">
+        }">
         <IconDocument type="outing" />
-        {{ $t('outings') }}
+        {{ capitalize($t('outings')) }}
       </NuxtLink>
     </template>
-    <div v-if="outingsByDate">
-      <!-- TODO skeleton -->
+    <LoadDataError v-if="status === 'error'" />
+    <div v-else>
       <ul>
+        <li v-if="status === 'pending'" v-for="skeleton in skeletons" class="print:hidden">
+          <Skeleton :width="skeleton.title" height="2rem" class="mt-4 mb-3 text-lg" />
+          <ul>
+            <li v-for="item in skeleton.items" class="flex items-center gap-1 w-full mb-1">
+              <Skeleton shape="circle" size="1.125rem" v-for="activity in item.activities" />
+              <Skeleton :width="item.title" />
+              <div class="flex justify-end gap-1 grow">
+                <Skeleton v-for="icon in item.icons" shape="circle" size="1.125rem" />
+              </div>
+            </li>
+          </ul>
+        </li>
         <li v-for="(sortedOutings, date) of outingsByDate" :key="date">
           <NuxtLink
             :to="{ path: '/outings', query: { date: `${date},${date}` } }"
-            class="block mt-4 mb-3 border-b-2 border-primary font-semibold italic text-lg capitalize">
-            <!-- TODO -->
-            {{ longOutingDate(date + '') }}
+            class="block mt-4 mb-3 border-b-2 border-primary font-semibold italic text-lg">
+            {{ capitalize(longOutingDate(date + '')) }}
           </NuxtLink>
           <ul>
             <li v-for="outing of sortedOutings" :key="outing.document_id" class="[&:nth-child(even)]:bg-gray-50">
@@ -83,6 +93,17 @@ const outingsQuery = computed((): Record<string, any> => {
 const { data, status, error } = await useC2cFetch<Documents<Outing>>(OUTINGS, {
   query: outingsQuery.value,
 });
+
+const skeletons = ref(
+  Array.from({ length: 2 }).map(() => ({
+    title: `${random(10, 20)}rem`,
+    items: Array.from({ length: random(10, 20) }).map(() => ({
+      activities: random(1, 2),
+      title: `${random(15, 25)}rem`,
+      icons: random(1, 3),
+    })),
+  })),
+);
 
 const outingsByDate = computed((): Record<ISODate, Outing[]> => {
   if (!data.value) {

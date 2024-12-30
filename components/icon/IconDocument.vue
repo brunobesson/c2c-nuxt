@@ -1,13 +1,11 @@
 <template>
   <Icon v-if="type !== 'outing'" :icon="icon" :fixed-width="fixedWidth" />
-  <span class="icon" v-else>
-    <ClientOnly>
-      <fa-layers :fixed-width="fixedWidth">
-        <fa-icon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
-        <fa-icon icon="cloud" :style="{ color: 'white' }" transform="shrink-3 flip-h left-1 down-3" />
-        <fa-icon icon="cloud" transform="shrink-5 flip-h left-1 down-3" />
-      </fa-layers>
-    </ClientOnly>
+  <span class="icon" v-else data-allow-mismatch>
+    <fa-layers :fixed-width="fixedWidth">
+      <fa-icon class="sun" icon="sun" transform="shrink-4 up-2 left-2" spin />
+      <fa-icon icon="cloud" :style="{ color: 'white' }" transform="shrink-3 flip-h left-1 down-3" />
+      <fa-icon icon="cloud" transform="shrink-5 flip-h left-1 down-3" />
+    </fa-layers>
   </span>
 </template>
 

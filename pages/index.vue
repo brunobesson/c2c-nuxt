@@ -69,7 +69,9 @@
         <HomeBoardAnnoucement />
       </ClientOnly>
       <ClientOnly>
-        <AdDfmSmall />
+        <div class="grid place-content-center">
+          <AdDfmSmall />
+        </div>
       </ClientOnly>
       <ClientOnly>
         <HomeLinks />

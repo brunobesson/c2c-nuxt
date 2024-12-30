@@ -1,7 +1,11 @@
 <template>
-  <ClientOnly>
-    <Icon class="icon-yeti" icon="exclamation" transform="shrink-6 rotate-45" mask="square" :fixed-width="fixedWidth" />
-  </ClientOnly>
+  <Icon
+    class="icon-yeti"
+    icon="exclamation"
+    transform="shrink-6 rotate-45"
+    mask="square"
+    :fixed-width="fixedWidth"
+    data-allow-mismatch />
 </template>
 
 <script lang="ts" setup>

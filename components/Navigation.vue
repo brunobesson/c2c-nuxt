@@ -1,8 +1,5 @@
 <template>
-  <nav
-    class="max-w-screen h-[--navbar-height] flex bg-white shadow-nav"
-    :class="{ 'with-ad': !isHomePage && (isWidescreen || isFullHD) }">
-    <!-- TODO ad-->
+  <nav class="navigation max-w-screen h-[--navbar-height] flex bg-white shadow-nav">
     <span
       v-if="isMobile || isTablet"
       class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3"
@@ -23,15 +20,17 @@
         class="ml-0 tablet:ml-[5px] h-[calc(var(--navbar-height)_-_8px)]" />
     </NuxtLink>
 
-    <AdDfmLarge v-if="!isHomePage && !isMobile && !isTablet && !isDesktop" />
+    <ClientOnly>
+      <AdDfmLarge v-if="!isHomePage && !isMobile && !isTablet && !isDesktop" class="shrink-0 grow-0" />
+    </ClientOnly>
     <div class="flex justify-end items-center ml-auto mr-[5px] desktop:mr-4">
       <NuxtLink
         to="/articles/106732"
         class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3 text-center"
         :class="{ 'max-mobile:hidden': !hideSearchInput }">
         <IconHelp fixed-width />
-        <span class="max-mobile:hidden capitalize">
-          {{ $t('help') }}
+        <span class="max-mobile:hidden">
+          {{ capitalize($t('help')) }}
         </span>
       </NuxtLink>
       <div ref="searchInputContainer">
@@ -228,3 +227,10 @@ const userMenuItems = computed((): MenuItem[] =>
     : [],
 );
 </script>
+
+<style lang="css" scoped>
+.home .navigation,
+.no-nav-ad .navigation {
+  --navbar-height: var(--navbar-height-no-ad);
+}
+</style>

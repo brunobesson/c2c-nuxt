@@ -2,8 +2,14 @@
 @import "./print.css";
 
 :root {
-  --navbar-height: 3.25rem;
-  --navbarad-height: 90px;
+  /** To be synced with tailwind.config.js */
+  --breakpoint-mobile: 768px;
+  --breakpoint-tablet: 1024px;
+  --breakpoint-desktop: 1216px;
+  --breakpoint-widescreen: 1408px;
+
+  --navbar-height: 90px;
+  --navbar-height-no-ad: 3.25rem;
   --sidemenu-width: 200px;
 
   --body-background-color: #fbfaf6;

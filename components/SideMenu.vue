@@ -11,7 +11,7 @@
             p => route.path.startsWith(`/${p}`),
           ),
         }">
-        <IconTopoguide fixed-width /> <span class="ml-0 capitalize">{{ $t('guidebook') }}</span>
+        <IconTopoguide fixed-width /> <span class="ml-0">{{ capitalize($t('guidebook')) }}</span>
       </span>
     </NuxtLink>
 
@@ -21,14 +21,14 @@
         :class="{
           '!border-primary font-bold': route.path.startsWith('/outings'),
         }">
-        <IconDocument type="outing" fixed-width /> <span class="ml-0 capitalize">{{ $t('outings') }}</span>
+        <IconDocument type="outing" fixed-width /> <span class="ml-0">{{ capitalize($t('outings')) }}</span>
       </span>
     </NuxtLink>
 
     <NuxtLink to="/forum">
       <span
         class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300">
-        <IconForum /> <span class="ml-0 capitalize">{{ $t('forum') }}</span>
+        <IconForum /> <span class="ml-0">{{ capitalize($t('forum')) }}</span>
       </span>
     </NuxtLink>
 
@@ -38,7 +38,7 @@
         :class="{
           '!border-primary font-bold': ['serac', 'xreports'].some(p => route.path.startsWith(`/${p}`)),
         }">
-        <IconDocument type="xreport" fixed-width /> <span class="ml-0 capitalize">{{ $t('side-menu.serac') }}</span>
+        <IconDocument type="xreport" fixed-width /> <span class="ml-0">{{ capitalize($t('side-menu.serac')) }}</span>
       </span>
     </NuxtLink>
 
@@ -48,7 +48,7 @@
         :class="{
           '!border-primary font-bold': route.path.startsWith('/articles'),
         }">
-        <IconDocument type="article" fixed-width /> <span class="ml-0 capitalize">{{ $t('articles') }}</span>
+        <IconDocument type="article" fixed-width /> <span class="ml-0">{{ capitalize($t('articles')) }}</span>
       </span>
     </NuxtLink>
 
@@ -58,12 +58,11 @@
         :class="{
           '!border-primary font-bold': route.path.startsWith('/yeti'),
         }"
-        >&nbsp;<IconYeti fixed-width /> <span class="ml-0 capitalize">YETI</span>
+        >&nbsp;<IconYeti fixed-width /> <span class="ml-0">YETI</span>
       </span>
     </NuxtLink>
 
     <div class="absolute w-full bottom-0 text-xs">
-      <AdFallback class="h-[320p] mx-[20px] mb-[15px]" v-if="hasHeightForAd" />
       <div class="text-center mb-[15px]">
         <NuxtLink to="/articles/106727" class="link">{{ $t('side-menu.contact') }}</NuxtLink>
         <span> &bull; </span>
@@ -93,7 +92,9 @@
           </NuxtLink>
         </div>
         <div>
-          <NuxtLink href="https://www.helloasso.com/associations/camptocamp-association" :title="$t('donate')">
+          <NuxtLink
+            href="https://www.helloasso.com/associations/camptocamp-association"
+            :title="$t('side-menu.donate')">
             <Icon icon="heart" class="text-[30px] text-[hsl(348,100%,71%)] hover:text-[hsl(348,100%,51%)]" />
           </NuxtLink>
         </div>
@@ -106,7 +107,6 @@
 import { useGdprStore } from '../store/gdpr.js';
 
 const route = useRoute();
-const { hasHeightForAd } = import.meta.client ? useScreen() : { hasHeightForAd: ref(false) };
 
 const showGdpr = () => {
   const { openGdprDialog } = useGdprStore();

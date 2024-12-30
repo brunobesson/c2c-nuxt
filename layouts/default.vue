@@ -2,19 +2,19 @@
   <div
     ref="root"
     id="app"
-    :class="{
-      'nav-dfm': !isHomePage && !isMobile && !isTablet && !isDesktop,
-      'home-topoguide': isHomePage,
-    }">
+    :class="{ home: isHomePage, 'no-nav-ad': isMobile || isTablet || isDesktop }"
+    data-allow-mismatch="class">
     <SideMenu
       class="fixed w-[--sidemenu-width] h-screen top-0 z-30 transition-[left] duration-300 max-tablet:left-[calc(-1*var(--sidemenu-width))] print:hidden"
       :class="{ '!left-0': alternativeSideMenu }" />
     <Navigation
-      class="fixed top-0 left-0 right-0 z-[25] print:hidden"
+      class="fixed top-0 left-0 right-0 z-[25] tablet:ml-[--sidemenu-width] print:hidden"
       @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu" />
-    <AdDfmLarge
+    <!-- <div class="absolute top-[--navbar-height] h-[2px] z-[26] w-full shadow-nav"></div> -->
+    <!-- TODO -->
+    <!-- <AdDfmLarge
       v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
-      class="ml-0 pt-[--navbar-height] tablet:ml-[--sidemenu-width] print:hidden" />
+      class="ml-0 pt-[--navbar-height] tablet:ml-[--sidemenu-width] print:hidden" /> -->
     <HomeSiteNotice
       class="absolute top-[--navbar-height] w-full z-20 shadow-md tablet:ml-[--sidemenu-width] tablet:w-[calc(100%-var(--sidemenu-width))] print:hidden" />
     <div
@@ -39,7 +39,7 @@ const { isMobile, isTablet, isDesktop } = import.meta.client
 const { isHomePage } = useHomePage();
 
 const root = useTemplateRef('root');
-const { tabletMin, desktopMin, fullhdMin, widescreenMin } = useBulma();
+const { BREAKPOINT_MOBILE, BREAKPOINT_TABLET, BREAKPOINT_DESKTOP, BREAKPOINT_WIDESCREEN } = useBreakpoints();
 
 useResizeObserver(root, updateWidth);
 
@@ -56,13 +56,13 @@ function updateWidth() {
   // (unlike the css @media(max-width) this is replacing)
 
   const width = root.value.offsetWidth;
-  if (width < tabletMin) {
+  if (width <= BREAKPOINT_MOBILE) {
     root.value.dataset.width = 'mobile';
-  } else if (width < desktopMin) {
+  } else if (width <= BREAKPOINT_TABLET) {
     root.value.dataset.width = 'tablet';
-  } else if (width < widescreenMin) {
+  } else if (width <= BREAKPOINT_DESKTOP) {
     root.value.dataset.width = 'desktop';
-  } else if (width < fullhdMin) {
+  } else if (width <= BREAKPOINT_WIDESCREEN) {
     root.value.dataset.width = 'widescreen';
   } else {
     root.value.dataset.width = 'fullhd';
@@ -80,11 +80,15 @@ function hideSideMenuOnMobile() {
 }
 </script>
 
-<!-- TODO modifier la variable plutôt ? -->
-<style lang="css" scoped>
-.nav-dfm {
-  .page-content {
-    padding-top: var(--navbarad-height);
-  }
+<style>
+#app:has(.data-retrieval-error) .navigation {
+  box-shadow: 0 2px 0 theme(colors.red.600);
+}
+</style>
+
+<style scoped>
+.home .page-content,
+.no-nav-ad .page-content {
+  --navbar-height: var(--navbar-height-no-ad);
 }
 </style>
