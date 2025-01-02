@@ -29,10 +29,6 @@
   @apply bg-surface-0 dark:bg-surface-900 text-primary start-5;
 }
 
-.p-toggleswitch.p-disabled.p-toggleswitch-checked .p-toggleswitch-slider {
-  @apply opacity-70 !bg-primary;
-}
-
 .p-toggleswitch:not(.p-disabled):has(.p-toggleswitch-input:hover) .p-toggleswitch-slider {
   @apply bg-surface-400 dark:bg-surface-600;
 }

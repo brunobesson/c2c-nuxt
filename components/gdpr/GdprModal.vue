@@ -10,7 +10,7 @@
       <div>
         <div class="flex justify-between items-center">
           <h2 class="text-xl">{{ $t('gdpr.modal.necessary-cookies') }}</h2>
-          <ToggleSwitch v-model="checked" disabled />
+          <ToggleSwitch v-model="checked" readonly :pt="{ slider: 'opacity-70' }" />
         </div>
         <p>
           {{ $t('gdpr.modal.necessary-cookies-details') }}
