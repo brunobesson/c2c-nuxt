@@ -124,5 +124,73 @@
       "default": "Une erreur est survenue lors de la récupération des données. Vous pouvez essayer de {0} la page",
       "reload": "recharger"
     }
+  },
+  "fields": {
+    "global_rating": {
+      "label": "cotation globale"
+    },
+    "via_ferrata_rating": {
+      "label": "cotation via ferrata"
+    },
+    "rock_free_rating": {
+      "label": "cotation libre"
+    },
+    "aid_rating": {
+      "label": "cotation artificielle"
+    },
+    "rock_required_rating": {
+      "label": "cotation obligatoire"
+    },
+    "engagement_rating": {
+      "label": "engagement"
+    },
+    "risk_rating": {
+      "label": "risques objectifs"
+    },
+    "equipment_rating": {
+      "label": "qualité de l'équipement"
+    },
+    "exposition_rock_rating": {
+      "label": "exposition rocher"
+    },
+    "ice_rating": {
+      "label": "cotation glace"
+    },
+    "mixed_rating": {
+      "label": "cotation mixte"
+    },
+    "ski_rating": {
+      "label": "cotation ski"
+    },
+    "ski_exposition": {
+      "label": "exposition ski"
+    },
+    "labande_global_rating": {
+      "label": "cotation globale ski"
+    },
+    "labande_ski_rating": {
+      "label": "cotation ponctuelle ski"
+    },
+    "snowshoe_rating": {
+      "label": "cotation raquette"
+    },
+    "hiking_rating": {
+      "label": "cotation randonnée / trail"
+    },
+    "mtb_up_rating": {
+      "label": "cotation VTT montée"
+    },
+    "mtb_down_rating": {
+      "label": "cotation VTT descente"
+    },
+    "hiking_mtb_exposition": {
+      "label": "exposition randonnée, trail et VTT"
+    },
+    "height_diff_up": {
+      "label": "dénivelé positif"
+    },
+    "height_diff_difficulties": {
+      "label": "dénivelé des difficultés"
+    }
   }
 }

@@ -30,7 +30,7 @@ export type BaseDocument = {
   locales: { lang: string; version: number; title: string; title_prefix?: string; summary?: string }[]; // TODO
 };
 type Area = BaseDocument & { type: 'a' }; // TODO
-type Article = BaseDocument & { type: 'c' }; // TODO
+export type Article = BaseDocument & { type: 'c' }; // TODO
 type Image = BaseDocument & { type: 'i' }; // TODO
 type Map = BaseDocument & { type: 'm' }; // TODO
 export type Outing = BaseDocument & {
@@ -40,15 +40,18 @@ export type Outing = BaseDocument & {
   date_start: ISODate;
   date_end: ISODate;
 };
-type Route = BaseDocument & { type: 'r' }; // TODO
+export type Route = BaseDocument & { type: 'r' }; // TODO
 type Profile = BaseDocument & { type: 'u'; name: string }; // TODO
 type Waypoint = BaseDocument & { type: 'w' }; // TODO
 type Book = BaseDocument & { type: 'b' }; // TODO
 type Xreport = BaseDocument & { type: 'x' }; // TODO
-export type Document = Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport;
+export type Document = (Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport) &
+  Record<string, unknown>; // TODO
 export type Documents<T extends Document> = { documents: T[]; total: number };
 
 export const OUTINGS = '/outings';
+export const ROUTES = '/routes';
+export const ARTICLES = '/articles';
 
 export type UserPreferences =
   | {

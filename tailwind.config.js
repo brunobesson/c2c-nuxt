@@ -53,7 +53,6 @@ export default {
         },
       },
       boxShadow: {
-        nav: '0 2px 0 var(--p-primary-color)',
         card: '0 1px 4px 0 rgba(0,0,0,0.2)',
       },
       backgroundColor: {

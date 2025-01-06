@@ -16,6 +16,10 @@ html {
     @apply cursor-pointer text-blue-700 hover:text-[--p-text-hover-color];
   }
 
+  .comma {
+    @apply [&:not(:last-child)]:after:content-[',_'];
+  }
+
   .home-layout {
     @apply flex flex-col gap-4 p-5 mobile:grid mobile:grid-cols-[7fr_5fr] widescreen:grid-cols-[8fr_4fr];
 

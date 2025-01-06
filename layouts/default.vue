@@ -10,7 +10,7 @@
     <Navigation
       class="fixed top-0 left-0 right-0 z-[25] tablet:ml-[--sidemenu-width] print:hidden"
       @toggle-side-menu="alternativeSideMenu = !alternativeSideMenu" />
-    <!-- <div class="absolute top-[--navbar-height] h-[2px] z-[26] w-full shadow-nav"></div> -->
+    <LoadingIndicator />
     <!-- TODO -->
     <!-- <AdDfmLarge
       v-if="!isHomePage && (isMobile || isTablet || isDesktop)"
@@ -32,9 +32,7 @@
 </template>
 
 <script setup lang="ts">
-const { isMobile, isTablet, isDesktop } = import.meta.client
-  ? useScreen()
-  : { isMobile: ref(true), isTablet: ref(false), isDesktop: ref(false) };
+const { isMobile, isTablet, isDesktop } = useScreen();
 
 const { isHomePage } = useHomePage();
 
@@ -80,15 +78,9 @@ function hideSideMenuOnMobile() {
 }
 </script>
 
-<style>
-#app:has(.data-retrieval-error) .navigation {
-  box-shadow: 0 2px 0 theme(colors.red.600);
-}
-</style>
-
-<style scoped>
-.home .page-content,
-.no-nav-ad .page-content {
+<style lang="css">
+.home,
+.no-nav-ad {
   --navbar-height: var(--navbar-height-no-ad);
 }
 </style>

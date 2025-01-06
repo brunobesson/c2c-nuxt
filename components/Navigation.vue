@@ -1,5 +1,5 @@
 <template>
-  <nav class="navigation max-w-screen h-[--navbar-height] flex bg-white shadow-nav">
+  <nav class="navigation max-w-screen h-[--navbar-height] flex bg-white">
     <span
       v-if="isMobile || isTablet"
       class="flex items-center leading-6 py-2 px-0.5 tablet:px-1 desktop:px3"
@@ -72,9 +72,10 @@
           <template #trigger>
             <Button type="button" severity="secondary" variant="outlined">
               <!-- display: inline -->
-              <NuxtImg
+              <NuxtPicture
                 width="24"
                 height="24"
+                format="avif,webp"
                 :src="`${config.public.forumBase}/user_avatar/forum.camptocamp.org/${user?.forumUsername}/24/1_1.png`" />&nbsp;<span
                 class="font-bold max-mobile:hidden">
                 {{ user?.name }}
@@ -123,9 +124,7 @@ import { useAuthStore } from '~/store/auth.js';
 
 const config = useRuntimeConfig();
 const { isHomePage } = useHomePage();
-const { isMobile, isTablet, isDesktop, isWidescreen, isFullHD } = import.meta.client
-  ? useScreen()
-  : { isMobile: ref(false), isTablet: ref(false), isDesktop: ref(false) };
+const { isMobile, isTablet, isDesktop } = useScreen();
 
 const hideSearchInput = ref(true); // only on small screen
 
@@ -227,10 +226,3 @@ const userMenuItems = computed((): MenuItem[] =>
     : [],
 );
 </script>
-
-<style lang="css" scoped>
-.home .navigation,
-.no-nav-ad .navigation {
-  --navbar-height: var(--navbar-height-no-ad);
-}
-</style>

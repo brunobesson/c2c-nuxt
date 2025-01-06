@@ -5,6 +5,12 @@
 </template>
 
 <script setup lang="ts">
+import { provideSSRWidth } from '@vueuse/core';
+
+// set default size for SSR rendering
+const { BREAKPOINT_MOBILE } = useBreakpoints();
+provideSSRWidth(BREAKPOINT_MOBILE - 1);
+
 const { locale } = useI18n();
 
 onMounted(() => {

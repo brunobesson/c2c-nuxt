@@ -6,16 +6,7 @@
     <div>
       <LoadDataError v-if="status === 'error'" />
       <ul>
-        <li
-          v-if="status === 'pending'"
-          v-for="n in messageCount"
-          class="flex gap-1 items-center w-full mb-2 print:hidden">
-          <Skeleton shape="circle" size="20px" class="shrink-0" />
-          <div class="flex flex-col gap-1 w-full">
-            <Skeleton class="w-full" />
-          </div>
-        </li>
-        <li v-for="topic of topics" :key="topic.id">
+        <li v-for="topic of topics" :key="topic.id" class="[&:nth-child(even)]:bg-gray-50">
           <!-- TODO ellipsis not working because  whitespace-nowrap overflow-hidden does no respect fractioning -->
           <NuxtLink
             class="flex gap-1 pb-1 w-full hover:bg-gray-100"
@@ -125,9 +116,7 @@ const transform = (input: Latest) => {
 const { data, status, error } = useForumFetch(`/latest.json`, {
   query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
   transform,
-  lazy: true,
-  server: false,
-} as UseFetchOptions<any>); // TODO
+} as UseFetchOptions<any>); // TODO avoid fetching several times when duplicated?
 
 const { messageCount = -1 } = defineProps<{ messageCount?: number }>();
 

@@ -4,12 +4,10 @@
       :activities="document.activities"
       class="max-mobile:grid max-mobile:grid-cols-2 max-mobile:w-8 text-2xl/7" />
     <span class="grow px-1">
-      <DocumentTitle :document="document" class="after:content-['\0000a0\002022\0000a0']" />
-      <DocumentTitle
-        v-for="area of rangeAreas"
-        :key="area.document_id"
-        :document="area"
-        class="italic [&:not(:last-child)]:after:content-[',_']" />
+      <span class="after:content-['\0000a0\002022\0000a0']"><DocumentTitle :document="document" /></span>
+      <span v-for="area of rangeAreas" class="italic comma"
+        ><DocumentTitle :key="area.document_id" :document="area"
+      /></span>
     </span>
     <span class="text-right">
       <slot />

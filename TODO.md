@@ -1,13 +1,20 @@
 # TODO
 
+## Working on
+
+* cache forum request and similar for a few seconds because component is duplicated
+* API with fetch + useAsync (video)
+
+## List
+
 * Modules
   * @nuxt/eslint
   * @vite/pwa
 * vue query (tanstack) - <https://tanstack.com/query/v4/docs/framework/vue/guides/ssr>
-  * shadow image while loading?
 * Styling
   * Remlacement des différents composants / plugins ?
 * cookie security configuration
+* prerender some on-dynamic pages such as topoguide, serac... yeti?
 * nuxtloadingindicator
 * SEO useSeoMet + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
@@ -28,7 +35,7 @@
 * Configuration sur demo // env demo vs prod, etc
 * Tests
 * typescript typechecking when building in CI
-* 404
+* 404 / error page
 * zod / valibot
 * husky
 * What else?
