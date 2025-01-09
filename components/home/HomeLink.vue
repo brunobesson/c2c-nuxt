@@ -16,14 +16,16 @@
 </template>
 
 <script setup lang="ts">
-const { document } = defineProps<{ document: any }>(); // TODO
+import type { RouteListing, OutingListing } from '~/api/c2c.js';
+
+const { document } = defineProps<{ document: RouteListing | OutingListing }>();
 
 const rangeAreas = computed(() => {
-  let areas = document.areas.filter((area: any) => area.area_type === 'range'); // TODO
+  let areas = document.areas.filter((area) => area.area_type === 'range');
   if (areas.length) {
     return areas;
   }
-  areas = document.areas.filter((area: any) => area.area_type === 'admin_limits'); // TODO
+  areas = document.areas.filter((area: any) => area.area_type === 'admin_limits');
   if (areas.length) {
     return areas;
   }

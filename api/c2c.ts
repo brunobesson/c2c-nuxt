@@ -343,7 +343,7 @@ type Geometry = {
   geom_detail?: string;
 };
 
-// TODO archives + cooked
+// TODO archive
 
 export type BaseLocale = {
   lang: ApiLang;
@@ -364,6 +364,7 @@ export type BaseDocument = {
   geometry: Geometry;
   available_langs: ApiLang[];
   locales: BaseLocale[];
+  cooked?: BaseLocale;
   associations: {};
 };
 export type Area = BaseDocument & {
@@ -374,7 +375,9 @@ export type Area = BaseDocument & {
   };
   geometry: SetRequired<Geometry, 'geom_detail'>;
 };
-export type AreaListing = Pick<Area, 'area_type'> & { locales: Pick<BaseLocale, 'title'>[] };
+export type AreaListingLocale = Pick<BaseLocale, 'title'>;
+export type AreaListing = Pick<Area, StringKeyOf<BaseDocument> | 'area_type'> & { locales: AreaListingLocale[] };
+
 export type Article = BaseDocument & {
   type: 'c';
   associations: {
@@ -391,12 +394,12 @@ export type Article = BaseDocument & {
   categories: ArticleCategory[];
   article_type: ArticleType;
 };
+export type ArticleListingLocale = Pick<BaseLocale, 'title' | 'summary'>;
 export type ArticleListing = Pick<
   Article,
   StringKeyOf<BaseDocument> | 'categories' | 'activities' | 'quality' | 'article_type'
-> & {
-  locales: Pick<BaseLocale, 'title' | 'summary'>[];
-};
+> & { locales: ArticleListingLocale[] };
+
 export type Book = BaseDocument & {
   type: 'b';
   associations: {
@@ -415,9 +418,11 @@ export type Book = BaseDocument & {
   langs: ApiLang[];
   nb_page?: number;
 };
+export type BookListingLocale = Pick<BaseLocale, 'title' | 'summary'>;
 export type BookListing = Pick<Book, StringKeyOf<BaseDocument> | 'activities' | 'author' | 'quality' | 'book_types'> & {
-  locales: Pick<BaseLocale, 'title' | 'summary'>[];
+  locales: BookListingLocale[];
 };
+
 export type Image = BaseDocument & {
   type: 'i';
   associations: {
@@ -448,29 +453,35 @@ export type Image = BaseDocument & {
   fnumber?: number;
   width: number;
 };
+export type ImageListingLocale = Pick<BaseLocale, 'title'>;
 export type ImageListing = Pick<Image, StringKeyOf<BaseDocument> | 'filename' | 'author' | 'areas'> & {
-  locales: Pick<BaseLocale, 'title'>[];
+  locales: ImageListingLocale[];
   geometry: Pick<Geometry, 'geom'>;
 };
+
 export type Map = BaseDocument & { type: 'm'; areas: AreaListing[]; code?: string; scale?: string; editor?: string };
+export type MapListingLocale = Pick<BaseLocale, 'title'>;
 export type MapListing = Pick<Map, StringKeyOf<BaseDocument> | 'code' | 'editor' | 'areas'> & {
-  locales: Pick<BaseLocale, 'title'>;
+  locales: MapListingLocale;
+};
+
+export type OutingLocale = BaseLocale & {
+  access_comment?: string;
+  avalanches?: string;
+  conditions_levels?: string;
+  conditions?: string;
+  description?: string;
+  hut_comment?: string;
+  participants?: string;
+  route_description?: string;
+  summary?: string;
+  timing?: string;
+  weather?: string;
 };
 export type Outing = BaseDocument & {
   type: 'o';
-  locales: (BaseLocale & {
-    access_comment?: string;
-    avalanches?: string;
-    conditions_levels?: string;
-    conditions?: string;
-    description?: string;
-    hut_comment?: string;
-    participants?: string;
-    route_description?: string;
-    summary?: string;
-    timing?: string;
-    weather?: string;
-  })[];
+  locales: OutingLocale[];
+  cooked?: OutingLocale;
   associations: {
     articles: ArticleListing[];
     images: ImageListing[];
@@ -517,9 +528,11 @@ export type Outing = BaseDocument & {
   snowshoe_rating?: SnowshoeRating;
   via_ferrata_rating?: ViaFerrataRating;
 };
+export type OutingListingLocale = Pick<OutingLocale, 'title' | 'summary'>;
 export type OutingListing = Pick<
   Outing,
   | StringKeyOf<BaseDocument>
+  | 'areas'
   | 'activities'
   | 'date_start'
   | 'date_end'
@@ -528,7 +541,6 @@ export type OutingListing = Pick<
   | 'public_transport'
   | 'condition_rating'
   | 'quality'
-  | 'areas'
   // skitouring
   | 'ski_rating'
   | 'labande_global_rating'
@@ -557,9 +569,11 @@ export type OutingListing = Pick<
   // via_ferrata
   | 'via_ferrata_rating'
 > & {
-  locales: Pick<Unpacked<Outing['locales']>, 'title' | 'summary'>;
+  img_count: number;
+  locales: OutingListingLocale;
   geometry: Pick<Geometry, 'geom'> & { has_geom_detail: boolean };
 };
+
 export type Profile = BaseDocument & {
   type: 'u';
   associations: {
@@ -577,17 +591,19 @@ export type ProfileListing = Pick<
 >;
 export const isProfile = (doc: BaseDocument): doc is Profile => doc.type === 'u';
 
+export type RouteLocale = BaseLocale & {
+  title_prefix?: string;
+  slackline_anchor1?: string;
+  slackline_anchor2?: string;
+  slope?: string;
+  remarks?: string;
+  gear?: string;
+  external_resources?: string;
+};
 export type Route = BaseDocument & {
   type: 'r';
-  locales: (BaseLocale & {
-    title_prefix?: string;
-    slackline_anchor1?: string;
-    slackline_anchor2?: string;
-    slope?: string;
-    remarks?: string;
-    gear?: string;
-    external_resources?: string;
-  })[];
+  locales: RouteLocale[];
+  cooked?: RouteLocale;
   associations: {
     articles: ArticleListing[];
     books: BookListing[];
@@ -600,6 +616,8 @@ export type Route = BaseDocument & {
       total: number;
     };
   };
+
+  areas: AreaListing[];
   maps: MapListing[];
   activities: Activity[];
   aid_rating?: AidRating;
@@ -645,9 +663,11 @@ export type Route = BaseDocument & {
   snowshoe_rating?: SnowshoeRating;
   via_ferrata_rating?: ViaFerrataRating;
 };
+export type RouteListingLocale = Pick<RouteLocale, 'title' | 'title_prefix' | 'summary'>;
 export type RouteListing = Pick<
   Route,
   | StringKeyOf<BaseDocument>
+  | 'areas'
   | 'elevation_max'
   | 'elevation_min'
   | 'height_diff_up'
@@ -715,14 +735,16 @@ export type RouteListing = Pick<
   | 'orientations'
   | 'slackline_type'
 > & {
-  locales: Pick<Unpacked<Route['locales']>, 'title' | 'title_prefix' | 'summary'>;
+  locales: RouteListingLocale[];
   geometry: Pick<Geometry, 'geom'> & { has_geom_details: boolean };
 };
 export const isRoute = (doc: BaseDocument): doc is Route | RouteListing => doc.type === 'r';
 
+export type WaypointLocale = BaseLocale & { external_resources?: string; access?: string; access_period?: string };
 export type Waypoint = BaseDocument & {
   type: 'w';
-  locales: (BaseLocale & { external_resources?: string; access?: string; access_period?: string })[];
+  locales: WaypointLocale[];
+  cooked?: WaypointLocale;
   associations: {
     articles: ArticleListing[];
     books: BookListing[];
@@ -786,6 +808,13 @@ export type Waypoint = BaseDocument & {
   waypoint_type: WaypointType;
   weather_station_types?: WeatherStationType[];
 };
+export type WaypointListingLocale = Pick<
+  WaypointLocale,
+  | 'title'
+  | 'summary'
+  // climbing_outdoor
+  | 'access_period'
+>;
 export type WaypointListing = Pick<
   Waypoint,
   | StringKeyOf<BaseDocument>
@@ -799,33 +828,30 @@ export type WaypointListing = Pick<
   | 'slackline_length_min'
   | 'slackline_length_max'
 > & {
-  locales: Pick<
-    Unpacked<Waypoint['locales']>,
-    | 'title'
-    | 'summary'
-    // climbing_outdoor
-    | 'access_period'
-  >;
+  locales: WaypointListingLocale;
   geometry: Pick<Geometry, 'geom'>;
+};
+
+export type XreportLocale = BaseLocale & {
+  place?: string;
+  access?: string;
+  route_study?: string;
+  conditions?: string;
+  training?: string;
+  motivations?: string;
+  group_management?: string;
+  risk?: string;
+  time_management?: string;
+  safety?: string;
+  reduce_impact?: string;
+  increase_impact?: string;
+  modifications?: string;
+  other_comments?: string;
 };
 export type Xreport = BaseDocument & {
   type: 'x';
-  locales: (BaseLocale & {
-    place?: string;
-    access?: string;
-    route_study?: string;
-    conditions?: string;
-    training?: string;
-    motivations?: string;
-    group_management?: string;
-    risk?: string;
-    time_management?: string;
-    safety?: string;
-    reduce_impact?: string;
-    increase_impact?: string;
-    modifications?: string;
-    other_comments?: string;
-  })[];
+  locales: XreportLocale[];
+  cooked?: XreportLocale;
   associations: {
     articles: ArticleListing[];
     images: ImageListing[];
@@ -854,6 +880,7 @@ export type Xreport = BaseDocument & {
   supervision?: Supervision;
   anonymous: boolean;
 };
+export type XreportListingLocale = Pick<XreportLocale, 'title'>;
 export type XreportListing = Pick<
   Xreport,
   | StringKeyOf<BaseDocument>
@@ -867,7 +894,7 @@ export type XreportListing = Pick<
   | 'avalanche_slope'
   | 'severity'
   | 'quality'
-> & { locales: Pick<BaseLocale, 'title'>; geometry: Pick<Geometry, 'geom'> };
+> & { locales: XreportListingLocale[]; geometry: Pick<Geometry, 'geom'> };
 export type Document = Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport;
 export type Documents<T extends Document> = { documents: T[]; total: number };
 

@@ -1,3 +1,5 @@
+import type { UiLang } from '~/api/lang.js';
+
 type UserPayload = {
   username: string;
   password: string;
@@ -8,7 +10,7 @@ type LoginResponse = {
   name: string;
   username: string;
   forum_username: string;
-  lang: string; // TODO
+  lang: UiLang;
   token: string;
   expire: number;
   roles: string[]; // TODO

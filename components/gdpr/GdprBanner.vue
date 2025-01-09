@@ -7,7 +7,6 @@
     :header="$t('gdpr.banner.title')"
     class="!h-auto print:hidden tablet:!w-1/2">
     <i18n-t keypath="gdpr.banner.message" class="prose">
-      <!-- TODO style -->
       <a href="#" @click="showGdprModal()">{{ $t('gdpr.banner.configure') }}</a>
     </i18n-t>
     <template #footer>
@@ -37,7 +36,6 @@ watch(
 );
 
 onBeforeMount(() => {
-  // TODO add mouse move ?
   window.addEventListener('scroll', firstUserInteraction);
   window.addEventListener('keydown', firstUserInteraction);
   window.addEventListener('resize', firstUserInteraction);

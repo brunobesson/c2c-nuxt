@@ -11,5 +11,7 @@
 </template>
 
 <script setup lang="ts">
-const { outing } = defineProps<{ outing: any }>(); // TODO
+import type { OutingListing} from '~/api/c2c.js';
+
+const { outing } = defineProps<{ outing: OutingListing }>();
 </script>
