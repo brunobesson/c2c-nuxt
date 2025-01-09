@@ -1,8 +1,8 @@
-import type { SetRequired } from 'type-fest';
+import type { SetRequired, StringKeyOf } from 'type-fest';
 import type { ApiLang } from '~/api/lang.js';
 import type { ISODate, ISODateTime } from '../types/index.js';
 
-type Unpacked<T> = T extends (infer U)[]
+export type Unpacked<T> = T extends (infer U)[]
   ? U
   : T extends (...args: any[]) => infer U
   ? U
@@ -391,7 +391,10 @@ export type Article = BaseDocument & {
   categories: ArticleCategory[];
   article_type: ArticleType;
 };
-export type ArticleListing = Pick<Article, 'categories' | 'activities' | 'quality' | 'article_type'> & {
+export type ArticleListing = Pick<
+  Article,
+  StringKeyOf<BaseDocument> | 'categories' | 'activities' | 'quality' | 'article_type'
+> & {
   locales: Pick<BaseLocale, 'title' | 'summary'>[];
 };
 export type Book = BaseDocument & {
@@ -412,7 +415,7 @@ export type Book = BaseDocument & {
   langs: ApiLang[];
   nb_page?: number;
 };
-export type BookListing = Pick<Book, 'activities' | 'author' | 'quality' | 'book_types'> & {
+export type BookListing = Pick<Book, StringKeyOf<BaseDocument> | 'activities' | 'author' | 'quality' | 'book_types'> & {
   locales: Pick<BaseLocale, 'title' | 'summary'>[];
 };
 export type Image = BaseDocument & {
@@ -445,12 +448,14 @@ export type Image = BaseDocument & {
   fnumber?: number;
   width: number;
 };
-export type ImageListing = Pick<Image, 'filename' | 'author' | 'areas'> & {
+export type ImageListing = Pick<Image, StringKeyOf<BaseDocument> | 'filename' | 'author' | 'areas'> & {
   locales: Pick<BaseLocale, 'title'>[];
   geometry: Pick<Geometry, 'geom'>;
 };
 export type Map = BaseDocument & { type: 'm'; areas: AreaListing[]; code?: string; scale?: string; editor?: string };
-export type MapListing = Pick<Map, 'code' | 'editor' | 'areas'> & { locales: Pick<BaseLocale, 'title'> };
+export type MapListing = Pick<Map, StringKeyOf<BaseDocument> | 'code' | 'editor' | 'areas'> & {
+  locales: Pick<BaseLocale, 'title'>;
+};
 export type Outing = BaseDocument & {
   type: 'o';
   locales: (BaseLocale & {
@@ -514,6 +519,7 @@ export type Outing = BaseDocument & {
 };
 export type OutingListing = Pick<
   Outing,
+  | StringKeyOf<BaseDocument>
   | 'activities'
   | 'date_start'
   | 'date_end'
@@ -563,8 +569,14 @@ export type Profile = BaseDocument & {
   activities: Activity[];
   categories: UserCategory[];
   name: string;
+  forum_username: string;
 };
-export type ProfileListing = Pick<Profile, 'categories' | 'activities' | 'areas'>;
+export type ProfileListing = Pick<
+  Profile,
+  StringKeyOf<BaseDocument> | 'name' | 'forum_username' | 'categories' | 'activities' | 'areas'
+>;
+export const isProfile = (doc: BaseDocument): doc is Profile => doc.type === 'u';
+
 export type Route = BaseDocument & {
   type: 'r';
   locales: (BaseLocale & {
@@ -635,6 +647,7 @@ export type Route = BaseDocument & {
 };
 export type RouteListing = Pick<
   Route,
+  | StringKeyOf<BaseDocument>
   | 'elevation_max'
   | 'elevation_min'
   | 'height_diff_up'
@@ -705,6 +718,8 @@ export type RouteListing = Pick<
   locales: Pick<Unpacked<Route['locales']>, 'title' | 'title_prefix' | 'summary'>;
   geometry: Pick<Geometry, 'geom'> & { has_geom_details: boolean };
 };
+export const isRoute = (doc: BaseDocument): doc is Route | RouteListing => doc.type === 'r';
+
 export type Waypoint = BaseDocument & {
   type: 'w';
   locales: (BaseLocale & { external_resources?: string; access?: string; access_period?: string })[];
@@ -773,6 +788,7 @@ export type Waypoint = BaseDocument & {
 };
 export type WaypointListing = Pick<
   Waypoint,
+  | StringKeyOf<BaseDocument>
   | 'elevation'
   | 'quality'
   | 'waypoint_type'
@@ -840,6 +856,7 @@ export type Xreport = BaseDocument & {
 };
 export type XreportListing = Pick<
   Xreport,
+  | StringKeyOf<BaseDocument>
   | 'elevation'
   | 'date'
   | 'event_type'

@@ -18,5 +18,8 @@
 </template>
 
 <script setup lang="ts">
-const { data, status } = await useAsyncData(() => useC2cApi().article.getAll({ limit: 5, qa: 'draft,great' }));
+import type { AsyncDataRequestStatus } from '#app';
+import type { ArticleListing } from '../../api/c2c.js';
+
+defineProps<{ data: ArticleListing[] | null; status: AsyncDataRequestStatus }>();
 </script>

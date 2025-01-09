@@ -2,8 +2,7 @@
   <main class="home-layout" :class="{ feed: config.feed }">
     <div class="flex flex-col gap-5">
       <HomeBanner />
-      <!-- TODO pas de v-if ismobile, pas de flicker...-->
-      <HomeBoardAnnoucement class="order-2 mobile:hidden" />
+      <HomeBoardAnnoucement :data="announcement" class="order-2 mobile:hidden" />
       <AdDfmSmall class="order-3 mobile:hidden" />
       <div class="flex items-center order-4">
         <SelectButton
@@ -40,18 +39,27 @@
       <HomeOutingsList v-if="!config.feed" :is-personal="isPersonal" class="order-6" />
       <HomeImagesGallery v-if="!config.feed" class="order-7 mobile:order-5" />
       <HomeRoutesList v-if="!config.feed" class="order-8" />
-      <HomeArticlesList v-if="!config.feed" class="order-8 mobile:hidden" />
+      <HomeArticlesList
+        v-if="!config.feed"
+        :data="latestArticles"
+        :status="latestArticlesStatus"
+        class="order-8 mobile:hidden" />
       <HomeLinks v-if="!config.feed" class="order-9 mobile:hidden" />
-      <HomeForum v-if="!config.feed" :message-count="20" class="order-10 mobile:hidden" />
+      <HomeForum
+        v-if="!config.feed"
+        :message-count="20"
+        :data="latestPosts"
+        :status="latestPostsStatus"
+        class="order-10 mobile:hidden" />
     </div>
     <div class="flex flex-col gap-5 max-mobile:hidden">
-      <HomeBoardAnnoucement />
+      <HomeBoardAnnoucement :data="announcement" />
       <div class="grid place-content-center">
         <AdDfmSmall />
       </div>
       <HomeLinks />
-      <HomeForum :message-count="20" />
-      <HomeArticlesList />
+      <HomeForum :message-count="20" :data="latestPosts" :status="latestPostsStatus" />
+      <HomeArticlesList :data="latestArticles" :status="latestArticlesStatus" />
     </div>
   </main>
 </template>
@@ -69,4 +77,14 @@ const feedOptions = ref([
   { text: 'home.activate-dashboard', value: false },
   { text: 'home.activate-feed', value: true },
 ]);
+
+const { data: announcement } = useAsyncData(() => useForumApi().getBoardAnnouncement());
+
+// We fetch data from the home page for some components because they need to be duplicated to respect the layout betwwen
+// mobile and other breakpoints
+const { getLatest } = useForumApi();
+const { data: latestPosts, status: latestPostsStatus } = useAsyncData(() => getLatest());
+const { data: latestArticles, status: latestArticlesStatus } = await useAsyncData(() =>
+  useC2cApi().article.getAll({ limit: 5, qa: 'draft,great' }),
+);
 </script>

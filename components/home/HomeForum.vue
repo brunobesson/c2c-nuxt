@@ -35,19 +35,22 @@
 </template>
 
 <script setup lang="ts">
+import type { AsyncDataRequestStatus } from '#app';
 import { type Topic } from '~/api/forum.js';
 
-const { messageCount = -1 } = defineProps<{ messageCount?: number }>();
+const {
+  messageCount = -1,
+  data,
+  status,
+} = defineProps<{ messageCount?: number; data: Topic[] | null; status: AsyncDataRequestStatus }>();
 
 const { baseUrl, getLatest } = useForumApi();
 
-const { data, status } = useAsyncData(() => getLatest());
-
 const topics = computed(() => {
-  if (messageCount > 0 && data.value) {
-    return data.value.slice(0, messageCount);
+  if (messageCount > 0 && data) {
+    return data.slice(0, messageCount);
   }
-  return data.value;
+  return data;
 });
 
 const getAvatarUrl = (avatarTemplate: string) => {

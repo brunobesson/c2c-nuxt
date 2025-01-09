@@ -1,11 +1,12 @@
-import type { Document } from '~/api/c2c.js';
+import type { BaseDocument, Route, Unpacked } from '~/api/c2c.js';
+import { isProfile, isRoute } from '~/api/c2c.js';
 import { UI_LANGS, type UiLang } from '~/api/lang.js';
 
-export const useDocument = (document: Document) => {
+export const useDocument = (document: BaseDocument) => {
   // TODO
   const documentTitle = (lang: string): string => {
     // profile does not have locale, get profile's name
-    if (document.type === 'u') {
+    if (isProfile(document)) {
       return document.name ?? '';
     }
 
@@ -18,8 +19,8 @@ export const useDocument = (document: Document) => {
 
     const locale = getLocaleSmart(lang);
 
-    if (locale.title_prefix) {
-      return locale.title_prefix + ' : ' + locale.title;
+    if (isRoute(document)) {
+      return (locale as Unpacked<Route['locales']>).title_prefix + ' : ' + locale.title; // TODO spacing
     }
 
     return locale.title ?? '';

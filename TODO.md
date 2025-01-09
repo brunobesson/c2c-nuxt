@@ -1,12 +1,5 @@
 # TODO
 
-## Working on
-
-* cache forum request and similar for a few seconds because component is duplicated => ou lors on fait remonté le fetch de données au dessus
-  * ça concerne board announcement + forum widget + latest articles mais on peut apliquer le pattern aux autres composants du coup...
-
-## List
-
 * Modules
   * @nuxt/eslint
   * @vite/pwa
@@ -15,11 +8,9 @@
   * Remlacement des différents composants / plugins ?
 * cookie security configuration
 * prerender some on-dynamic pages such as topoguide, serac... yeti?
-* nuxtloadingindicator
-* SEO useSeoMet + pour chaque page + og
+* SEO useSeoMeta + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools
-* API handling
 * auth / middleware => cookie security!
 * i18n
   * extract keys (vue-i18n-extract to custommize in order to save ?)
