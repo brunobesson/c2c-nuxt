@@ -87,6 +87,9 @@ importers:
       sass-embedded:
         specifier: 1.81.0
         version: 1.81.0
+      type-fest:
+        specifier: 4.31.0
+        version: 4.31.0
       xml2js:
         specifier: 0.6.2
         version: 0.6.2
@@ -3895,8 +3898,8 @@ packages:
     resolution: {integrity: sha512-t0rzBq87m3fVcduHDUFhKmyyX+9eo6WQjZvf51Ea/M0Q7+T374Jp1aUiyUl0GKxp8M/OETVHSDvmkyPgvX+X2w==}
     engines: {node: '>=10'}
 
-  type-fest@4.28.1:
-    resolution: {integrity: sha512-LO/+yb3mf46YqfUC7QkkoAlpa7CTYh//V1Xy9+NQ+pKqDqXIq0NTfPfQRwFfCt+if4Qkwb9gzZfsl6E5TkXZGw==}
+  type-fest@4.31.0:
+    resolution: {integrity: sha512-yCxltHW07Nkhv/1F6wWBr8kz+5BGMfP+RbRSYFnegVb0qV/UMT0G0ElBloPVerqn4M2ZV80Ir1FtCcYv1cT6vQ==}
     engines: {node: '>=16'}
 
   type-is@1.6.18:
@@ -6403,7 +6406,7 @@ snapshots:
 
   dot-prop@9.0.0:
     dependencies:
-      type-fest: 4.28.1
+      type-fest: 4.31.0
 
   dotenv@16.4.5: {}
 
@@ -7738,7 +7741,7 @@ snapshots:
     dependencies:
       '@babel/code-frame': 7.26.2
       index-to-position: 0.1.2
-      type-fest: 4.28.1
+      type-fest: 4.31.0
 
   parse-path@7.0.0:
     dependencies:
@@ -8682,7 +8685,7 @@ snapshots:
 
   type-fest@0.21.3: {}
 
-  type-fest@4.28.1: {}
+  type-fest@4.31.0: {}
 
   type-is@1.6.18:
     dependencies:

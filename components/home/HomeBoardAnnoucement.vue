@@ -11,13 +11,12 @@
 
 <script setup lang="ts">
 import type { ISODateTime } from '~/types/index.js';
-import type { Announcement } from '../../api/forum.js';
 
 const hasAnnouncement = ref(false);
 const updatedAt = ref<ISODateTime | undefined>(undefined);
 const hidden = ref(false);
 const contentEl = useTemplateRef('content');
-const { data } = useForumFetch<Announcement>('/t/publication-ca.json', { lazy: true, server: false });
+const { data } = useAsyncData(() => useForumApi().getBoardAnnouncement());
 const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('boardAnnoucement.updatedAt', undefined);
 
 watch([data, contentEl], ([announcement]) => {

@@ -14,7 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { type Announcement } from '~/api/forum.js';
 import { type ISODateTime } from '~/types/index.js';
 
 const hasAnnouncement = ref(false);
@@ -27,17 +26,10 @@ const { locale: lang } = useI18n();
 const headerEl = useTemplateRef('header');
 const contentEl = useTemplateRef('content');
 
-const { data } = useForumFetch<Announcement>(
-  `/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang.value) ? 'en' : lang.value}.json`,
-  {
-    pick: ['tags', 'post_stream'],
-    lazy: true,
-    server: false,
-  },
-);
+const { data } = useAsyncData(() => useForumApi().getSiteNotice(lang.value), { pick: ['tags', 'post_stream'] });
 
 watch([data, headerEl], ([announcement]) => {
-  if (!headerEl.value || !announcement /*|| !announcement.tags.includes('visible')*/) {
+  if (!headerEl.value || !announcement || !announcement.tags.includes('visible')) {
     return;
   }
   const lastPost = announcement.post_stream.posts?.[0];

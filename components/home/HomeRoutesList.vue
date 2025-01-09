@@ -17,7 +17,7 @@
 
     <LoadDataError v-if="status === 'error'" />
     <ul v-else>
-      <li v-for="route of data?.documents" :key="route.document_id" class="[&:nth-child(even)]:bg-gray-50">
+      <li v-for="route of data" :key="route.document_id" class="[&:nth-child(even)]:bg-gray-50">
         <HomeRouteLink :route="route" />
       </li>
     </ul>
@@ -30,7 +30,5 @@
 </template>
 
 <script setup lang="ts">
-import { ROUTES, type Documents, type Route } from '../../api/c2c.js';
-
-const { data, status, error } = await useC2cFetch<Documents<Route>>(ROUTES, { query: { limit: 5, qa: 'draft,great' } });
+const { data, status } = await useAsyncData(() => useC2cApi().route.getAll({ limit: 5, qa: 'draft,great' }));
 </script>

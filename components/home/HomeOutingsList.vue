@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { OUTINGS, USER_PREFERENCES, type Documents, type Outing, type UserPreferences } from '~/api/c2c.js';
+import type { Outing, UserPreferences } from '~/api/c2c.js';
 import type { ISODate } from '../../types/index.js';
 
 const { $c2cFetch } = useNuxtApp();
@@ -61,7 +61,7 @@ const { data: userPrefs } = await useAsyncData<UserPreferences | null>('user.pre
   if (!isPersonal) {
     return null;
   }
-  return $c2cFetch<UserPreferences>(USER_PREFERENCES);
+  return useC2cApi().userProfile.getPreferences();
 });
 const outingsQuery = computed((): Record<string, any> => {
   if (!isPersonal) {
@@ -75,17 +75,14 @@ const outingsQuery = computed((): Record<string, any> => {
     qa: 'draft,great',
   };
 });
-// TODO handle error & loading
-const { data, status, error } = await useC2cFetch<Documents<Outing>>(OUTINGS, {
-  query: outingsQuery.value,
-});
+const { data, status } = await useAsyncData(() => useC2cApi().outing.getAll(outingsQuery.value));
 
 const outingsByDate = computed((): Record<ISODate, Outing[]> => {
   if (!data.value) {
     return {};
   }
   const result: Record<ISODate, Outing[]> = {};
-  for (const outing of data.value.documents) {
+  for (const outing of data.value) {
     result[outing.date_end] = result[outing.date_end] ?? [];
     result[outing.date_end].push(outing);
   }

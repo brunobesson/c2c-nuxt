@@ -35,90 +35,13 @@
 </template>
 
 <script setup lang="ts">
-import type { AsyncDataOptions, UseFetchOptions } from '#app';
-import { type Latest, type Topic } from '~/api/forum.js';
-
-const config = useRuntimeConfig();
-
-const EXCLUDED_CATEGORIES = [
-  // https://forum.camptocamp.org/c/comments
-  // document's comments
-  29,
-
-  // https://forum.camptocamp.org/c/petites-annonces
-  // offers (petites annonces in french)
-  40, // ski surf snowshoeing gears
-  41, // ice, snow, mixt gears
-  42, // climnbing gears
-  43, // Misc gears
-  44, // other offers
-  45, // professionals
-
-  // https://forum.camptocamp.org/c/apres-l-effort/partenaires
-  // tinder for camptocamp ? ;)
-  47,
-
-  // https://forum.camptocamp.org/c/apres-l-effort/bistrot
-  // all but subjects about mountain...
-  54,
-
-  // https://forum.camptocamp.org/c/archives/le-site-suggestions-bugs-et-problemes
-  // Old V5 site's bugs reporting
-  55,
-
-  // https://forum.camptocamp.org/c/site-et-association/moderation-forums-topoguide-articles
-  // Forum moderation
-  56,
-
-  // https://forum.camptocamp.org/c/site-et-association/traduction
-  // traduction issues
-  64,
-
-  // https://forum.camptocamp.org/c/partenaires/partenaires-ski-surf-raquette-randonnee-trai
-  // ski buddy finder
-  94,
-
-  // https://forum.camptocamp.org/c/partenaires/partenaires-escalade-sae
-  // climbing buddy finder
-  95,
-
-  // https://forum.camptocamp.org/c/partenaires/co-voiturage
-  // car-pooling
-  96,
-
-  // https://forum.camptocamp.org/c/petites-annonces/perdu-trouve
-  // have you find/lost something in the moutain ? it's here!
-  97,
-
-  // https://forum.camptocamp.org/c/partenaires/partenaires-alpinisme-cascade-de-glace
-  // mountaineering buddy finder
-  113,
-
-  // https://forum.camptocamp.org/c/site-et-association/v6-suggestions-bugs-et-problemes
-  // Site's bugs reporting
-  136,
-
-  // https://forum.camptocamp.org/c/site-et-association/appli-mobile-suggestions-bugs
-  // mobile application bugs reporting
-  146,
-];
-const transform = (input: Latest) => {
-  const userAvatars = new Map<string, string>();
-  input.users.forEach(user => userAvatars.set(user.username, user.avatar_template));
-  return input.topic_list.topics.map(
-    topic =>
-      ({
-        ...topic,
-        last_poster_avatar_template: userAvatars.get(topic.last_poster_username),
-      } as AsyncDataOptions<Latest, Topic[]>),
-  );
-};
-const { data, status, error } = useForumFetch(`/latest.json`, {
-  query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
-  transform,
-} as UseFetchOptions<any>); // TODO avoid fetching several times when duplicated?
+import { type Topic } from '~/api/forum.js';
 
 const { messageCount = -1 } = defineProps<{ messageCount?: number }>();
+
+const { baseUrl, getLatest } = useForumApi();
+
+const { data, status } = useAsyncData(() => getLatest());
 
 const topics = computed(() => {
   if (messageCount > 0 && data.value) {
@@ -128,11 +51,11 @@ const topics = computed(() => {
 });
 
 const getAvatarUrl = (avatarTemplate: string) => {
-  const template = avatarTemplate.startsWith('/') ? config.public.forumBase + avatarTemplate : avatarTemplate;
+  const template = avatarTemplate.startsWith('/') ? baseUrl + avatarTemplate : avatarTemplate;
   return template.replace('{size}', '20');
 };
 
 const getTopicUrl = (topic: Topic) => {
-  return `${config.public.forumBase}/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`;
+  return `${baseUrl}/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`;
 };
 </script>

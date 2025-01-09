@@ -2,8 +2,8 @@
 
 ## Working on
 
-* cache forum request and similar for a few seconds because component is duplicated
-* API with fetch + useAsync (video)
+* cache forum request and similar for a few seconds because component is duplicated => ou lors on fait remonté le fetch de données au dessus
+  * ça concerne board announcement + forum widget + latest articles mais on peut apliquer le pattern aux autres composants du coup...
 
 ## List
 
