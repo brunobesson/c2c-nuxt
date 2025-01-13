@@ -35,7 +35,7 @@
           </NuxtLink>
         </span>
       </div>
-      <HomeFeed class="order-5" v-if="config.feed" />
+      <HomeFeed v-if="config.feed" :type="isPersonal && authenticated ? 'personal' : 'default'" class="order-5" />
       <HomeOutingsList v-if="!config.feed" :is-personal="isPersonal" class="order-6" />
       <HomeImagesGallery v-if="!config.feed" class="order-7 mobile:order-5" />
       <HomeRoutesList v-if="!config.feed" class="order-8" />

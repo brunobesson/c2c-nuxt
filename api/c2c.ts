@@ -377,6 +377,7 @@ export type Area = BaseDocument & {
 };
 export type AreaListingLocale = Pick<BaseLocale, 'title'>;
 export type AreaListing = Pick<Area, StringKeyOf<BaseDocument> | 'area_type'> & { locales: AreaListingLocale[] };
+export const isArea = (doc: BaseDocument): doc is Area | AreaListing => doc.type === 'a';
 
 export type Article = BaseDocument & {
   type: 'c';
@@ -399,6 +400,7 @@ export type ArticleListing = Pick<
   Article,
   StringKeyOf<BaseDocument> | 'categories' | 'activities' | 'quality' | 'article_type'
 > & { locales: ArticleListingLocale[] };
+export const isArticle = (doc: BaseDocument): doc is Article | ArticleListing => doc.type === 'c';
 
 export type Book = BaseDocument & {
   type: 'b';
@@ -410,7 +412,7 @@ export type Book = BaseDocument & {
   };
   author?: string;
   editor?: string;
-  activities?: Activity[];
+  activities: Activity[];
   url?: string;
   isbn?: string;
   book_types: BookType[];
@@ -422,6 +424,7 @@ export type BookListingLocale = Pick<BaseLocale, 'title' | 'summary'>;
 export type BookListing = Pick<Book, StringKeyOf<BaseDocument> | 'activities' | 'author' | 'quality' | 'book_types'> & {
   locales: BookListingLocale[];
 };
+export const isBook = (doc: BaseDocument): doc is Book | BookListing => doc.type === 'b';
 
 export type Image = BaseDocument & {
   type: 'i';
@@ -458,6 +461,9 @@ export type ImageListing = Pick<Image, StringKeyOf<BaseDocument> | 'filename' | 
   locales: ImageListingLocale[];
   geometry: Pick<Geometry, 'geom'>;
 };
+export const isImage = (doc: BaseDocument): doc is Image | ImageListing => doc.type === 'i';
+export const isImageListing = (doc: BaseDocument): doc is ImageListing =>
+  doc.type === 'i' && !Object.hasOwn(doc, 'activities');
 
 export type Map = BaseDocument & { type: 'm'; areas: AreaListing[]; code?: string; scale?: string; editor?: string };
 export type MapListingLocale = Pick<BaseLocale, 'title'>;
@@ -573,6 +579,9 @@ export type OutingListing = Pick<
   locales: OutingListingLocale;
   geometry: Pick<Geometry, 'geom'> & { has_geom_detail: boolean };
 };
+export const isOuting = (doc: BaseDocument): doc is Outing | OutingListing => doc.type === 'o';
+export const isOutingListing = (doc: BaseDocument): doc is OutingListing =>
+  isOuting(doc) && Object.hasOwn(doc, 'has_geom_detail');
 
 export type Profile = BaseDocument & {
   type: 'u';
@@ -736,9 +745,11 @@ export type RouteListing = Pick<
   | 'slackline_type'
 > & {
   locales: RouteListingLocale[];
-  geometry: Pick<Geometry, 'geom'> & { has_geom_details: boolean };
+  geometry: Pick<Geometry, 'geom'> & { has_geom_detail: boolean };
 };
 export const isRoute = (doc: BaseDocument): doc is Route | RouteListing => doc.type === 'r';
+export const isRouteListing = (doc: BaseDocument): doc is RouteListing =>
+  isRoute(doc) && Object.hasOwn(doc, 'has_geom_detail');
 
 export type WaypointLocale = BaseLocale & { external_resources?: string; access?: string; access_period?: string };
 export type Waypoint = BaseDocument & {
@@ -761,6 +772,7 @@ export type Waypoint = BaseDocument & {
       total: number;
     };
   };
+  areas: AreaListing[];
   maps: MapListing[];
   access_time?: AccessTime;
   best_periods?: Month[];
@@ -818,6 +830,8 @@ export type WaypointListingLocale = Pick<
 export type WaypointListing = Pick<
   Waypoint,
   | StringKeyOf<BaseDocument>
+  | 'areas'
+  | 'maps'
   | 'elevation'
   | 'quality'
   | 'waypoint_type'
@@ -831,6 +845,7 @@ export type WaypointListing = Pick<
   locales: WaypointListingLocale;
   geometry: Pick<Geometry, 'geom'>;
 };
+export const isWaypoint = (doc: BaseDocument): doc is Waypoint | WaypointListing => doc.type === 'w';
 
 export type XreportLocale = BaseLocale & {
   place?: string;
@@ -896,7 +911,35 @@ export type XreportListing = Pick<
   | 'quality'
 > & { locales: XreportListingLocale[]; geometry: Pick<Geometry, 'geom'> };
 export type Document = Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport;
-export type Documents<T extends Document> = { documents: T[]; total: number };
+export type Documents<T extends BaseDocument> = { documents: T[]; total: number };
+export type DocumentListing =
+  | AreaListing
+  | ArticleListing
+  | ImageListing
+  | MapListing
+  | OutingListing
+  | RouteListing
+  | ProfileListing
+  | WaypointListing
+  | BookListing
+  | XreportListing;
+
+export type Feed = {
+  feed: FeedItem[];
+  pagination_token: string;
+};
+export type FeedItem = {
+  id: number;
+  time: ISODateTime;
+  user: ProfileListing;
+  change_type: 'updated' | 'created' | 'added_photos';
+  document: DocumentListing;
+  participants: ProfileListing[];
+  image1?: ImageListing;
+  image2?: ImageListing;
+  image3?: ImageListing;
+  more_images: boolean;
+};
 
 export type UserPreferences =
   | {

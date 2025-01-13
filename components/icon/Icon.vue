@@ -7,7 +7,7 @@
 <script setup lang="ts">
 const { fixedWidth = false } = defineProps<{
   icon: string | string[];
-  transform?: string;
+  transform?: string | Record<string, any>;
   mask?: string;
   fixedWidth?: boolean;
 }>();

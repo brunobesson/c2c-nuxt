@@ -85,10 +85,13 @@ export const useForumApi = () => {
   const getSiteNotice = async (lang: UiLang): Promise<Announcement> =>
     $fetch<Announcement>(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`);
 
+  const forumAvatarUrl = `${baseUrl}user_avatar/${baseUrl.replace('https://', '')}`;
+
   return {
     getLatest,
     getBoardAnnouncement,
     getSiteNotice,
     baseUrl,
+    forumAvatarUrl,
   };
 };

@@ -10,6 +10,7 @@ import 'dayjs/locale/it';
 import 'dayjs/locale/sl';
 import 'dayjs/locale/zh-cn';
 import type { UiLang } from '~/api/lang.js';
+import type { ISODate } from '~/types/index.js';
 
 export const useDate = (lang: Ref<UiLang>) => {
   const locales = {
@@ -54,9 +55,30 @@ export const useDate = (lang: Ref<UiLang>) => {
     }
   });
 
-  const longOutingDate = (date: string) => dayjs(date).locale(locale.value).format(longOutingDateFormat.value);
+  function longOutingDate(date: ISODate): string {
+    return dayjs(date).locale(locale.value).format(longOutingDateFormat.value);
+  }
+
+  function outingDates(start: ISODate | undefined, end: ISODate | undefined): string | undefined {
+    if (!start) {
+      return undefined;
+    }
+    const s = dayjs(start);
+    const e = dayjs(end ?? start); // end_date might be undefined for preview
+
+    if (!s.isSame(e, 'year')) {
+      return s.locale(locale.value).format('ll') + ' - ' + e.locale(locale.value).format('ll');
+    } else if (!s.isSame(e, 'month')) {
+      return s.locale(locale.value).format('D MMMM') + ' - ' + e.locale(locale.value).format('ll');
+    } else if (!s.isSame(e, 'day')) {
+      return s.locale(locale.value).format('D') + ' - ' + e.locale(locale.value).format('ll');
+    } else {
+      return s.locale(locale.value).format(longOutingDateFormat.value);
+    }
+  }
 
   return {
     longOutingDate,
+    outingDates,
   };
 };

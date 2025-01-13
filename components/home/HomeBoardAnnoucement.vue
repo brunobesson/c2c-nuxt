@@ -1,5 +1,5 @@
 <template>
-  <div v-show="hasAnnouncement && !hidden" class="relative bg-secondary-500 text-white print:hidden">
+  <div v-show="hasAnnouncement && !hidden" class="relative bg-secondary text-white print:hidden">
     <div class="p-6">
       <Button rounded severity="secondary" size="small" class="!absolute top-1 right-1" @click="hide">
         <Icon icon="xmark" />

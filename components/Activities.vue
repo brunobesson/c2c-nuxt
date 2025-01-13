@@ -11,15 +11,9 @@
 </template>
 
 <script setup lang="ts">
-import type { PropType } from 'vue';
 import type { Activity } from '~/api/c2c.js';
 
-const { activities } = defineProps({
-  activities: {
-    type: Array as PropType<Activity[]>,
-    default: null,
-  },
-});
+const { activities } = defineProps<{ activities: Activity[] }>();
 
 const sortedActivities = computed(() => activities.slice(0).sort());
 </script>

@@ -6,6 +6,7 @@
 * vue query (tanstack) - <https://tanstack.com/query/v4/docs/framework/vue/guides/ssr>
 * Styling
   * Remlacement des différents composants / plugins ?
+  * remettre les skeleton pour ce qui bascule avec le feed
 * cookie security configuration
 * prerender some on-dynamic pages such as topoguide, serac... yeti?
 * SEO useSeoMeta + pour chaque page + og

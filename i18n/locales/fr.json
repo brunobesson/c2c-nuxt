@@ -192,5 +192,66 @@
     "height_diff_difficulties": {
       "label": "dénivelé des difficultés"
     }
+  },
+  "feed": {
+    "avatar": "Avatar",
+    "change": {
+      "updated": {
+        "area": "{user} a mis à jour une région",
+        "article": "{user} a mis à jour un article",
+        "book": "{user} a mis à jour un livre",
+        "image": "{user} a mis à jour une image",
+        "outing": "{user} a mis à jour une sortie",
+        "route": "{user} a mis à jour un itinéraire",
+        "waypoint": "{user} a mis à jour un point de passage",
+        "xreport": "{user} a mis à jour un rapport d'incident / accident"
+      },
+      "created": {
+        "article": "{user} a rédigé un nouvel article",
+        "book": "{user} a ajouté un nouveau livre",
+        "image": "{user} a ajouté une nouvelle image",
+        "outing": "{user} a ajouté une nouvelle sortie",
+        "route": "{user} a ajouté un nouvel itinéraire",
+        "waypoint": "{user} a ajouté un nouveau point de passage",
+        "xreport": "{user} a créé un nouveau rapport d'incident / accident"
+      },
+      "added_photos": {
+        "article": "{user} a ajouté des images pour cet article",
+        "book": "{user} a ajouté des images pour ce livre",
+        "area": "{user} a ajouté des images pour cette région",
+        "outing": "{user} a ajouté des images pour cette sortie",
+        "route": "{user} a ajouté des images pour cet itinéraire",
+        "waypoint": "{user} a ajouté des images pour ce point de passage",
+        "xreport": "{user} a ajouté des images pour ce rapport d'incident / accident"
+      }
+    }
+  },
+  "waypoint_type-values": {
+    "summit": "sommet",
+    "pass": "col",
+    "lake": "lac",
+    "waterfall": "cascade",
+    "locality": "lieu-dit",
+    "bisse": "bisse / béal",
+    "canyon": "canyon",
+    "access": "accès routier / transports en commun",
+    "climbing_outdoor": "site d'escalade",
+    "climbing_indoor": "SAE",
+    "hut": "refuge / cabane",
+    "gite": "gîte",
+    "shelter": "abri",
+    "bivouac": "bivouac",
+    "camp_site": "camping",
+    "base_camp": "camp de base",
+    "local_product": "produits locaux",
+    "paragliding_takeoff": "décollage parapente",
+    "paragliding_landing": "atterrissage parapente",
+    "cave": "grotte",
+    "waterpoint": "point d'eau / source",
+    "weather_station": "station météo",
+    "webcam": "webcam",
+    "virtual": "virtuel",
+    "slackline_spot": "spot de slackline",
+    "misc": "divers"
   }
 }

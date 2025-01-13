@@ -1,10 +1,9 @@
-import type { BaseDocument, Route, Unpacked } from '~/api/c2c.js';
-import { isProfile, isRoute } from '~/api/c2c.js';
-import { UI_LANGS, type UiLang } from '~/api/lang.js';
+import type { AreaType, BaseDocument, RouteListingLocale, RouteLocale } from '~/api/c2c.js';
+import { isImage, isOuting, isProfile, isRoute, isWaypoint } from '~/api/c2c.js';
+import type { UiLang } from '~/api/lang.js';
 
 export const useDocument = (document: BaseDocument) => {
-  // TODO
-  const documentTitle = (lang: string): string => {
+  const documentTitle = (lang: UiLang): string => {
     // profile does not have locale, get profile's name
     if (isProfile(document)) {
       return document.name ?? '';
@@ -17,58 +16,17 @@ export const useDocument = (document: BaseDocument) => {
       return /* document.title ?? */ '';
     }
 
-    const locale = getLocaleSmart(lang);
+    const locale = useDocumentLocale().getLocaleSmart(document, lang);
 
     if (isRoute(document)) {
-      return (locale as Unpacked<Route['locales']>).title_prefix + ' : ' + locale.title; // TODO spacing
+      const colon = ['fr', 'es', 'ca'].includes(locale.lang) ? ' : ' : ': ';
+      return (locale as RouteLocale | RouteListingLocale).title_prefix + colon + locale.title;
     }
 
     return locale.title ?? '';
   };
 
-  const getLocaleStupid = (lang: string) => {
-    if (!document.locales) {
-      return undefined;
-    }
-
-    const { apiLang } = useLang();
-    const locale = apiLang(lang as UiLang); // TODO
-
-    for (const result of document.locales) {
-      if (result.lang === locale) {
-        return result;
-      }
-    }
-
-    return undefined;
-  };
-
-  const getLocaleSmart = (lang: string) => {
-    // first of all try to search asked lang
-    let result = lang ? getLocaleStupid(lang) : undefined;
-
-    if (result) {
-      return result;
-    }
-
-    // TODO else, search user lang
-    /* result = getLocaleStupid(currentLocale);
-    if (result) {
-      return result;
-    } */
-
-    // else try langs by order // TODO langs
-    for (const lang of UI_LANGS) {
-      result = getLocaleStupid(lang);
-      if (result) {
-        return result;
-      }
-    }
-
-    throw new Error('Impossible to find matching lang, should never happen');
-  };
-
-  function getDocumentType() {
+  const documentType = computed(() => {
     // TODO return constants.letterToDocumentType[letterType];
     switch (document.type) {
       case 'a':
@@ -94,8 +52,25 @@ export const useDocument = (document: BaseDocument) => {
       default:
         throw new Error('TODO');
     }
-  }
-  const documentType = getDocumentType();
+  });
 
-  return { documentTitle, documentType };
+  const sortedAreaList = computed(() => {
+    if (
+      !isImage(document) &&
+      !isOuting(document) &&
+      !isProfile(document) &&
+      !isRoute(document) &&
+      !isWaypoint(document)
+    ) {
+      return '';
+    }
+    // the areas often come in different orders within 3 area objects.
+    const orderedAreas: Record<AreaType, string[]> = { range: [], admin_limits: [], country: [] };
+    for (const area of document.areas) {
+      orderedAreas[area.area_type].push(useDocumentLocale().getLocaleSmart(area).title);
+    }
+    return orderedAreas.range.concat(orderedAreas.admin_limits).concat(orderedAreas.country).join(' - ');
+  });
+
+  return { documentTitle, documentType, sortedAreaList };
 };

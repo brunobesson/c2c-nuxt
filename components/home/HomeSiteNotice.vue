@@ -1,7 +1,7 @@
 <template>
   <div
     v-show="hasAnnouncement && !hidden"
-    class="relative bg-secondary-500 text-white print:hidden"
+    class="relative bg-secondary text-white print:hidden"
     @click="showContent = !showContent">
     <div class="p-6">
       <Button rounded severity="secondary" size="small" class="!absolute top-1 right-1" @click="hide">

@@ -39,6 +39,7 @@ export default {
     extend: {
       colors: {
         secondary: {
+          DEFAULT: 'var(--p-secondary-500)',
           50: 'var(--p-secondary-50)',
           100: 'var(--p-secondary-100)',
           200: 'var(--p-secondary-200)',
@@ -51,12 +52,14 @@ export default {
           900: 'var(--p-secondary-900)',
           950: 'var(--p-secondary-950)',
         },
+        default: 'var(--p-text-color)',
       },
       boxShadow: {
         card: '0 1px 4px 0 rgba(0,0,0,0.2)',
       },
       backgroundColor: {
         body: 'var(--body-background-color)',
+        hover: 'var(--p-surface-100)',
       },
     },
   },

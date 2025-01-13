@@ -21,7 +21,7 @@ type User = {
   id: number;
   name: string;
   username: string;
-  lang: string;
+  lang: UiLang;
   forumUsername: string;
   token: string;
   expire: number;
