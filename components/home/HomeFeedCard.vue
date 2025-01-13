@@ -35,14 +35,14 @@
 
             <span
               v-if="(isRoute(item.document) || isOuting(item.document)) && !!item.document.height_diff_up"
-              :title="$t('fields.height_diff_up')">
+              :title="$t('fields.height_diff_up.label')">
               <IconHeightDiffUp />
               {{ item.document.height_diff_up }}&nbsp;m
             </span>
 
             <span
               v-if="(isRoute(item.document) || isOuting(item.document)) && !!item.document.height_diff_difficulties"
-              :title="$t('fields.height_diff_difficulties')">
+              :title="$t('fields.height_diff_difficulties.label')">
               <Icon icon="arrows-alt-v" />
               {{ item.document.height_diff_difficulties }}&nbsp;m
             </span>

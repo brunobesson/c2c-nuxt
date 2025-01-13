@@ -1,5 +1,5 @@
 <template>
-  <Message severity="error" class="data-retrieval-error">
+  <Message severity="error" class="data-retrieval-error m-2">
     <slot>
       <i18n-t keypath="error.message.default">
         <a class="link" @click="router.go()">{{ $t('error.message.reload') }}</a>

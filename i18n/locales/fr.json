@@ -59,9 +59,16 @@
     "donate": "Faire un don à l'association Camptocamp"
   },
   "guidebook": "topoguide",
+  "area": "région",
+  "areas": "régions",
+  "article": "article",
   "articles": "articles",
+  "book": "livre",
   "books": "livres",
+  "outing": "sortie",
   "outings": "sorties",
+  "route": "itinéraire",
+  "routes": "itinéraires",
   "forum": "forum",
   "more": "Voir plus",
   "help": "aide",
@@ -118,7 +125,6 @@
     "soft-mobility-outing": "Sortie en mobilité douce",
     "gps-track": "Trace GPS"
   },
-  "routes": "itinéraires",
   "error": {
     "message": {
       "default": "Une erreur est survenue lors de la récupération des données. Vous pouvez essayer de {0} la page",
@@ -253,5 +259,8 @@
     "virtual": "virtuel",
     "slackline_spot": "spot de slackline",
     "misc": "divers"
+  },
+  "card": {
+    "elevation_max": "Altitude maximale"
   }
 }

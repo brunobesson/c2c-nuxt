@@ -1,9 +1,11 @@
 <template>
-  <div>
-    <LoadDataError v-if="status === 'error'" />
-    <div class="grid grid-cols-2 gap-4">
-      <HomeFeedCard v-for="item of data" :item="item" :key="item.id" />
+  <div class="flex flex-col items-center">
+    <LoadDataError v-if="error" />
+    <div class="grid grid-cols-2 gap-4 min-h-full">
+      <HomeFeedCard v-for="card of cards" :item="card" :key="card.id" />
     </div>
+    <ProgressSpinner v-if="loading" style="width: 50px; height: 50px" strokeWidth="4" class="mt-2" />
+    <ScrollTop :threshold="1500" />
   </div>
 </template>
 
@@ -14,26 +16,74 @@ import type { FeedQuery } from '../../composables/useC2cApi.js';
 
 const { type } = defineProps<{ type: 'personal' | 'default' | 'profile' }>();
 const { params } = useRoute();
-
+const cards = ref<FeedItem[]>([]);
+const canLoadMore = ref(true);
+const error = ref(false);
+const loading = ref(false);
 const paginationToken = ref<string | undefined>(undefined);
-const { data, status } = useAsyncData<FeedItem[]>(async () => {
+if (import.meta.client) {
+  const { isLoading } = useInfiniteScroll(
+    window,
+    async () => {
+      try {
+        onLoad(await load());
+      } catch (err: unknown) {
+        error.value = true;
+        canLoadMore.value = false;
+      }
+    },
+    {
+      distance: 50,
+      canLoadMore: () => canLoadMore.value,
+    },
+  );
+  watchEffect(() => (loading.value = isLoading.value));
+  /* 
+  onMounted(async () => {
+    if (useNuxtApp().payload.)
+    if (cards.value.length === 0 && !isLoading.value) {
+      onLoad(await load());
+    }
+  }); */
+}
+
+const { data: initialData, clear } = useAsyncData(async () => load(20));
+watch(
+  initialData,
+  data => {
+    if (!data) {
+      loading.value = true;
+      return;
+    }
+    paginationToken.value = data.pagination_token;
+    canLoadMore.value = data.feed.length > 0;
+    cards.value.push(...data.feed);
+    clear(); // don't use these values again
+  },
+  { immediate: true },
+);
+
+async function load(limit = 10): Promise<Feed> {
   const query: FeedQuery = {
     pl: 'fr' as ApiLang, // TODO getApiLang(),
     token: paginationToken.value,
+    limit,
   };
   const feed = useC2cApi().feed;
-  let data: Feed;
   switch (type) {
     case 'personal':
-      data = await feed.getPersonalFeed(query);
-      break;
+      return await feed.getPersonalFeed(query);
     case 'profile':
-      data = await feed.getProfileFeed(+params.id, query);
-      break;
+      return await feed.getProfileFeed(+params.id, query);
     case 'default':
     default:
-      data = await feed.getDefaultFeed(query);
+      return await feed.getDefaultFeed(query);
   }
-  return data.feed;
-});
+}
+
+function onLoad(data: Feed) {
+  paginationToken.value = data.pagination_token;
+  canLoadMore.value = data.feed.length > 0;
+  cards.value.push(...data.feed);
+}
 </script>
