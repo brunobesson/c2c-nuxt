@@ -1,5 +1,5 @@
 <template>
-  <LinkDocument :document="document" class="flex items-center hover:bg-gray-100">
+  <LinkDocument :document="document" class="flex items-center hover:bg-hover">
     <Activities
       :activities="document.activities"
       class="max-mobile:grid max-mobile:grid-cols-2 max-mobile:w-8 text-2xl/7" />
@@ -16,12 +16,12 @@
 </template>
 
 <script setup lang="ts">
-import type { RouteListing, OutingListing } from '~/api/c2c.js';
+import type { OutingListing, RouteListing } from '~/api/c2c.js';
 
 const { document } = defineProps<{ document: RouteListing | OutingListing }>();
 
 const rangeAreas = computed(() => {
-  let areas = document.areas.filter((area) => area.area_type === 'range');
+  let areas = document.areas.filter(area => area.area_type === 'range');
   if (areas.length) {
     return areas;
   }

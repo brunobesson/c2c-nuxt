@@ -1,6 +1,6 @@
 .p-avatar {
     @apply inline-flex items-center justify-center
-        w-8 h-8 text-base rounded-md
+        w-7 h-7 text-base rounded-md
         bg-surface-200 dark:bg-surface-700
 }
 

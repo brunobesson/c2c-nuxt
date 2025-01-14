@@ -5,7 +5,7 @@
     </NuxtLink>
     <NuxtLink to="/topoguide">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300"
         :class="{
           '!border-primary font-bold': ['topoguide', 'routes', 'waypoints', 'areas', 'route', 'waypoint', 'area'].some(
             p => route.path.startsWith(`/${p}`),
@@ -17,7 +17,7 @@
 
     <NuxtLink to="/outings">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300"
         :class="{
           '!border-primary font-bold': route.path.startsWith('/outings'),
         }">
@@ -27,14 +27,14 @@
 
     <NuxtLink to="/forum">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300">
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300">
         <IconForum /> <span class="ml-0">{{ capitalize($t('forum')) }}</span>
       </span>
     </NuxtLink>
 
     <NuxtLink to="/serac">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300"
         :class="{
           '!border-primary font-bold': ['serac', 'xreports'].some(p => route.path.startsWith(`/${p}`)),
         }">
@@ -44,7 +44,7 @@
 
     <NuxtLink to="/articles">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300"
         :class="{
           '!border-primary font-bold': route.path.startsWith('/articles'),
         }">
@@ -54,7 +54,7 @@
 
     <NuxtLink to="/yeti">
       <span
-        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-gray-100 hover:border-primary-300"
+        class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300"
         :class="{
           '!border-primary font-bold': route.path.startsWith('/yeti'),
         }"

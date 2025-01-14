@@ -15,12 +15,12 @@
           <CardRow class="!block">
             <NuxtImg
               v-if="!useDefautlAvatarIcon"
-              :src="`${forumAvatarUrl}${item.user.forum_username}/36/1_1.png`"
+              :src="`${forumAvatarUrl}${item.user.forum_username}/36/1_1.pngs`"
               class="inline-block rounded-full w-[24px] h-[24px]"
               loading="lazy"
               @error="useDefautlAvatarIcon = true"
               alt="Avatar" />
-            <Icon v-else icon="user" class="text-gray-300 inline-block rounded-full text-[24px]" />
+            <Avatar v-else shape="circle" :label="avatarLetter" />
             {{ $t(`feed.change.${item.change_type}.${documentType}`, { user: item.user.name }) }}
           </CardRow>
           <CardRow v-if="!['article', 'book', 'xreport'].includes(documentType)" flex>
@@ -123,7 +123,7 @@ const images = computed(() => {
 
 const { forumAvatarUrl } = useForumApi();
 const useDefautlAvatarIcon = ref(false);
-const { baseUrl: forumBaseUrl } = useForumApi();
+const avatarLetter = computed(() => item.user.name.charAt(0).toUpperCase());
 
 function max300char(value: string) {
   return value.length > 300 ? value.substring(0, 300) + '…' : value;
