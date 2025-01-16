@@ -132,10 +132,10 @@ import activity_slacklining from '~/assets/font-awesome-custom/activity/slacklin
 import activity_snow_ice_mixed from '~/assets/font-awesome-custom/activity/snow_ice_mixed.svg?icon';
 import activity_snowshoeing from '~/assets/font-awesome-custom/activity/snowshoeing.svg?icon';
 import activity_via_ferrata from '~/assets/font-awesome-custom/activity/via_ferrata.svg?icon';
-import document_type_outing from '~/assets/font-awesome-custom/document-type/outing.svg?icon';
 import drill from '~/assets/font-awesome-custom/miscs/drill.svg?icon';
 import paragliding from '~/assets/font-awesome-custom/miscs/paragliding.svg?icon';
 import sort from '~/assets/font-awesome-custom/miscs/sort.svg?icon';
+import yeti from '~/assets/font-awesome-custom/miscs/yeti.svg?icon';
 import quality_draft from '~/assets/font-awesome-custom/quality/draft.svg?icon';
 import quality_empty from '~/assets/font-awesome-custom/quality/empty.svg?icon';
 import quality_fine from '~/assets/font-awesome-custom/quality/fine.svg?icon';
@@ -180,8 +180,7 @@ library.add(
   drill,
   paragliding,
   sort,
-
-  document_type_outing,
+  yeti,
 
   waypoint_access,
   waypoint_base_camp,
