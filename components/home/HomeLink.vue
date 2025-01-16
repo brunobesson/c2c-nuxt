@@ -2,14 +2,15 @@
   <LinkDocument :document="document" class="flex items-center hover:bg-hover">
     <Activities
       :activities="document.activities"
-      class="max-mobile:grid max-mobile:grid-cols-2 max-mobile:w-8 text-2xl/7" />
+      class="shrink-0 text-2xl/7"
+      :class="{ 'max-mobile:grid max-mobile:grid-cols-2': document.activities.length > 1 }" />
     <span class="grow px-1">
-      <span class="after:content-['\0000a0\002022\0000a0']"><DocumentTitle :document="document" /></span>
-      <span v-for="area of rangeAreas" class="italic comma"
-        ><DocumentTitle :key="area.document_id" :document="area"
+      <DocumentTitle :document="document" /><span v-if="rangeAreas.length !== 0">&puncsp;&bull;&puncsp;</span>
+      <span v-for="(area, index) of rangeAreas" :key="area.document_id" class="italic comma"
+        ><DocumentTitle :document="area"
       /></span>
     </span>
-    <span class="text-right">
+    <span class="shrink-0 text-right">
       <slot />
     </span>
   </LinkDocument>

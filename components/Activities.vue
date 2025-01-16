@@ -1,5 +1,5 @@
 <template>
-  <span v-if="activities !== null">
+  <span>
     <span
       v-for="activity of sortedActivities"
       :key="activity"
