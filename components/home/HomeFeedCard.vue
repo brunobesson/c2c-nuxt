@@ -15,7 +15,7 @@
           <CardRow class="!block">
             <NuxtImg
               v-if="!useDefautlAvatarIcon"
-              :src="`${forumAvatarUrl}${item.user.forum_username}/36/1_1.pngs`"
+              :src="`${forumAvatarUrl}${item.user.forum_username}/36/1_1.png`"
               class="inline-block rounded-full w-[24px] h-[24px]"
               loading="lazy"
               @error="useDefautlAvatarIcon = true"
