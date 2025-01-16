@@ -22,7 +22,7 @@ import {
   Xreport,
   XreportList,
 } from '~/api/c2c.js';
-import type { ApiLang } from '~/api/lang.js';
+import type { ApiLang, UiLang } from '~/api/lang.js';
 
 export type FeedQuery = {
   /** When set only the given locale will be included (if available). Otherwise all locales will be returned. */
@@ -54,6 +54,8 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
+      setPreferredLang: async (lang: UiLang) =>
+        $fetch('/users/update_preferred_language', { method: 'POST', body: { lang } }),
     },
 
     feed: {

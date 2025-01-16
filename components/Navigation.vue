@@ -163,7 +163,7 @@ function configureLocale(lang: string) {
   setPrimeUiLang(lang);
 
   if (authenticated) {
-    useNuxtApp().$c2cFetch('/users/update_preferred_language', { method: 'POST', body: { lang } });
+    useC2cApi().userProfile.setPreferredLang(lang);
   }
 }
 
