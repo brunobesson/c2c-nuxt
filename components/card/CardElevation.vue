@@ -6,5 +6,5 @@
   </template>
 
   <script setup lang="ts">
-  defineProps<{elevation?: number}>();
+  defineProps<{elevation: number | null | undefined}>();
   </script>

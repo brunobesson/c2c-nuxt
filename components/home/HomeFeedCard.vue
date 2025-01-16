@@ -6,7 +6,7 @@
           <CardRow flex>
             <MarkerDocumentType :document-type="documentType" class="float-left text-2xl" />
             <DocumentTitle :document="item.document" class="grow pl-2 font-semibold" />
-            <span v-if="dates" class="float-right max-mobile:pl-2">{{ dates }}</span>
+            <span v-if="dates" class="float-right pl-2">{{ dates }}</span>
           </CardRow>
           <CardRow v-if="summary" flex>
             <p class="line-clamp-3 text-ellipsis">{{ summary }}</p>
@@ -29,19 +29,22 @@
             </span>
 
             <CardElevation
-              v-if="isRoute(item.document) || isOuting(item.document)"
+              v-if="isRouteListing(item.document) || isOutingListing(item.document)"
               :elevation="item.document.elevation_max"
               class="text-ellipsis" />
 
             <span
-              v-if="(isRoute(item.document) || isOuting(item.document)) && !!item.document.height_diff_up"
+              v-if="(isRouteListing(item.document) || isOutingListing(item.document)) && !!item.document.height_diff_up"
               :title="$t('fields.height_diff_up.label')">
               <IconHeightDiffUp />
               {{ item.document.height_diff_up }}&nbsp;m
             </span>
 
             <span
-              v-if="(isRoute(item.document) || isOuting(item.document)) && !!item.document.height_diff_difficulties"
+              v-if="
+                (isRouteListing(item.document) || isOutingListing(item.document)) &&
+                !!item.document.height_diff_difficulties
+              "
               :title="$t('fields.height_diff_difficulties.label')">
               <Icon icon="arrows-alt-v" />
               {{ item.document.height_diff_difficulties }}&nbsp;m
@@ -58,23 +61,22 @@
             <CardRegion :document="item.document" />
             <CardActivities
               v-if="
-                isArticle(item.document) ||
-                isBook(item.document) ||
-                (isImage(item.document) && !isImageListing(item.document)) ||
-                isOuting(item.document) ||
-                isProfile(item.document)
+                isArticleListing(item.document) ||
+                isBookListing(item.document) ||
+                isOutingListing(item.document) ||
+                isProfileListing(item.document)
               "
               :activities="item.document.activities" />
             <span class="flex flex-nowrap justify-end items-center gap-[0.1rem] min-w-20">
-              <MarkerSoftMobility v-if="isOuting(item.document) && item.document.public_transport" />
-              <MarkerImageCount v-if="isOuting(item.document)" :image-count="item.document.img_count" />
+              <MarkerSoftMobility v-if="isOutingListing(item.document) && item.document.public_transport" />
+              <MarkerImageCount v-if="isOutingListing(item.document)" :image-count="item.document.img_count" />
               <MarkerGpsTrace
                 v-if="
                   (isOutingListing(item.document) || isRouteListing(item.document)) &&
                   item.document.geometry.has_geom_detail
                 " />
               <MarkerCondition
-                v-if="isOuting(item.document) && item.document.condition_rating"
+                v-if="isOutingListing(item.document) && item.document.condition_rating"
                 :condition="item.document.condition_rating" />
               <MarkerQuality :quality="item.document.quality" />
             </span>
@@ -86,18 +88,20 @@
 </template>
 
 <script setup lang="ts">
+import * as v from 'valibot';
 import type { FeedItem } from '../../api/c2c.js';
 import {
-  isArticle,
-  isBook,
-  isImage,
-  isImageListing,
-  isOuting,
+  ArticleListing,
+  BookListing,
+  isArticleListing,
+  isBookListing,
   isOutingListing,
-  isProfile,
-  isRoute,
+  isProfileListing,
   isRouteListing,
   isWaypoint,
+  OutingListing,
+  RouteListing,
+  WaypointListing,
 } from '../../api/c2c.js';
 
 const { item } = defineProps<{ item: FeedItem }>();
@@ -105,16 +109,29 @@ const { locale: lang, t } = useI18n();
 
 const { outingDates } = useDate(lang);
 const dates = computed(() =>
-  isOuting(item.document) ? outingDates(item.document.date_start, item.document.date_end) : undefined,
+  isOutingListing(item.document) ? outingDates(item.document.date_start, item.document.date_end) : undefined,
 );
 
 const { documentType } = useDocument(item.document);
 const locale = computed(() => useDocumentLocale().getLocaleSmart(item.document, lang.value));
 const summary = computed(() => {
-  if (!locale.value.summary) {
-    return undefined;
+  const lv = locale.value;
+  if (
+    v.is(
+      v.union([
+        ArticleListing.entries.locales.item,
+        BookListing.entries.locales.item,
+        OutingListing.entries.locales.item,
+        RouteListing.entries.locales.item,
+        WaypointListing.entries.locales.item,
+      ]),
+      lv,
+    ) &&
+    lv.summary
+  ) {
+    return stripMarkdown(lv.summary);
   }
-  return max300char(stripMarkdown(locale.value.summary));
+  return undefined;
 });
 
 const images = computed(() => {
@@ -124,8 +141,4 @@ const images = computed(() => {
 const { forumAvatarUrl } = useForumApi();
 const useDefautlAvatarIcon = ref(false);
 const avatarLetter = computed(() => item.user.name.charAt(0).toUpperCase());
-
-function max300char(value: string) {
-  return value.length > 300 ? value.substring(0, 300) + '…' : value;
-}
 </script>

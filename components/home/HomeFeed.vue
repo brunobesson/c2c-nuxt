@@ -33,7 +33,7 @@ if (import.meta.client) {
       }
     },
     {
-      distance: 50,
+      distance: 200,
       canLoadMore: () => canLoadMore.value,
     },
   );

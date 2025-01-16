@@ -1,11 +1,21 @@
-import type { AreaType, BaseDocument, RouteListingLocale, RouteLocale } from '~/api/c2c.js';
-import { isImage, isOuting, isProfile, isRoute, isWaypoint } from '~/api/c2c.js';
+import type { AreaType, Document, Route, RouteListing } from '~/api/c2c.js';
+import {
+  isImage,
+  isImageListing,
+  isOuting,
+  isOutingListing,
+  isProfile,
+  isProfileListing,
+  isRoute,
+  isRouteListing,
+  isWaypoint,
+} from '~/api/c2c.js';
 import type { UiLang } from '~/api/lang.js';
 
-export const useDocument = (document: BaseDocument) => {
+export const useDocument = (document: Document) => {
   const documentTitle = (lang: UiLang): string => {
     // profile does not have locale, get profile's name
-    if (isProfile(document)) {
+    if (isProfile(document) || isProfileListing(document)) {
       return document.name ?? '';
     }
 
@@ -18,9 +28,9 @@ export const useDocument = (document: BaseDocument) => {
 
     const locale = useDocumentLocale().getLocaleSmart(document, lang);
 
-    if (isRoute(document)) {
+    if (isRoute(document) || isRouteListing(document)) {
       const colon = ['fr', 'es', 'ca'].includes(locale.lang) ? ' : ' : ': ';
-      return (locale as RouteLocale | RouteListingLocale).title_prefix + colon + locale.title;
+      return (locale as Route['locales'][0] | RouteListing['locales'][0]).title_prefix + colon + locale.title;
     }
 
     return locale.title ?? '';
@@ -57,9 +67,13 @@ export const useDocument = (document: BaseDocument) => {
   const sortedAreaList = computed(() => {
     if (
       !isImage(document) &&
+      !isImageListing(document) &&
       !isOuting(document) &&
+      !isOutingListing(document) &&
       !isProfile(document) &&
+      !isProfileListing(document) &&
       !isRoute(document) &&
+      !isRouteListing(document) &&
       !isWaypoint(document)
     ) {
       return '';

@@ -1,4 +1,5 @@
-import type { Announcement, Latest, Topic } from '~/api/forum.js';
+import * as v from 'valibot';
+import { Announcement, Latest, type Topic } from '~/api/forum.js';
 import type { UiLang } from '~/api/lang.js';
 
 const EXCLUDED_CATEGORIES = [
@@ -69,9 +70,12 @@ export const useForumApi = () => {
   const baseUrl = useRuntimeConfig().public.forumBase;
 
   const getLatest = async (): Promise<Topic[]> => {
-    const data = await $fetch<Latest>('/latest.json', {
-      query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
-    });
+    const data = v.parse(
+      Latest,
+      await $fetch('/latest.json', {
+        query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
+      }),
+    );
     const userAvatars = new Map<string, string>();
     data.users.forEach(user => userAvatars.set(user.username, user.avatar_template));
     return data.topic_list.topics.map(topic => ({
@@ -80,10 +84,11 @@ export const useForumApi = () => {
     }));
   };
 
-  const getBoardAnnouncement = async (): Promise<Announcement> => $fetch('/t/publication-ca.json');
+  const getBoardAnnouncement = async (): Promise<Announcement> =>
+    v.parse(Announcement, await $fetch('/t/publication-ca.json'));
 
   const getSiteNotice = async (lang: UiLang): Promise<Announcement> =>
-    $fetch<Announcement>(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`);
+    v.parse(Announcement, await $fetch(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`));
 
   const forumAvatarUrl = `${baseUrl}user_avatar/${baseUrl.replace('https://', '')}`;
 

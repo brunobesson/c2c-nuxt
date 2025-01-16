@@ -1,958 +1,1181 @@
-import type { SetRequired, StringKeyOf } from 'type-fest';
-import type { ApiLang } from '~/api/lang.js';
-import type { ISODate, ISODateTime } from '../types/index.js';
+import * as v from 'valibot';
+import { ApiLang } from '~/api/lang.js';
+import { IsoDate, IsoDateTime, PositiveInt, Uint } from '~/types/common.js';
+import { LineString, MultiLineString, MultiPolygon, Point, Polygon } from '~/types/geojson.js';
 
-export type Unpacked<T> = T extends (infer U)[]
-  ? U
-  : T extends (...args: any[]) => infer U
-  ? U
-  : T extends Promise<infer U>
-  ? U
-  : T;
+const AccessCondition = v.picklist(['cleared', 'snowy', 'closed_snow', 'closed_cleared']);
+export type AccessCondition = v.InferOutput<typeof AccessCondition>;
+const AccessTime = v.picklist([
+  '1min',
+  '5min',
+  '10min',
+  '15min',
+  '20min',
+  '30min',
+  '45min',
+  '1h',
+  '1h30',
+  '2h',
+  '2h30',
+  '3h',
+  '3h+',
+]);
+export type AccessTime = v.InferOutput<typeof AccessTime>;
+const ActivityRate = v.picklist(['activity_rate_y5', 'activity_rate_m2', 'activity_rate_w1']);
+export type ActivityRate = v.InferOutput<typeof ActivityRate>;
+const AidRating = v.picklist(['A0', 'A0+', 'A1', 'A1+', 'A2', 'A2+', 'A3', 'A3+', 'A4', 'A4+', 'A5', 'A5+']);
+export type AidRating = v.InferOutput<typeof AidRating>;
+const AreaType = v.picklist(['range', 'admin_limits', 'country']);
+export type AreaType = v.InferOutput<typeof AreaType>;
+const ArticleCategory = v.picklist([
+  'mountain_environment',
+  'gear',
+  'technical',
+  'topoguide_supplements',
+  'soft_mobility',
+  'expeditions',
+  'stories',
+  'c2c_meetings',
+  'tags',
+  'site_info',
+  'association',
+]);
+export type ArticleCategory = v.InferOutput<typeof ArticleCategory>;
+const ArticleType = v.picklist(['collab', 'personal']);
+export type ArticleType = v.InferOutput<typeof ArticleType>;
+const AuthorStatus = v.picklist(['primary_impacted', 'secondary_impacted', 'internal_witness', 'external_witness']);
+export type AuthorStatus = v.InferOutput<typeof AuthorStatus>;
+const Autonomy = v.picklist(['non_autonomous', 'autonomous', 'expert']);
+export type Autonomy = v.InferOutput<typeof Autonomy>;
+const AvalancheLevel = v.picklist(['level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_na']);
+export type AvalancheLevel = v.InferOutput<typeof AvalancheLevel>;
+const AvalancheSigns = v.picklist([
+  'no',
+  'danger_sign',
+  'recent_avalanche',
+  'natural_avalanche',
+  'accidental_avalanche',
+]);
+export type AvalancheSigns = v.InferOutput<typeof AvalancheSigns>;
+const AvalancheSlope = v.picklist(['slope_lt_30', 'slope_30_35', 'slope_35_40', 'slope_40_45', 'slope_gt_45']);
+export type AvalancheSlope = v.InferOutput<typeof AvalancheSlope>;
+const BookType = v.picklist([
+  'topo',
+  'environment',
+  'historical',
+  'biography',
+  'photos-art',
+  'novel',
+  'technics',
+  'tourism',
+  'magazine',
+]);
+export type BookType = v.InferOutput<typeof BookType>;
+const ChildrenProofType = v.picklist(['very_safe', 'safe', 'dangerous', 'very_dangerous']);
+export type ChildrenProofType = v.InferOutput<typeof ChildrenProofType>;
+const ClimbingIndoorType = v.picklist(['pitch', 'bloc']);
+export type ClimbingIndoorType = v.InferOutput<typeof ClimbingIndoorType>;
+const ClimbingOutdoorType = v.picklist(['single', 'multi', 'bloc', 'psicobloc']);
+export type ClimbingOutdoorType = v.InferOutput<typeof ClimbingOutdoorType>;
+const ClimbingRating = v.picklist([
+  '2',
+  '3a',
+  '3b',
+  '3c',
+  '4a',
+  '4b',
+  '4c',
+  '5a',
+  '5a+',
+  '5b',
+  '5b+',
+  '5c',
+  '5c+',
+  '6a',
+  '6a+',
+  '6b',
+  '6b+',
+  '6c',
+  '6c+',
+  '7a',
+  '7a+',
+  '7b',
+  '7b+',
+  '7c',
+  '7c+',
+  '8a',
+  '8a+',
+  '8b',
+  '8b+',
+  '8c',
+  '8c+',
+  '9a',
+  '9a+',
+  '9b',
+  '9b+',
+  '9c',
+  '9c+',
+]);
+export type ClimbingRating = v.InferOutput<typeof ClimbingRating>;
+const ClimbingStyle = v.picklist(['slab', 'vertical', 'overhang', 'roof', 'small_pillar', 'crack_dihedral']);
+export type ClimbingStyle = v.InferOutput<typeof ClimbingStyle>;
+const ConditionRating = v.picklist(['excellent', 'good', 'average', 'poor', 'awful']);
+export type ConditionRating = v.InferOutput<typeof ConditionRating>;
+const CustodianshipType = v.picklist(['accessible_when_wardened', 'always_accessible', 'key_needed', 'no_warden']);
+export type CustodianshipType = v.InferOutput<typeof CustodianshipType>;
+const EngagementRating = v.picklist(['I', 'II', 'III', 'IV', 'V', 'VI']);
+export type EngagementRating = v.InferOutput<typeof EngagementRating>;
+const EquipmentRating = v.picklist(['P1', 'P1+', 'P2', 'P2+', 'P3', 'P3+', 'P4', 'P4+']);
+export type EquipmentRating = v.InferOutput<typeof EquipmentRating>;
+const EventActivity = v.picklist([
+  'sport_climbing',
+  'multipitch_climbing',
+  'alpine_climbing',
+  'snow_ice_mixed',
+  'ice_climbing',
+  'skitouring',
+  'other',
+]);
+export type EventActivity = v.InferOutput<typeof EventActivity>;
+const EventType = v.picklist([
+  'avalanche',
+  'stone_ice_fall',
+  'ice_cornice_collapse',
+  'person_fall',
+  'crevasse_fall',
+  'physical_failure',
+  'injury_without_fall',
+  'blocked_person',
+  'weather_event',
+  'safety_operation',
+  'critical_situation',
+  'other',
+]);
+export type EventType = v.InferOutput<typeof EventType>;
+const ExpositionRating = v.picklist(['E1', 'E2', 'E3', 'E4']);
+export type ExpositionRating = v.InferOutput<typeof ExpositionRating>;
+const ExpositionRockRating = v.picklist(['E1', 'E2', 'E3', 'E4', 'E5', 'E6']);
+export type ExpositionRockRating = v.InferOutput<typeof ExpositionRockRating>;
+const FrequentationType = v.picklist(['quiet', 'some', 'crowded', 'overcrowded']);
+export type FrequentationType = v.InferOutput<typeof FrequentationType>;
+const Gender = v.picklist(['male', 'female']);
+export type Gender = v.InferOutput<typeof Gender>;
+const GlacierGearType = v.picklist([
+  'no',
+  'glacier_safety_gear',
+  'crampons_spring',
+  'crampons_req',
+  'glacier_crampons',
+]);
+export type GlacierGearType = v.InferOutput<typeof GlacierGearType>;
+const GlacierRating = v.picklist(['easy', 'possible', 'difficult', 'impossible']);
+export type GlacierRating = v.InferOutput<typeof GlacierRating>;
+const GlobalRating = v.picklist([
+  'F',
+  'F+',
+  'PD-',
+  'PD',
+  'PD+',
+  'AD-',
+  'AD',
+  'AD+',
+  'D-',
+  'D',
+  'D+',
+  'TD-',
+  'TD',
+  'TD+',
+  'ED-',
+  'ED',
+  'ED+',
+  'ED4',
+  'ED5',
+  'ED6',
+  'ED7',
+]);
+export type GlobalRating = v.InferOutput<typeof GlobalRating>;
+const GroundType = v.picklist(['prairie', 'scree', 'snow']);
+export type GroundType = v.InferOutput<typeof GlobalRating>;
+const HikingRating = v.picklist(['T1', 'T2', 'T3', 'T4', 'T5']);
+export type HikingRating = v.InferOutput<typeof GlobalRating>;
+const HutStatus = v.picklist(['open_guarded', 'open_non_guarded', 'closed_hut']);
+export type HutStatus = v.InferOutput<typeof GlobalRating>;
+const IceRating = v.picklist(['1', '2', '3', '3+', '4', '4+', '5', '5+', '6', '6+', '7', '7+']);
+export type IceRating = v.InferOutput<typeof GlobalRating>;
+const ImageCategory = v.picklist([
+  'landscapes',
+  'detail',
+  'action',
+  'track',
+  'rise',
+  'descent',
+  'topo',
+  'people',
+  'fauna',
+  'flora',
+  'nivology',
+  'geology',
+  'hut',
+  'equipment',
+  'book',
+  'help',
+  'misc',
+]);
+export type ImageCategory = v.InferOutput<typeof ImageCategory>;
+const ImageType = v.picklist(['collaborative', 'personal', 'copyright']);
+export type ImageType = v.InferOutput<typeof ImageType>;
+const LabandeSkiRating = v.picklist(['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7']);
+export type LabandeSkiRating = v.InferOutput<typeof LabandeSkiRating>;
+const LiftStatus = v.picklist(['open', 'closed']);
+export type LiftStatus = v.InferOutput<typeof LiftStatus>;
+const MixedRating = v.picklist([
+  'M1',
+  'M2',
+  'M3',
+  'M3+',
+  'M4',
+  'M4+',
+  'M5',
+  'M5+',
+  'M6',
+  'M6+',
+  'M7',
+  'M7+',
+  'M8',
+  'M8+',
+  'M9',
+  'M9+',
+  'M10',
+  'M10+',
+  'M11',
+  'M11+',
+  'M12',
+  'M12+',
+]);
+export type MixedRating = v.InferOutput<typeof MixedRating>;
+const Month = v.picklist(['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']);
+export type Month = v.InferOutput<typeof Month>;
+const MtbDownRating = v.picklist(['V1', 'V2', 'V3', 'V4', 'V5']);
+export type MtbDownRating = v.InferOutput<typeof MtbDownRating>;
+const MtbUpRating = v.picklist(['M1', 'M2', 'M3', 'M4', 'M5']);
+export type MtbUpRating = v.InferOutput<typeof MtbUpRating>;
+const OrientationType = v.picklist(['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']);
+export type OrientationType = v.InferOutput<typeof OrientationType>;
+const ParaglidingRating = v.picklist(['1', '2', '3', '4']);
+export type ParaglidingRating = v.InferOutput<typeof ParaglidingRating>;
+const ParkingFeeType = v.picklist(['yes', 'seasonal', 'no']);
+export type ParkingFeeType = v.InferOutput<typeof ParkingFeeType>;
+const PreviousInjury = v.picklist(['no', 'previous_injuries_2']);
+export type PreviousInjury = v.InferOutput<typeof PreviousInjury>;
+const ProductType = v.picklist(['farm_sale', 'restaurant', 'grocery', 'bar', 'sport_shop']);
+export type ProductType = v.InferOutput<typeof ProductType>;
+const PublicTransportationRating = v.picklist([
+  'good service',
+  'seasonal service',
+  'poor service',
+  'nearby service',
+  'no service',
+]);
+const PublicTransportationType = v.picklist(['train', 'bus', 'service_on_demand', 'boat']);
+export type PublicTransportationType = v.InferOutput<typeof PublicTransportationType>;
+const Qualification = v.picklist(['federal_supervisor', 'federal_trainer', 'professional_diploma']);
+export type Qualification = v.InferOutput<typeof Qualification>;
+const QualityType = v.picklist(['empty', 'draft', 'medium', 'fine', 'great']);
+export type QualityType = v.InferOutput<typeof QualityType>;
+const RainProofType = v.picklist(['exposed', 'partly_protected', 'protected', 'inside']);
+export type RainProofType = v.InferOutput<typeof RainProofType>;
+const RiskRating = v.picklist(['X1', 'X2', 'X3', 'X4', 'X5']);
+export type RiskRating = v.InferOutput<typeof RiskRating>;
+const RockType = v.picklist([
+  'basalte',
+  'calcaire',
+  'conglomerat',
+  'craie',
+  'gneiss',
+  'gres',
+  'granit',
+  'migmatite',
+  'mollasse_calcaire',
+  'pouding',
+  'quartzite',
+  'rhyolite',
+  'schiste',
+  'trachyte',
+  'artificial',
+]);
+export type RockType = v.InferOutput<typeof RockType>;
+const RouteConfigurationType = v.picklist(['edge', 'pillar', 'face', 'corridor', 'goulotte', 'glacier']);
+export type RouteConfigurationType = v.InferOutput<typeof RouteConfigurationType>;
+const RouteDurationType = v.picklist(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '10+']);
+export type RouteDurationType = v.InferOutput<typeof RouteDurationType>;
+const RouteType = v.picklist(['return_same_way', 'loop', 'loop_hut', 'traverse', 'raid', 'expedition']);
+export type RouteType = v.InferOutput<typeof RouteType>;
+const Severity = v.picklist(['severity_no', '1d_to_3d', '4d_to_1m', '1m_to_3m', 'more_than_3m']);
+export type Severity = v.InferOutput<typeof Severity>;
+const SkiRating = v.picklist([
+  '1.1',
+  '1.2',
+  '1.3',
+  '2.1',
+  '2.2',
+  '2.3',
+  '3.1',
+  '3.2',
+  '3.3',
+  '4.1',
+  '4.2',
+  '4.3',
+  '5.1',
+  '5.2',
+  '5.3',
+  '5.4',
+  '5.5',
+  '5.6',
+]);
+export type SkiRating = v.InferOutput<typeof SkiRating>;
+const SlacklineType = v.picklist(['slackline', 'highline', 'waterline']);
+export type SlacklineType = v.InferOutput<typeof SlacklineType>;
+const SnowClearanceRating = v.picklist([
+  'often',
+  'sometimes',
+  'progressive',
+  'naturally',
+  'closed_in_winter',
+  'non_applicable',
+]);
+export type SnowClearanceRating = v.InferOutput<typeof SnowClearanceRating>;
+const SnowQualityRating = v.picklist(['excellent', 'good', 'average', 'poor', 'awful']);
+export type SnowQualityRating = v.InferOutput<typeof SnowQualityRating>;
+const SnowQuantityRating = v.picklist(['excellent', 'good', 'average', 'poor', 'awful']);
+export type SnowQuantityRating = v.InferOutput<typeof SnowQuantityRating>;
+const SnowshoeRating = v.picklist(['R1', 'R2', 'R3', 'R4', 'R5']);
+export type SnowshoeRating = v.InferOutput<typeof SnowshoeRating>;
+const Supervision = v.picklist(['no_supervision', 'federal_supervision', 'professional_supervision']);
+export type Supervision = v.InferOutput<typeof Supervision>;
+const UserCategory = v.picklist([
+  'amateur',
+  'mountain_guide',
+  'mountain_leader',
+  'ski_instructor',
+  'climbing_instructor',
+  'mountainbike_instructor',
+  'paragliding_instructor',
+  'hut_warden',
+  'ski_patroller',
+  'avalanche_forecaster',
+  'club',
+  'institution',
+]);
+export type UserCategory = v.InferOutput<typeof UserCategory>;
+const ViaFerrataRating = v.picklist(['K1', 'K2', 'K3', 'K4', 'K5', 'K6']);
+export type ViaFerrataRating = v.InferOutput<typeof ViaFerrataRating>;
+const WaypointType = v.picklist([
+  'summit',
+  'pass',
+  'lake',
+  'waterfall',
+  'locality',
+  'bisse',
+  'canyon',
+  'access',
+  'climbing_outdoor',
+  'climbing_indoor',
+  'hut',
+  'gite',
+  'shelter',
+  'bivouac',
+  'camp_site',
+  'base_camp',
+  'local_product',
+  'paragliding_takeoff',
+  'paragliding_landing',
+  'cave',
+  'waterpoint',
+  'weather_station',
+  'webcam',
+  'virtual',
+  'slackline_spot',
+  'misc',
+]);
+export type WaypointType = v.InferOutput<typeof WaypointType>;
+const WeatherStationType = v.picklist([
+  'temperature',
+  'wind_speed',
+  'wind_direction',
+  'humidity',
+  'pressure',
+  'precipitation',
+  'precipitation_heater',
+  'snow_height',
+  'insolation',
+]);
+export type WeatherStationType = v.InferOutput<typeof WeatherStationType>;
 
-export type AccessCondition = 'cleared' | 'snowy' | 'closed_snow' | 'closed_cleared';
-export type AccessTime =
-  | '1min'
-  | '5min'
-  | '10min'
-  | '15min'
-  | '20min'
-  | '30min'
-  | '45min'
-  | '1h'
-  | '1h30'
-  | '2h'
-  | '2h30'
-  | '3h'
-  | '3h+';
-export type ActivityRate = 'activity_rate_y5' | 'activity_rate_m2' | 'activity_rate_w1';
-export type AidRating = 'A0' | 'A0+' | 'A1' | 'A1+' | 'A2' | 'A2+' | 'A3' | 'A3+' | 'A4' | 'A4+' | 'A5' | 'A5+';
-export type AreaType = 'range' | 'admin_limits' | 'country';
-export type ArticleCategory =
-  | 'mountain_environment'
-  | 'gear'
-  | 'technical'
-  | 'topoguide_supplements'
-  | 'soft_mobility'
-  | 'expeditions'
-  | 'stories'
-  | 'c2c_meetings'
-  | 'tags'
-  | 'site_info'
-  | 'association';
-export type ArticleType = 'collab' | 'personal';
-export type AuthorStatus = 'primary_impacted' | 'secondary_impacted' | 'internal_witness' | 'external_witness';
-export type Autonomy = 'non_autonomous' | 'autonomous' | 'expert';
-export type AvalancheLevel = 'level_1' | 'level_2' | 'level_3' | 'level_4' | 'level_5' | 'level_na';
-export type AvalancheSigns = 'no' | 'danger_sign' | 'recent_avalanche' | 'natural_avalanche' | 'accidental_avalanche';
-export type AvalancheSlope = 'slope_lt_30' | 'slope_30_35' | 'slope_35_40' | 'slope_40_45' | 'slope_gt_45';
-export type BookType =
-  | 'topo'
-  | 'environment'
-  | 'historical'
-  | 'biography'
-  | 'photos-art'
-  | 'novel'
-  | 'technics'
-  | 'tourism'
-  | 'magazine';
+const LetterType = v.picklist(['a', 'c', 'i', 'm', 'o', 'r', 'u', 'w', 'b', 'x']);
+export type LetterType = v.InferOutput<typeof LetterType>;
 
-export type ChildrenProofType = 'very_safe' | 'safe' | 'dangerous' | 'very_dangerous';
-export type ClimbingIndoorType = 'pitch' | 'bloc';
-export type ClimbingOutdoorType = 'single' | 'multi' | 'bloc' | 'psicobloc';
-export type ClimbingRating =
-  | '2'
-  | '3a'
-  | '3b'
-  | '3c'
-  | '4a'
-  | '4b'
-  | '4c'
-  | '5a'
-  | '5a+'
-  | '5b'
-  | '5b+'
-  | '5c'
-  | '5c+'
-  | '6a'
-  | '6a+'
-  | '6b'
-  | '6b+'
-  | '6c'
-  | '6c+'
-  | '7a'
-  | '7a+'
-  | '7b'
-  | '7b+'
-  | '7c'
-  | '7c+'
-  | '8a'
-  | '8a+'
-  | '8b'
-  | '8b+'
-  | '8c'
-  | '8c+'
-  | '9a'
-  | '9a+'
-  | '9b'
-  | '9b+'
-  | '9c'
-  | '9c+';
-export type ClimbingStyle = 'slab' | 'vertical' | 'overhang' | 'roof' | 'small_pillar' | 'crack_dihedral';
-export type ConditionRating = 'excellent' | 'good' | 'average' | 'poor' | 'awful';
-export type CustodianshipType = 'accessible_when_wardened' | 'always_accessible' | 'key_needed' | 'no_warden';
-export type EngagementRating = 'I' | 'II' | 'III' | 'IV' | 'V' | 'VI';
-export type EquipmentRating = 'P1' | 'P1+' | 'P2' | 'P2+' | 'P3' | 'P3+' | 'P4' | 'P4+';
-export type EventActivity =
-  | 'sport_climbing'
-  | 'multipitch_climbing'
-  | 'alpine_climbing'
-  | 'snow_ice_mixed'
-  | 'ice_climbing'
-  | 'skitouring'
-  | 'other';
-export type EventType =
-  | 'avalanche'
-  | 'stone_ice_fall'
-  | 'ice_cornice_collapse'
-  | 'person_fall'
-  | 'crevasse_fall'
-  | 'physical_failure'
-  | 'injury_without_fall'
-  | 'blocked_person'
-  | 'weather_event'
-  | 'safety_operation'
-  | 'critical_situation'
-  | 'other';
-export type ExpositionRating = 'E1' | 'E2' | 'E3' | 'E4';
-export type ExpositionRockRating = 'E1' | 'E2' | 'E3' | 'E4' | 'E5' | 'E6';
-export type FrequentationType = 'quiet' | 'some' | 'crowded' | 'overcrowded';
-export type Gender = 'male' | 'female';
-export type GlacierGearType = 'no' | 'glacier_safety_gear' | 'crampons_spring' | 'crampons_req' | 'glacier_crampons';
-export type GlacierRating = 'easy' | 'possible' | 'difficult' | 'impossible';
-export type GlobalRating =
-  | 'F'
-  | 'F+'
-  | 'PD-'
-  | 'PD'
-  | 'PD+'
-  | 'AD-'
-  | 'AD'
-  | 'AD+'
-  | 'D-'
-  | 'D'
-  | 'D+'
-  | 'TD-'
-  | 'TD'
-  | 'TD+'
-  | 'ED-'
-  | 'ED'
-  | 'ED+'
-  | 'ED4'
-  | 'ED5'
-  | 'ED6'
-  | 'ED7';
-export type GroundType = 'prairie' | 'scree' | 'snow';
-export type HikingRating = 'T1' | 'T2' | 'T3' | 'T4' | 'T5';
-export type HutStatus = 'open_guarded' | 'open_non_guarded' | 'closed_hut';
-export type IceRating = '1' | '2' | '3' | '3+' | '4' | '4+' | '5' | '5+' | '6' | '6+' | '7' | '7+';
-export type ImageCategory =
-  | 'landscapes'
-  | 'detail'
-  | 'action'
-  | 'track'
-  | 'rise'
-  | 'descent'
-  | 'topo'
-  | 'people'
-  | 'fauna'
-  | 'flora'
-  | 'nivology'
-  | 'geology'
-  | 'hut'
-  | 'equipment'
-  | 'book'
-  | 'help'
-  | 'misc';
-export type ImageType = 'collaborative' | 'personal' | 'copyright';
-export type LabandeSkiRating = 'S1' | 'S2' | 'S3' | 'S4' | 'S5' | 'S6' | 'S7';
-export type LiftStatus = 'open' | 'closed';
-export type MixedRating =
-  | 'M1'
-  | 'M2'
-  | 'M3'
-  | 'M3+'
-  | 'M4'
-  | 'M4+'
-  | 'M5'
-  | 'M5+'
-  | 'M6'
-  | 'M6+'
-  | 'M7'
-  | 'M7+'
-  | 'M8'
-  | 'M8+'
-  | 'M9'
-  | 'M9+'
-  | 'M10'
-  | 'M10+'
-  | 'M11'
-  | 'M11+'
-  | 'M12'
-  | 'M12+';
-export type Month = 'jan' | 'feb' | 'mar' | 'apr' | 'may' | 'jun' | 'jul' | 'aug' | 'sep' | 'oct' | 'nov' | 'dec';
-export type MtbDownRating = 'V1' | 'V2' | 'V3' | 'V4' | 'V5';
-export type MtbUpRating = 'M1' | 'M2' | 'M3' | 'M4' | 'M5';
-export type OrientationType = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW';
-export type ParaglidingRating = '1' | '2' | '3' | '4';
-export type ParkingFeeType = 'yes' | 'seasonal' | 'no';
-export type PreviousInjury = 'no' | 'previous_injuries_2';
-export type ProductType = 'farm_sale' | 'restaurant' | 'grocery' | 'bar' | 'sport_shop';
-export type PublicTransportationRating =
-  | 'good service'
-  | 'seasonal service'
-  | 'poor service'
-  | 'nearby service'
-  | 'no service';
-export type PublicTransportationType = 'train' | 'bus' | 'service_on_demand' | 'boat';
-export type Qualification = 'federal_supervisor' | 'federal_trainer' | 'professional_diploma';
-export type QualityType = 'empty' | 'draft' | 'medium' | 'fine' | 'great';
-export type RainProofType = 'exposed' | 'partly_protected' | 'protected' | 'inside';
-export type RiskRating = 'X1' | 'X2' | 'X3' | 'X4' | 'X5';
-export type RockType =
-  | 'basalte'
-  | 'calcaire'
-  | 'conglomerat'
-  | 'craie'
-  | 'gneiss'
-  | 'gres'
-  | 'granit'
-  | 'migmatite'
-  | 'mollasse_calcaire'
-  | 'pouding'
-  | 'quartzite'
-  | 'rhyolite'
-  | 'schiste'
-  | 'trachyte'
-  | 'artificial';
-export type RouteConfigurationType = 'edge' | 'pillar' | 'face' | 'corridor' | 'goulotte' | 'glacier';
-export type RouteDurationType = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10' | '10+';
-export type RouteType = 'return_same_way' | 'loop' | 'loop_hut' | 'traverse' | 'raid' | 'expedition';
-export type Severity = 'severity_no' | '1d_to_3d' | '4d_to_1m' | '1m_to_3m' | 'more_than_3m';
-export type SkiRating =
-  | '1.1'
-  | '1.2'
-  | '1.3'
-  | '2.1'
-  | '2.2'
-  | '2.3'
-  | '3.1'
-  | '3.2'
-  | '3.3'
-  | '4.1'
-  | '4.2'
-  | '4.3'
-  | '5.1'
-  | '5.2'
-  | '5.3'
-  | '5.4'
-  | '5.5'
-  | '5.6';
-export type SlacklineType = 'slackline' | 'highline' | 'waterline';
-export type SnowClearanceRating =
-  | 'often'
-  | 'sometimes'
-  | 'progressive'
-  | 'naturally'
-  | 'closed_in_winter'
-  | 'non_applicable';
-export type SnowQualityRating = 'excellent' | 'good' | 'average' | 'poor' | 'awful';
-export type SnowQuantityRating = 'excellent' | 'good' | 'average' | 'poor' | 'awful';
-export type SnowshoeRating = 'R1' | 'R2' | 'R3' | 'R4' | 'R5';
-export type Supervision = 'no_supervision' | 'federal_supervision' | 'professional_supervision';
-export type UserCategory =
-  | 'amateur'
-  | 'mountain_guide'
-  | 'mountain_leader'
-  | 'ski_instructor'
-  | 'climbing_instructor'
-  | 'mountainbike_instructor'
-  | 'paragliding_instructor'
-  | 'hut_warden'
-  | 'ski_patroller'
-  | 'avalanche_forecaster'
-  | 'club'
-  | 'institution';
-export type ViaFerrataRating = 'K1' | 'K2' | 'K3' | 'K4' | 'K5' | 'K6';
-export type WaypointType =
-  | 'summit'
-  | 'pass'
-  | 'lake'
-  | 'waterfall'
-  | 'locality'
-  | 'bisse'
-  | 'canyon'
-  | 'access'
-  | 'climbing_outdoor'
-  | 'climbing_indoor'
-  | 'hut'
-  | 'gite'
-  | 'shelter'
-  | 'bivouac'
-  | 'camp_site'
-  | 'base_camp'
-  | 'local_product'
-  | 'paragliding_takeoff'
-  | 'paragliding_landing'
-  | 'cave'
-  | 'waterpoint'
-  | 'weather_station'
-  | 'webcam'
-  | 'virtual'
-  | 'slackline_spot'
-  | 'misc';
-export type WeatherStationType =
-  | 'temperature'
-  | 'wind_speed'
-  | 'wind_direction'
-  | 'humidity'
-  | 'pressure'
-  | 'precipitation'
-  | 'precipitation_heater'
-  | 'snow_height'
-  | 'insolation';
+const Activity = v.picklist([
+  'skitouring',
+  'snow_ice_mixed',
+  'mountain_climbing',
+  'rock_climbing',
+  'ice_climbing',
+  'hiking',
+  'snowshoeing',
+  'paragliding',
+  'mountain_biking',
+  'via_ferrata',
+  'slacklining',
+]);
+export type Activity = v.InferOutput<typeof Activity>;
 
-export type LetterType = 'a' | 'c' | 'i' | 'm' | 'o' | 'r' | 'u' | 'w' | 'b' | 'x';
+const BaseGeometry = v.object({
+  version: PositiveInt,
+  geom: v.pipe(
+    v.string(),
+    v.transform(input => v.parse(Point, JSON.parse(input))),
+  ),
+});
+export type BaseGeometry = v.InferOutput<typeof BaseGeometry>;
+const Geometry = v.object({
+  ...BaseGeometry.entries,
+  geom_detail: v.nullable(
+    v.pipe(
+      v.string(),
+      v.transform(input => v.parse(v.union([LineString, MultiLineString]), JSON.parse(input))),
+    ),
+  ),
+});
+export type Geometry = v.InferOutput<typeof Geometry>;
 
-export type Activity =
-  | 'skitouring'
-  | 'snow_ice_mixed'
-  | 'mountain_climbing'
-  | 'rock_climbing'
-  | 'ice_climbing'
-  | 'hiking'
-  | 'snowshoeing'
-  | 'paragliding'
-  | 'mountain_biking'
-  | 'via_ferrata'
-  | 'slacklining';
+// TODO archive, whatsnew
 
-type Geometry = {
-  version: number;
-  geom: string;
-  geom_detail?: string;
-};
+const BaseLocale = v.strictObject({
+  lang: ApiLang,
+  version: PositiveInt,
+  title: v.string(),
+});
+export type BaseLocale = v.InferOutput<typeof BaseLocale>;
 
-// TODO archive
+const FullBaseLocale = v.strictObject({
+  ...BaseLocale.entries,
+  description: v.nullable(v.string()),
+  summary: v.nullable(v.string()),
+  topic_id: PositiveInt,
+});
+export type FullBaseLocale = v.InferOutput<typeof FullBaseLocale>;
 
-export type BaseLocale = {
-  lang: ApiLang;
-  version: number;
-  title: string;
-  description?: string;
-  summary?: string;
-  topic_id?: number;
-};
+const BaseDocument = v.object({
+  document_id: PositiveInt,
+  type: LetterType,
+  version: PositiveInt,
+  protected: v.boolean(),
+  available_langs: v.array(ApiLang),
+  quality: QualityType,
+  locales: v.array(BaseLocale),
+});
 
-export type BaseDocument = {
-  document_id: number;
-  type: LetterType;
-  version: number;
-  protected: boolean;
-  redirects_to?: number;
-  quality: QualityType;
-  geometry: Geometry;
-  available_langs: ApiLang[];
-  locales: BaseLocale[];
-  cooked?: BaseLocale;
-  associations: {};
-};
-export type Area = BaseDocument & {
-  type: 'a';
-  area_type: AreaType;
-  associations: {
-    images: ImageListing[];
-  };
-  geometry: SetRequired<Geometry, 'geom_detail'>;
-};
-export type AreaListingLocale = Pick<BaseLocale, 'title'>;
-export type AreaListing = Pick<Area, StringKeyOf<BaseDocument> | 'area_type'> & { locales: AreaListingLocale[] };
-export const isArea = (doc: BaseDocument): doc is Area | AreaListing => doc.type === 'a';
+const FullBaseDocument = v.object({
+  ...BaseDocument.entries,
+  locales: v.array(FullBaseLocale),
+  cooked: v.nullish(FullBaseLocale),
+  associations: v.object({}),
+  geometry: Geometry,
+  redirects_to: v.nullish(PositiveInt),
+});
 
-export type Article = BaseDocument & {
-  type: 'c';
-  associations: {
-    articles: ArticleListing[];
-    books: BookListing[];
-    outings: OutingListing[];
-    routes: RouteListing[];
-    waypoints: WaypointListing[];
-    images: ImageListing[];
-    users: ProfileListing[];
-    xreports: XreportListing[];
-  };
-  activities: Activity[];
-  categories: ArticleCategory[];
-  article_type: ArticleType;
-};
-export type ArticleListingLocale = Pick<BaseLocale, 'title' | 'summary'>;
-export type ArticleListing = Pick<
-  Article,
-  StringKeyOf<BaseDocument> | 'categories' | 'activities' | 'quality' | 'article_type'
-> & { locales: ArticleListingLocale[] };
-export const isArticle = (doc: BaseDocument): doc is Article | ArticleListing => doc.type === 'c';
+const BaseArea = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('a'),
+  area_type: AreaType,
+});
 
-export type Book = BaseDocument & {
-  type: 'b';
-  associations: {
-    articles: ArticleListing[];
-    routes: RouteListing[];
-    waypoints: WaypointListing[];
-    images: ImageListing[];
-  };
-  author?: string;
-  editor?: string;
-  activities: Activity[];
-  url?: string;
-  isbn?: string;
-  book_types: BookType[];
-  publication_date?: string;
-  langs: ApiLang[];
-  nb_page?: number;
-};
-export type BookListingLocale = Pick<BaseLocale, 'title' | 'summary'>;
-export type BookListing = Pick<Book, StringKeyOf<BaseDocument> | 'activities' | 'author' | 'quality' | 'book_types'> & {
-  locales: BookListingLocale[];
-};
-export const isBook = (doc: BaseDocument): doc is Book | BookListing => doc.type === 'b';
+export const AreaListing = v.strictObject({
+  ...v.omit(BaseArea, ['quality']).entries,
+  available_langs: v.null(),
+  locales: v.array(BaseLocale),
+});
+export type AreaListing = v.InferOutput<typeof AreaListing>;
 
-export type Image = BaseDocument & {
-  type: 'i';
-  associations: {
-    areas: AreaListing[];
-    articles: ArticleListing[];
-    books: BookListing[];
-    outings: OutingListing[];
-    routes: RouteListing[];
-    waypoints: WaypointListing[];
-    images: ImageListing[];
-    users: ProfileListing[];
-    xreports: XreportListing[];
-  };
-  areas: AreaListing[];
-  activities: Activity[];
-  author?: string;
-  camera_name?: string;
-  date_time: ISODateTime;
-  elevation?: number;
-  height: number;
-  categories?: ImageCategory[];
-  image_type: ImageType;
-  iso_speed?: number;
-  file_size: number;
-  filename: string;
-  exposure_time?: number;
-  focal_length?: number;
-  fnumber?: number;
-  width: number;
-};
-export type ImageListingLocale = Pick<BaseLocale, 'title'>;
-export type ImageListing = Pick<Image, StringKeyOf<BaseDocument> | 'filename' | 'author' | 'areas'> & {
-  locales: ImageListingLocale[];
-  geometry: Pick<Geometry, 'geom'>;
-};
-export const isImage = (doc: BaseDocument): doc is Image | ImageListing => doc.type === 'i';
-export const isImageListing = (doc: BaseDocument): doc is ImageListing =>
-  doc.type === 'i' && !Object.hasOwn(doc, 'activities');
+const BaseArticle = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('c'),
+  activities: v.array(Activity),
+  categories: v.array(ArticleCategory),
+  article_type: ArticleType,
+});
 
-export type Map = BaseDocument & { type: 'm'; areas: AreaListing[]; code?: string; scale?: string; editor?: string };
-export type MapListingLocale = Pick<BaseLocale, 'title'>;
-export type MapListing = Pick<Map, StringKeyOf<BaseDocument> | 'code' | 'editor' | 'areas'> & {
-  locales: MapListingLocale;
-};
+export const ArticleListing = v.strictObject({
+  ...BaseArticle.entries,
+  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+});
+export type ArticleListing = v.InferOutput<typeof ArticleListing>;
 
-export type OutingLocale = BaseLocale & {
-  access_comment?: string;
-  avalanches?: string;
-  conditions_levels?: string;
-  conditions?: string;
-  description?: string;
-  hut_comment?: string;
-  participants?: string;
-  route_description?: string;
-  summary?: string;
-  timing?: string;
-  weather?: string;
-};
-export type Outing = BaseDocument & {
-  type: 'o';
-  locales: OutingLocale[];
-  cooked?: OutingLocale;
-  associations: {
-    articles: ArticleListing[];
-    images: ImageListing[];
-    routes: RouteListing[];
-    users: ProfileListing[];
-    xreports: XreportListing[];
-  };
-  areas: AreaListing[];
-  access_condition?: AccessCondition;
-  activities: Activity[];
-  avalanche_signs?: AvalancheSigns[];
-  condition_rating?: ConditionRating;
-  date_end: ISODate;
-  date_start: ISODate;
-  disable_comments: boolean;
-  elevation_access?: number;
-  elevation_down_snow?: number;
-  elevation_max?: number;
-  elevation_min?: number;
-  elevation_up_snow?: number;
-  engagement_rating?: EngagementRating;
-  equipment_rating?: EquipmentRating;
-  frequentation?: FrequentationType;
-  glacier_rating?: GlacierRating;
-  global_rating?: GlobalRating;
-  height_diff_difficulties?: number;
-  height_diff_down?: number;
-  height_diff_up?: number;
-  hiking_rating?: HikingRating;
-  hut_status?: HutStatus;
-  ice_rating?: IceRating;
-  labande_global_rating?: GlobalRating;
-  length_total?: number;
-  lift_status?: LiftStatus;
-  mtb_down_rating?: MtbDownRating;
-  mtb_up_rating?: MtbUpRating;
-  partial_trip: boolean;
-  participant_count?: number;
-  public_transport: boolean;
-  rock_free_rating?: ClimbingRating;
-  ski_rating?: SkiRating;
-  snow_quality: SnowQualityRating;
-  snow_quantity?: SnowQuantityRating;
-  snowshoe_rating?: SnowshoeRating;
-  via_ferrata_rating?: ViaFerrataRating;
-};
-export type OutingListingLocale = Pick<OutingLocale, 'title' | 'summary'>;
-export type OutingListing = Pick<
-  Outing,
-  | StringKeyOf<BaseDocument>
-  | 'areas'
-  | 'activities'
-  | 'date_start'
-  | 'date_end'
-  | 'elevation_max'
-  | 'height_diff_up'
-  | 'public_transport'
-  | 'condition_rating'
-  | 'quality'
-  // skitouring
-  | 'ski_rating'
-  | 'labande_global_rating'
-  // snow_ice_mixed
-  | 'height_diff_difficulties'
-  | 'global_rating'
-  | 'engagement_rating'
-  // mountain_climbing
-  | 'global_rating'
-  | 'engagement_rating'
-  | 'height_diff_difficulties'
-  // rock climbing
-  | 'global_rating'
-  | 'equipment_rating'
-  | 'rock_free_rating'
-  // ice_climbing
-  | 'global_rating'
-  | 'ice_rating'
-  // hiking
-  | 'hiking_rating'
-  // snowshoeing
-  | 'snowshoe_rating'
-  // mountain_biking
-  | 'mtb_up_rating'
-  | 'mtb_down_rating'
-  // via_ferrata
-  | 'via_ferrata_rating'
-> & {
-  img_count: number;
-  locales: OutingListingLocale;
-  geometry: Pick<Geometry, 'geom'> & { has_geom_detail: boolean };
-};
-export const isOuting = (doc: BaseDocument): doc is Outing | OutingListing => doc.type === 'o';
-export const isOutingListing = (doc: BaseDocument): doc is OutingListing =>
-  isOuting(doc) && Object.hasOwn(doc, 'has_geom_detail');
+const BaseBook = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('b'),
+  author: v.nullable(v.string()),
+  activities: v.array(Activity),
+  book_types: v.array(BookType),
+});
 
-export type Profile = BaseDocument & {
-  type: 'u';
-  associations: {
-    images: ImageListing[];
-  };
-  areas: AreaListing[];
-  activities: Activity[];
-  categories: UserCategory[];
-  name: string;
-  forum_username: string;
-};
-export type ProfileListing = Pick<
-  Profile,
-  StringKeyOf<BaseDocument> | 'name' | 'forum_username' | 'categories' | 'activities' | 'areas'
->;
-export const isProfile = (doc: BaseDocument): doc is Profile => doc.type === 'u';
+export const BookListing = v.strictObject({
+  ...BaseBook.entries,
+  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+});
+export type BookListing = v.InferOutput<typeof BookListing>;
 
-export type RouteLocale = BaseLocale & {
-  title_prefix?: string;
-  slackline_anchor1?: string;
-  slackline_anchor2?: string;
-  slope?: string;
-  remarks?: string;
-  gear?: string;
-  external_resources?: string;
-};
-export type Route = BaseDocument & {
-  type: 'r';
-  locales: RouteLocale[];
-  cooked?: RouteLocale;
-  associations: {
-    articles: ArticleListing[];
-    books: BookListing[];
-    images: ImageListing[];
-    routes: RouteListing[];
-    waypoints: WaypointListing[];
-    xreports: XreportListing[];
-    recent_outings: {
-      documents: OutingListing[];
-      total: number;
-    };
-  };
+const BaseImage = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('i'),
+  areas: v.array(AreaListing),
+  author: v.nullable(v.string()),
+  filename: v.string(),
+});
 
-  areas: AreaListing[];
-  maps: MapListing[];
-  activities: Activity[];
-  aid_rating?: AidRating;
-  climbing_outdoor_type?: ClimbingOutdoorType;
-  configuration?: RouteConfigurationType;
-  difficulties_height?: number;
-  durations?: RouteDurationType[];
-  elevation_max?: number;
-  elevation_min?: number;
-  engagement_rating?: EngagementRating;
-  equipment_rating?: EquipmentRating;
-  exposition_rock_rating?: ExpositionRockRating;
-  glacier_gear?: GlacierGearType;
-  global_rating?: GlobalRating;
-  height_diff_access?: number;
-  height_diff_difficulties?: number;
-  height_diff_down?: number;
-  height_diff_up?: number;
-  hiking_mtb_exposition?: ExpositionRating;
-  hiking_rating?: HikingRating;
-  ice_rating?: IceRating;
-  labande_global_rating?: GlobalRating;
-  labande_ski_rating?: LabandeSkiRating;
-  lift_access?: boolean;
-  main_waypoint_id?: number;
-  mixed_rating?: MixedRating;
-  mtb_down_rating?: MtbDownRating;
-  mtb_height_diff_portages?: number;
-  mtb_length_asphalt?: number;
-  mtb_length_trail?: number;
-  mtb_up_rating?: number;
-  orientations?: OrientationType[];
-  risk_rating?: RiskRating;
-  rock_free_rating?: ClimbingRating;
-  rock_required_rating?: ClimbingRating;
-  rock_types?: RockType[];
-  route_length?: number;
-  route_types?: RouteType[];
-  ski_exposition?: ExpositionRating;
-  ski_rating?: SkiRating;
-  slackline_height?: number;
-  slackline_type?: SlacklineType;
-  snowshoe_rating?: SnowshoeRating;
-  via_ferrata_rating?: ViaFerrataRating;
-};
-export type RouteListingLocale = Pick<RouteLocale, 'title' | 'title_prefix' | 'summary'>;
-export type RouteListing = Pick<
-  Route,
-  | StringKeyOf<BaseDocument>
-  | 'areas'
-  | 'elevation_max'
-  | 'elevation_min'
-  | 'height_diff_up'
-  | 'height_diff_down'
-  | 'height_diff_difficulties'
-  | 'activities'
-  | 'quality'
-  | 'orientations'
-  // skitouring
-  | 'ski_rating'
-  | 'ski_exposition'
-  | 'labande_ski_rating'
-  | 'labande_global_rating'
-  // snow_ice_mixed
-  | 'global_rating'
-  | 'engagement_rating'
-  | 'risk_rating'
-  | 'equipment_rating'
-  | 'ice_rating'
-  | 'mixed_rating'
-  // mountain_climbing
-  | 'global_rating'
-  | 'engagement_rating'
-  | 'risk_rating'
-  | 'equipment_rating'
-  | 'exposition_rock_rating'
-  | 'rock_free_rating'
-  | 'rock_required_rating'
-  | 'aid_rating'
-  // rock_climbing
-  | 'global_rating'
-  | 'engagement_rating'
-  | 'risk_rating'
-  | 'equipment_rating'
-  | 'exposition_rock_rating'
-  | 'rock_free_rating'
-  | 'rock_required_rating'
-  | 'aid_rating'
-  | 'climbing_outdoor_type'
-  // ice_climbing
-  | 'ice_rating'
-  | 'global_rating'
-  | 'engagement_rating'
-  | 'risk_rating'
-  | 'equipment_rating'
-  | 'mixed_rating'
-  // hiking
-  | 'hiking_rating'
-  | 'hiking_mtb_exposition'
-  // snowshoeing
-  | 'snowshoe_rating'
-  // mountain_biking
-  | 'mtb_down_rating'
-  | 'mtb_up_rating'
-  | 'hiking_mtb_exposition'
-  // via_ferrata
-  | 'via_ferrata_rating'
-  | 'engagement_rating'
-  | 'equipment_rating'
-  // slacklining
-  | 'route_length'
-  | 'slackline_height'
-  | 'activities'
-  | 'quality'
-  | 'orientations'
-  | 'slackline_type'
-> & {
-  locales: RouteListingLocale[];
-  geometry: Pick<Geometry, 'geom'> & { has_geom_detail: boolean };
-};
-export const isRoute = (doc: BaseDocument): doc is Route | RouteListing => doc.type === 'r';
-export const isRouteListing = (doc: BaseDocument): doc is RouteListing =>
-  isRoute(doc) && Object.hasOwn(doc, 'has_geom_detail');
+export const ImageListing = v.strictObject({
+  ...v.omit(BaseImage, ['quality']).entries,
+  geometry: v.nullable(
+    v.object({
+      ...BaseGeometry.entries,
+      geom: v.nullable(
+        v.pipe(
+          v.string(),
+          v.transform(input => v.parse(Point, JSON.parse(input))),
+        ),
+      ),
+    }),
+  ),
+});
+export type ImageListing = v.InferOutput<typeof ImageListing>;
 
-export type WaypointLocale = BaseLocale & { external_resources?: string; access?: string; access_period?: string };
-export type Waypoint = BaseDocument & {
-  type: 'w';
-  locales: WaypointLocale[];
-  cooked?: WaypointLocale;
-  associations: {
-    articles: ArticleListing[];
-    books: BookListing[];
-    images: ImageListing[];
-    waypoints: WaypointListing[];
-    waypoint_children: WaypointListing[];
-    xreports: XreportListing[];
-    recent_outings: {
-      document: OutingListing[];
-      total: number;
-    };
-    all_routes: {
-      documents: RouteListing[];
-      total: number;
-    };
-  };
-  areas: AreaListing[];
-  maps: MapListing[];
-  access_time?: AccessTime;
-  best_periods?: Month[];
-  blanket_unstaffed?: boolean;
-  capacity?: number;
-  capacity_staffed?: number;
-  children_proof?: ChildrenProofType;
-  climbing_indoor_types?: ClimbingIndoorType[];
-  climbing_outdoor_types?: ClimbingOutdoorType[];
-  climbing_rating_max?: ClimbingRating;
-  climbing_rating_min?: ClimbingRating;
-  climbing_styles?: ClimbingStyle[];
-  custodianship?: boolean;
-  elevation: number;
-  elevation_min?: number;
-  equipment_ratings?: EquipmentRating;
-  gas_unstaffed?: boolean;
-  ground_types?: GroundType;
-  heating_unstaffed?: boolean;
-  height_max?: number;
-  height_median?: number;
-  height_min?: number;
-  length?: number;
-  lift_access?: boolean;
-  maps_info?: string;
-  matress_unstaffed?: boolean;
-  orientations?: OrientationType[];
-  paragliding_rating?: ParaglidingRating;
-  parking_fee?: boolean;
-  phone?: string;
-  phone_custodian?: number;
-  product_types?: ProductType[];
-  prominence?: number;
-  public_transportation_rating?: PublicTransportationRating;
-  public_transportation_types?: PublicTransportationType[];
-  rain_proof?: boolean;
-  rock_types?: RockType[];
-  routes_quantity?: number;
-  slackline_length_max?: number;
-  slackline_length_min?: number;
-  slackline_types?: SlacklineType[];
-  waypoint_slope?: string;
-  snow_clearance_rating?: SnowClearanceRating;
-  url?: string;
-  waypoint_type: WaypointType;
-  weather_station_types?: WeatherStationType[];
-};
-export type WaypointListingLocale = Pick<
-  WaypointLocale,
-  | 'title'
-  | 'summary'
-  // climbing_outdoor
-  | 'access_period'
->;
-export type WaypointListing = Pick<
-  Waypoint,
-  | StringKeyOf<BaseDocument>
-  | 'areas'
-  | 'maps'
-  | 'elevation'
-  | 'quality'
-  | 'waypoint_type'
-  // access
-  | 'public_transportation_rating'
-  // slackline_spot
-  | 'slackline_types'
-  | 'slackline_length_min'
-  | 'slackline_length_max'
-> & {
-  locales: WaypointListingLocale;
-  geometry: Pick<Geometry, 'geom'>;
-};
-export const isWaypoint = (doc: BaseDocument): doc is Waypoint | WaypointListing => doc.type === 'w';
+const BaseMap = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('m'),
+  areas: v.array(AreaListing),
+  code: v.nullable(v.string()),
+  editor: v.nullable(v.string()),
+});
 
-export type XreportLocale = BaseLocale & {
-  place?: string;
-  access?: string;
-  route_study?: string;
-  conditions?: string;
-  training?: string;
-  motivations?: string;
-  group_management?: string;
-  risk?: string;
-  time_management?: string;
-  safety?: string;
-  reduce_impact?: string;
-  increase_impact?: string;
-  modifications?: string;
-  other_comments?: string;
-};
-export type Xreport = BaseDocument & {
-  type: 'x';
-  locales: XreportLocale[];
-  cooked?: XreportLocale;
-  associations: {
-    articles: ArticleListing[];
-    images: ImageListing[];
-    outings: OutingListing[];
-    routes: RouteListing[];
-    users: ProfileListing[];
-    waypoints: WaypointListing[];
-  };
-  elevation?: number;
-  date: ISODate;
-  event_type?: EventType;
-  event_activity?: EventActivity;
-  nb_participants?: number;
-  nb_impacted?: number;
-  rescue?: boolean;
-  avalanche_level?: AvalancheLevel;
-  avalanche_slope?: AvalancheSlope;
-  severity?: Severity;
-  author_status?: AuthorStatus;
-  activity_rate?: ActivityRate;
-  age?: number;
-  gender?: Gender;
-  previous_injuries?: PreviousInjury;
-  autonomy?: Autonomy;
-  qualification?: Qualification;
-  supervision?: Supervision;
-  anonymous: boolean;
-};
-export type XreportListingLocale = Pick<XreportLocale, 'title'>;
-export type XreportListing = Pick<
-  Xreport,
-  | StringKeyOf<BaseDocument>
-  | 'elevation'
-  | 'date'
-  | 'event_type'
-  | 'event_activity'
-  | 'nb_participants'
-  | 'nb_impacted'
-  | 'avalanche_level'
-  | 'avalanche_slope'
-  | 'severity'
-  | 'quality'
-> & { locales: XreportListingLocale[]; geometry: Pick<Geometry, 'geom'> };
-export type Document = Area | Article | Image | Map | Outing | Route | Profile | Waypoint | Book | Xreport;
-export type Documents<T extends BaseDocument> = { documents: T[]; total: number };
-export type DocumentListing =
+export const MapListing = v.strictObject({
+  ...BaseMap.entries,
+});
+export type MapListing = v.InferOutput<typeof MapListing>;
+
+const BaseOuting = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('o'),
+  areas: v.array(AreaListing),
+  activities: v.array(Activity),
+  date_end: IsoDate,
+  date_start: IsoDate,
+  condition_rating: v.nullable(ConditionRating),
+  elevation_max: v.nullable(v.number()),
+  engagement_rating: v.nullish(EngagementRating), // snow_ice_mixed, mountain_climbing, rock_climbing
+  equipment_rating: v.nullish(EquipmentRating), // rock_climbing
+  global_rating: v.nullish(GlobalRating), // snow_ice_mixed, mountain_climbing, rock_climbing, ice_climbing
+  height_diff_difficulties: v.nullish(v.number()), // snow_ice_mixed, mountain_climbing
+  height_diff_up: v.nullable(v.number()),
+  hiking_rating: v.nullish(HikingRating), // hiking
+  ice_rating: v.nullish(IceRating), // ice_climbing
+  labande_global_rating: v.nullish(GlobalRating), // skitouring
+  mtb_down_rating: v.nullish(MtbDownRating), // mountain_biking
+  mtb_up_rating: v.nullish(MtbUpRating), // mountain_biking
+  public_transport: v.nullable(v.boolean()),
+  rock_free_rating: v.nullish(ClimbingRating), // rock_climbing
+  ski_rating: v.nullish(SkiRating), // skitouring
+  snowshoe_rating: v.nullish(SnowshoeRating), // snowshoeing
+  via_ferrata_rating: v.nullish(ViaFerrataRating), // via_ferrata
+});
+
+export const OutingListing = v.strictObject({
+  ...BaseOuting.entries,
+  author: v.object({
+    name: v.string(),
+    user_id: PositiveInt,
+  }),
+  img_count: Uint,
+  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+  geometry: v.object({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
+});
+export type OutingListing = v.InferOutput<typeof OutingListing>;
+
+const BaseProfile = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('u'),
+  areas: v.array(AreaListing),
+  activities: v.nullable(v.array(Activity)),
+  categories: v.nullable(v.array(UserCategory)),
+  name: v.pipe(v.string(), v.nonEmpty()),
+  forum_username: v.pipe(v.string(), v.nonEmpty()),
+});
+
+const ProfileListing = v.strictObject({
+  ...v.omit(BaseProfile, ['quality']).entries,
+  locales: v.array(v.omit(BaseLocale, ['title'])),
+});
+export type ProfileListing = v.InferOutput<typeof ProfileListing>;
+
+const BaseRoute = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('r'),
+  areas: v.array(AreaListing),
+  elevation_max: v.nullish(Uint), // NOT for slacklining
+  elevation_min: v.nullish(Uint), // NOT for slacklining
+  height_diff_difficulties: v.nullish(Uint), // NOT for slacklining
+  height_diff_down: v.nullish(Uint), // NOT for slacklining
+  height_diff_up: v.nullish(Uint), // NOT for slacklining
+  activities: v.array(Activity),
+  orientations: v.array(OrientationType),
+  ski_rating: v.nullish(SkiRating), // skitouring
+  ski_exposition: v.nullish(ExpositionRating), // skitouring
+  labande_global_rating: v.nullish(GlobalRating), // skitouring
+  labande_ski_rating: v.nullish(LabandeSkiRating), // skitouring
+  global_rating: v.nullish(GlobalRating), // snow_ice_mixed, mountain_climbing, rock_climbing, ice_climbing
+  engagement_rating: v.nullish(EngagementRating), // snow_ice_mixed, mountain_climbing, rock_climbing, ice_climbing, via_ferrata
+  risk_rating: v.nullish(RiskRating), // snow_ice_mixed, mountain_climbing, rock_climbing, ice_climbing
+  equipment_rating: v.nullish(EquipmentRating), // snow_ice_mixed, mountain_climbing, rock_climbing, ice_climbing, via_ferrata
+  ice_rating: v.nullish(IceRating), // snow_ice_mixed, ice_climbing
+  mixed_rating: v.nullish(MixedRating), // snow_ice_mixed, ice_climbing
+  exposition_rock_rating: v.nullish(ExpositionRockRating), // mountain_climbing, rock_climbing
+  rock_free_rating: v.nullish(ClimbingRating), // mountain_climbing, rock_climbing
+  rock_required_rating: v.nullish(ClimbingRating), // mountain_climbing, rock_climbing
+  aid_rating: v.nullish(AidRating), // mountain_climbing, rock_climbing
+  climbing_outdoor_type: v.nullish(ClimbingOutdoorType), // rock_climbing
+  hiking_mtb_exposition: v.nullish(ExpositionRating), // hiking, mountain_biking
+  hiking_rating: v.nullish(HikingRating), // hiking
+  snowshoe_rating: v.nullish(SnowshoeRating), // snowshoeing
+  mtb_down_rating: v.nullish(MtbDownRating), // mountain_biking
+  mtb_up_rating: v.nullish(MtbUpRating), // mountain_biking
+  via_ferrata_rating: v.nullish(ViaFerrataRating), // via_ferrata
+  route_length: v.nullish(Uint), // slacklining
+  slackline_height: v.nullish(Uint), // slacklining
+  slackline_type: v.nullish(SlacklineType), // slacklining
+});
+
+export const RouteListing = v.strictObject({
+  ...BaseRoute.entries,
+  locales: v.array(
+    v.object({
+      ...BaseLocale.entries,
+      ...v.pick(FullBaseLocale, ['summary']).entries,
+      title_prefix: v.nullable(v.string()),
+    }),
+  ),
+  geometry: v.object({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
+});
+export type RouteListing = v.InferOutput<typeof RouteListing>;
+
+const BaseWaypoint = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('w'),
+  areas: v.array(AreaListing),
+  elevation: Uint,
+  waypoint_type: WaypointType,
+});
+
+export const WaypointListing = v.strictObject({
+  ...BaseWaypoint.entries,
+  public_transportation_rating: v.nullish(PublicTransportationRating), // access
+  slackline_length_max: v.nullish(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())), // slackline_spot
+  slackline_length_min: v.nullish(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())), // slackline_spot
+  slackline_types: v.nullish(v.array(SlacklineType)),
+  locales: v.array(
+    v.object({
+      ...BaseLocale.entries,
+      ...v.pick(FullBaseLocale, ['summary']).entries,
+      access_period: v.nullish(v.string()), // climbing_outdoor
+    }),
+  ),
+  geometry: v.omit(Geometry, ['geom_detail']),
+});
+export type WaypointListing = v.InferOutput<typeof WaypointListing>;
+
+const BaseXreport = v.object({
+  ...BaseDocument.entries,
+  type: v.literal('x'),
+  areas: v.array(AreaListing),
+  elevation: v.nullable(Uint),
+  date: IsoDate,
+  event_type: v.nullable(EventType),
+  event_activity: v.nullable(EventActivity),
+  nb_participants: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())),
+  nb_impacted: v.nullable(Uint),
+  avalanche_level: v.nullable(AvalancheLevel),
+  avalanche_slope: v.nullable(AvalancheSlope),
+  severity: v.nullable(Severity),
+});
+
+export const XreportListing = v.strictObject({
+  ...BaseXreport.entries,
+  geometry: BaseGeometry,
+});
+export type XreportListing = v.InferOutput<typeof XreportListing>;
+
+export const Area = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseArea.entries,
+  associations: v.object({
+    images: v.array(ImageListing),
+  }),
+  geometry: v.object({
+    ...BaseGeometry.entries,
+    geom_detail: v.nullable(
+      v.pipe(
+        v.string(),
+        v.transform(input => v.parse(v.union([Polygon, MultiPolygon]), JSON.parse(input))),
+      ),
+    ),
+  }),
+});
+export type Area = v.InferOutput<typeof Area>;
+
+export const Article = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseArticle.entries,
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    books: v.array(BookListing),
+    outings: v.array(OutingListing),
+    routes: v.array(RouteListing),
+    waypoints: v.array(WaypointListing),
+    images: v.array(ImageListing),
+    users: v.array(ProfileListing),
+    xreports: v.array(XreportListing),
+  }),
+});
+export type Article = v.InferOutput<typeof Article>;
+
+export const Book = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseBook.entries,
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    routes: v.array(RouteListing),
+    waypoints: v.array(WaypointListing),
+    images: v.array(ImageListing),
+  }),
+  editor: v.nullable(v.string()),
+  url: v.nullable(v.string()),
+  isbn: v.nullable(v.string()),
+  publication_date: v.nullable(v.string()),
+  langs: v.array(ApiLang),
+  nb_page: v.nullable(Uint),
+});
+export type Book = v.InferOutput<typeof Book>;
+
+export const Image = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseImage.entries,
+  associations: v.object({
+    areas: v.array(AreaListing),
+    articles: v.array(ArticleListing),
+    books: v.array(BookListing),
+    outings: v.array(OutingListing),
+    routes: v.array(RouteListing),
+    waypoints: v.array(WaypointListing),
+    images: v.array(ImageListing),
+    users: v.array(ProfileListing),
+    xreports: v.array(XreportListing),
+  }),
+  activities: v.array(Activity),
+  camera_name: v.nullable(v.string()),
+  date_time: IsoDateTime,
+  elevation: v.nullable(Uint),
+  height: v.pipe(v.number(), v.minValue(1), v.finite()),
+  categories: v.array(ImageCategory),
+  image_type: ImageType,
+  iso_speed: v.nullable(Uint),
+  file_size: v.pipe(v.number(), v.minValue(1), v.finite()),
+  exposure_time: v.nullable(v.pipe(v.number(), v.minValue(0), v.finite())),
+  focal_length: v.nullable(Uint),
+  fnumber: v.nullable(v.pipe(v.number(), v.minValue(0), v.finite())),
+  width: v.pipe(v.number(), v.minValue(1), v.finite()),
+});
+export type Image = v.InferOutput<typeof Image>;
+
+export const Map = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseMap.entries,
+  scale: v.nullable(v.string()),
+});
+export type Map = v.InferOutput<typeof Map>;
+
+const OutingLocale = v.object({
+  ...FullBaseLocale.entries,
+  access_comment: v.nullable(v.string()),
+  avalanches: v.nullable(v.string()),
+  conditions_levels: v.nullable(v.string()),
+  conditions: v.nullable(v.string()),
+  description: v.nullable(v.string()),
+  hut_comment: v.nullable(v.string()),
+  participants: v.nullable(v.string()),
+  route_description: v.nullable(v.string()),
+  summary: v.nullable(v.string()),
+  timing: v.nullable(v.string()),
+  weather: v.nullable(v.string()),
+});
+export const Outing = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseOuting.entries,
+  locales: v.array(OutingLocale),
+  cooked: v.nullable(OutingLocale),
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    images: v.array(ImageListing),
+    routes: v.array(RouteListing),
+    users: v.array(ProfileListing),
+    xreports: v.array(XreportListing),
+  }),
+  access_condition: v.nullable(AccessCondition),
+  avalanche_signs: v.nullish(v.array(AvalancheSigns)),
+  disable_comments: v.boolean(),
+  elevation_access: v.nullable(v.number()),
+  elevation_down_snow: v.nullish(v.number()),
+  elevation_min: v.nullable(v.number()),
+  elevation_up_snow: v.nullish(v.number()),
+  frequentation: v.nullable(FrequentationType),
+  glacier_rating: v.nullish(GlacierRating),
+  height_diff_down: v.nullable(v.number()),
+  hut_status: v.nullable(HutStatus),
+  length_total: v.nullable(v.number()),
+  lift_status: v.nullable(LiftStatus),
+  partial_trip: v.boolean(),
+  participant_count: v.nullable(v.number()),
+  snow_quality: v.nullish(SnowQualityRating),
+  snow_quantity: v.nullish(SnowQuantityRating),
+});
+export type Outing = v.InferOutput<typeof Outing>;
+
+export const Profile = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseProfile.entries,
+  associations: v.object({
+    images: v.array(ImageListing),
+  }),
+});
+export type Profile = v.InferOutput<typeof Profile>;
+
+const RouteLocale = v.object({
+  ...FullBaseLocale.entries,
+  title_prefix: v.nullable(v.string()),
+  slackline_anchor1: v.nullish(v.string()), // slacklining
+  slackline_anchor2: v.nullish(v.string()), // slacklining
+  slope: v.nullish(v.string()), // skitouring, snow_ice_mixed, ice_climbing, snowshoeing
+  remarks: v.nullable(v.string()),
+  gear: v.nullable(v.string()),
+  external_resources: v.nullable(v.string()),
+  route_history: v.nullable(v.string()),
+});
+export const Route = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseRoute.entries,
+  locales: v.array(RouteLocale),
+  cooked: v.nullable(RouteLocale),
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    books: v.array(BookListing),
+    images: v.array(ImageListing),
+    routes: v.array(RouteListing),
+    waypoints: v.array(WaypointListing),
+    xreports: v.array(XreportListing),
+    recent_outings: v.object({
+      documents: v.array(OutingListing),
+      total: Uint,
+    }),
+  }),
+  maps: v.array(MapListing),
+  configuration: v.nullable(RouteConfigurationType),
+  difficulties_height: v.nullable(Uint),
+  durations: v.nullable(v.array(RouteDurationType)),
+  glacier_gear: v.nullable(GlacierGearType),
+  height_diff_access: v.nullable(Uint),
+  lift_access: v.nullable(v.boolean()),
+  main_waypoint_id: v.nullable(PositiveInt),
+  mtb_height_diff_portages: v.nullable(Uint),
+  mtb_length_asphalt: v.nullable(Uint),
+  mtb_length_trail: v.nullable(Uint),
+  rock_types: v.nullable(v.array(RockType)),
+  route_types: v.nullable(v.array(RouteType)),
+});
+export type Route = v.InferOutput<typeof Route>;
+
+const WaypointLocale = v.object({
+  ...FullBaseLocale.entries,
+  external_resources: v.nullable(v.string()),
+  access: v.nullable(v.string()),
+  access_period: v.nullable(v.string()),
+});
+export const Waypoint = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseWaypoint.entries,
+  locales: v.array(WaypointLocale),
+  cooked: v.nullable(WaypointLocale),
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    books: v.array(BookListing),
+    images: v.array(ImageListing),
+    waypoints: v.array(WaypointListing),
+    waypoint_children: v.array(WaypointListing),
+    xreports: v.array(XreportListing),
+    recent_outings: v.object({
+      document: v.array(OutingListing),
+      total: Uint,
+    }),
+    all_routes: v.object({
+      documents: v.array(RouteListing),
+      total: Uint,
+    }),
+  }),
+  maps: v.array(MapListing),
+  access_time: v.nullable(AccessTime),
+  best_periods: v.nullable(v.array(Month)),
+  blanket_unstaffed: v.nullable(v.boolean()),
+  capacity: v.nullable(Uint),
+  capacity_staffed: v.nullable(Uint),
+  children_proof: v.nullable(ChildrenProofType),
+  climbing_indoor_types: v.nullable(v.array(ClimbingIndoorType)),
+  climbing_outdoor_types: v.nullable(v.array(ClimbingOutdoorType)),
+  climbing_rating_max: v.nullable(ClimbingRating),
+  climbing_rating_min: v.nullable(ClimbingRating),
+  climbing_styles: v.nullable(v.array(ClimbingStyle)),
+  custodianship: v.nullable(v.boolean()),
+  elevation_min: v.nullable(Uint),
+  equipment_rating: v.nullable(EquipmentRating),
+  gas_unstaffed: v.nullable(v.boolean()),
+  ground_types: v.nullable(GroundType),
+  heating_unstaffed: v.nullable(v.boolean()),
+  height_max: v.nullable(Uint),
+  height_median: v.nullable(Uint),
+  height_min: v.nullable(Uint),
+  length: v.nullable(Uint),
+  lift_access: v.nullable(v.boolean()),
+  maps_info: v.nullable(v.string()),
+  matress_unstaffed: v.nullable(v.boolean()),
+  orientations: v.nullable(v.array(OrientationType)),
+  paragliding_rating: v.nullable(ParaglidingRating),
+  parking_fee: v.nullable(v.boolean()),
+  phone: v.nullable(v.string()),
+  phone_custodian: v.nullable(v.string()),
+  product_types: v.nullable(v.array(ProductType)),
+  prominence: v.nullable(Uint),
+  public_transportation_rating: v.nullable(PublicTransportationRating),
+  public_transportation_types: v.nullable(v.array(PublicTransportationType)),
+  rain_proof: v.nullable(v.boolean()),
+  rock_types: v.nullable(v.array(RockType)),
+  routes_quantity: v.nullable(Uint),
+  slackline_length_max: v.nullable(Uint),
+  slackline_length_min: v.nullable(Uint),
+  slackline_types: v.nullable(v.array(SlacklineType)),
+  waypoint_slope: v.nullable(v.string()),
+  snow_clearance_rating: v.nullable(SnowClearanceRating),
+  url: v.nullable(v.string()),
+  weather_station_types: v.nullable(v.array(WeatherStationType)),
+});
+export type Waypoint = v.InferOutput<typeof Waypoint>;
+
+const XreportLocale = v.object({
+  ...FullBaseLocale.entries,
+  place: v.nullable(v.string()),
+  access: v.nullable(v.string()),
+  route_study: v.nullable(v.string()),
+  conditions: v.nullable(v.string()),
+  training: v.nullable(v.string()),
+  motivations: v.nullable(v.string()),
+  group_management: v.nullable(v.string()),
+  risk: v.nullable(v.string()),
+  time_management: v.nullable(v.string()),
+  safety: v.nullable(v.string()),
+  reduce_impact: v.nullable(v.string()),
+  increase_impact: v.nullable(v.string()),
+  modifications: v.nullable(v.string()),
+  other_comments: v.nullable(v.string()),
+});
+export const Xreport = v.strictObject({
+  ...FullBaseDocument.entries,
+  ...BaseXreport.entries,
+  locales: v.array(XreportLocale),
+  cooked: v.nullable(XreportLocale),
+  associations: v.object({
+    articles: v.array(ArticleListing),
+    images: v.array(ImageListing),
+    outings: v.array(OutingListing),
+    routes: v.array(RouteListing),
+    users: v.array(ProfileListing),
+    waypoints: v.array(WaypointListing),
+  }),
+  rescue: v.nullable(v.boolean()),
+  author_status: v.nullable(AuthorStatus),
+  activity_rate: v.nullable(ActivityRate),
+  age: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())),
+  gender: v.nullable(Gender),
+  previous_injuries: v.nullable(PreviousInjury),
+  autonomy: v.nullable(Autonomy),
+  qualification: v.nullable(Qualification),
+  supervision: v.nullable(Supervision),
+  anonymous: v.boolean(),
+});
+export type Xreport = v.InferOutput<typeof Xreport>;
+
+export type Document =
+  | Area
   | AreaListing
+  | Article
   | ArticleListing
-  | ImageListing
-  | MapListing
-  | OutingListing
-  | RouteListing
-  | ProfileListing
-  | WaypointListing
+  | Book
   | BookListing
+  | Image
+  | ImageListing
+  | Map
+  | MapListing
+  | Outing
+  | OutingListing
+  | Profile
+  | ProfileListing
+  | Route
+  | RouteListing
+  | Waypoint
+  | WaypointListing
+  | Xreport
   | XreportListing;
 
-export type Feed = {
-  feed: FeedItem[];
-  pagination_token: string;
-};
-export type FeedItem = {
-  id: number;
-  time: ISODateTime;
-  user: ProfileListing;
-  change_type: 'updated' | 'created' | 'added_photos';
-  document: DocumentListing;
-  participants: ProfileListing[];
-  image1?: ImageListing;
-  image2?: ImageListing;
-  image3?: ImageListing;
-  more_images: boolean;
-};
+export const AreaList = v.strictObject({
+  documents: v.array(AreaListing),
+  total: Uint,
+});
+export type AreaList = v.InferOutput<typeof AreaList>;
 
-export type UserPreferences =
-  | {
-      followed_only: false;
-      activities: Activity[];
-      areas: AreaListing[];
-      langs: ApiLang[];
-    }
-  | {
-      followed_only: true;
-      activities: never[];
-      areas: never[];
-      langs: never[];
-    };
+export const ArticleList = v.strictObject({
+  documents: v.array(ArticleListing),
+  total: Uint,
+});
+export type ArticleList = v.InferOutput<typeof ArticleList>;
 
-export type Query = Record<string, any>; // TODO
+export const BookList = v.strictObject({
+  documents: v.array(BookListing),
+  total: Uint,
+});
+export type BookList = v.InferOutput<typeof BookList>;
+
+export const ImageList = v.strictObject({
+  documents: v.array(ImageListing),
+  total: Uint,
+});
+export type ImageList = v.InferOutput<typeof ImageList>;
+
+export const MapList = v.strictObject({
+  documents: v.array(MapListing),
+  total: Uint,
+});
+export type MapList = v.InferOutput<typeof MapList>;
+
+export const OutingList = v.strictObject({
+  documents: v.array(OutingListing),
+  total: Uint,
+});
+export type OutingList = v.InferOutput<typeof OutingList>;
+
+export const RouteList = v.strictObject({
+  documents: v.array(RouteListing),
+  total: Uint,
+});
+export type RouteList = v.InferOutput<typeof RouteList>;
+
+export const WaypointList = v.strictObject({
+  documents: v.array(WaypointListing),
+  total: Uint,
+});
+export type WaypointList = v.InferOutput<typeof WaypointList>;
+
+export const XreportList = v.strictObject({
+  documents: v.array(XreportListing),
+  total: Uint,
+});
+export type XreportList = v.InferOutput<typeof XreportList>;
+
+export const isAreaListing = (doc: Document): doc is AreaListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'a' && !('associations' in doc);
+export const isArticleListing = (doc: Document): doc is ArticleListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'c' && !('associations' in doc);
+export const isBookListing = (doc: Document): doc is BookListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'b' && !('associations' in doc);
+export const isImageListing = (doc: Document): doc is ImageListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'i' && !('associations' in doc);
+export const isMapListing = (doc: Document): doc is MapListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'm' && !('associations' in doc);
+export const isOutingListing = (doc: Document): doc is OutingListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'o' && !('associations' in doc);
+export const isProfileListing = (doc: Document): doc is ProfileListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'u' && !('associations' in doc);
+export const isRouteListing = (doc: Document): doc is RouteListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'r' && !('associations' in doc);
+export const isWaypointListing = (doc: unknown): doc is WaypointListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'w' && !('associations' in doc);
+export const isXreportListing = (doc: Document): doc is XreportListing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'x' && !('associations' in doc);
+
+export const isArea = (doc: Document): doc is Area =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'a' && 'associations' in doc;
+export const isArticle = (doc: Document): doc is Article =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'c' && 'associations' in doc;
+export const isBook = (doc: Document): doc is Book =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'b' && 'associations' in doc;
+export const isImage = (doc: Document): doc is Image =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'i' && 'associations' in doc;
+export const isMap = (doc: Document): doc is Map =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'm' && 'associations' in doc;
+export const isOuting = (doc: Document): doc is Outing =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'o' && 'associations' in doc;
+export const isProfile = (doc: Document): doc is Profile =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'u' && 'associations' in doc;
+export const isRoute = (doc: Document): doc is Route =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'r' && 'associations' in doc;
+export const isWaypoint = (doc: unknown): doc is Waypoint =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'w' && 'associations' in doc;
+export const isXreport = (doc: Document): doc is Xreport =>
+  doc instanceof Object && 'type' in doc && doc['type'] === 'x' && 'associations' in doc;
+
+const FeedItem = v.strictObject({
+  id: PositiveInt,
+  time: IsoDateTime,
+  user: ProfileListing,
+  change_type: v.picklist(['updated', 'created', 'added_photos']),
+  document: v.variant('type', [
+    AreaListing,
+    ArticleListing,
+    BookListing,
+    ImageListing,
+    MapListing,
+    OutingListing,
+    RouteListing,
+    WaypointListing,
+    XreportListing,
+  ]),
+  participants: v.array(ProfileListing),
+  image1: v.nullable(ImageListing),
+  image2: v.nullable(ImageListing),
+  image3: v.nullable(ImageListing),
+  more_images: v.boolean(),
+});
+export type FeedItem = v.InferOutput<typeof FeedItem>;
+export const Feed = v.strictObject({
+  feed: v.array(FeedItem),
+  pagination_token: v.pipe(v.string(), v.nonEmpty()),
+});
+export type Feed = v.InferOutput<typeof Feed>;
+
+export const UserPreferences = v.variant('followed_only', [
+  v.strictObject({
+    followed_only: v.literal(false),
+    activities: v.array(Activity),
+    areas: v.array(AreaListing),
+    langs: v.array(ApiLang),
+  }),
+  v.strictObject({
+    followed_only: v.literal(true),
+    activities: v.pipe(v.array(Activity), v.empty()),
+    areas: v.array(AreaListing),
+    langs: v.array(ApiLang),
+  }),
+]);
+export type UserPreferences = v.InferOutput<typeof UserPreferences>;

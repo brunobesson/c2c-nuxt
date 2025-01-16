@@ -262,5 +262,7 @@
   },
   "card": {
     "elevation_max": "Altitude maximale"
-  }
+  },
+  "waypoint": "point de passage",
+  "xreport": "rapport incident / accident"
 }
