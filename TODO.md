@@ -3,15 +3,14 @@
 * Modules
   * @nuxt/eslint
   * @vite/pwa
-* vue query (tanstack) - <https://tanstack.com/query/v4/docs/framework/vue/guides/ssr>
 * Styling
   * Remlacement des différents composants / plugins ?
   * remettre les skeleton pour ce qui bascule avec le feed
-* cookie security configuration
 * prerender some on-dynamic pages such as topoguide, serac... yeti?
 * SEO useSeoMeta + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools
+* cookie security configuration
 * auth / middleware => cookie security!
 * i18n
   * extract keys (vue-i18n-extract to custommize in order to save ?)
@@ -20,7 +19,7 @@
   * optimization (cf. doc)
 * swiper (module nuxt-swiper)
 * Forms
-  * vee validate? (cf module)
+  * vee validate? (cf module) - vs valibot maybe?
 * scrolltotop (<https://nuxt.com/docs/api/utils/define-page-meta>)
 * Ads
 * Media print
@@ -28,6 +27,5 @@
 * Tests
 * typescript typechecking when building in CI
 * 404 / error page
-* zod / valibot
 * husky
 * What else?
