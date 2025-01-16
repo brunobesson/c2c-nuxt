@@ -33,7 +33,7 @@
                     <NuxtLink to="yeti" class="link">YETI</NuxtLink>
                   </li>
                   <li class="list-disc ml-6">
-                    <i18n-t keypath="home.banner.library">
+                    <i18n-t keypath="home.banner.library" scope="global">
                       <template v-slot:articles>
                         <IconDocument type="article" />&nbsp;<NuxtLink to="articles" class="link">{{
                           $t('articles')
@@ -53,7 +53,7 @@
               </div>
             </div>
             <div>
-              <i18n-t keypath="home.banner.camptocamp" tag="p">
+              <i18n-t keypath="home.banner.camptocamp" tag="p" scope="global">
                 <NuxtLink to="/articles/106726" class="link">
                   {{ $t('camptocamp-association') }}
                 </NuxtLink>
