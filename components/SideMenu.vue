@@ -58,7 +58,7 @@
         :class="{
           '!border-primary font-bold': route.path.startsWith('/yeti'),
         }"
-        ><IconYeti fixed-width /> <span class="ml-0">YETI</span>
+        ><Icon :icon="['miscs', 'yeti']" fixed-width /> <span class="ml-0">YETI</span>
       </span>
     </NuxtLink>
 

@@ -69,6 +69,10 @@
   "outings": "sorties",
   "route": "itinéraire",
   "routes": "itinéraires",
+  "xreport": "rapport incident / accident",
+  "xreports": "rapports incident / accident",
+  "waypoint": "point de passage",
+  "waypoints": "points de passage",
   "forum": "forum",
   "more": "Voir plus",
   "help": "aide",
@@ -115,7 +119,7 @@
     "paragliding": "parapente",
     "rock_climbing": "escalade",
     "skitouring": "ski, surf",
-    "slacklining": "slackline / highine",
+    "slacklining": "slackline / highline",
     "snow_ice_mixed": "neige, glace, mixte",
     "snowshoeing": "raquette",
     "via_ferrata": "via ferrata"
@@ -263,6 +267,15 @@
   "card": {
     "elevation_max": "Altitude maximale"
   },
-  "waypoint": "point de passage",
-  "xreport": "rapport incident / accident"
+  "topoguide": {
+    "outing": {
+      "new": "Nouvelle sortie"
+    },
+    "route": {
+      "new": "Nouvel itinéraire"
+    },
+    "waypoint": {
+      "new": "Nouveau point de passage"
+    }
+  }
 }

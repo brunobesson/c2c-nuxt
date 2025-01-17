@@ -6,7 +6,6 @@
 * Styling
   * Remlacement des différents composants / plugins ?
   * remettre les skeleton pour ce qui bascule avec le feed
-* prerender some on-dynamic pages such as topoguide, serac... yeti?
 * SEO useSeoMeta + pour chaque page + og
   * <https://nuxt.com/docs/getting-started/seo-meta>
   * utiliser l'onglet des nuxt dev tools
@@ -28,4 +27,5 @@
 * typescript typechecking when building in CI
 * 404 / error page
 * husky
+* scrollbars
 * What else?

@@ -369,7 +369,7 @@ const UserCategory = v.picklist([
 export type UserCategory = v.InferOutput<typeof UserCategory>;
 const ViaFerrataRating = v.picklist(['K1', 'K2', 'K3', 'K4', 'K5', 'K6']);
 export type ViaFerrataRating = v.InferOutput<typeof ViaFerrataRating>;
-const WaypointType = v.picklist([
+export const WAYPOINT_TYPES = [
   'summit',
   'pass',
   'lake',
@@ -396,7 +396,8 @@ const WaypointType = v.picklist([
   'virtual',
   'slackline_spot',
   'misc',
-]);
+] as const;
+const WaypointType = v.picklist(WAYPOINT_TYPES);
 export type WaypointType = v.InferOutput<typeof WaypointType>;
 const WeatherStationType = v.picklist([
   'temperature',
@@ -414,7 +415,7 @@ export type WeatherStationType = v.InferOutput<typeof WeatherStationType>;
 const LetterType = v.picklist(['a', 'c', 'i', 'm', 'o', 'r', 'u', 'w', 'b', 'x']);
 export type LetterType = v.InferOutput<typeof LetterType>;
 
-const Activity = v.picklist([
+export const ACTIVITIES = [
   'skitouring',
   'snow_ice_mixed',
   'mountain_climbing',
@@ -426,7 +427,8 @@ const Activity = v.picklist([
   'mountain_biking',
   'via_ferrata',
   'slacklining',
-]);
+] as const;
+const Activity = v.picklist(ACTIVITIES);
 export type Activity = v.InferOutput<typeof Activity>;
 
 const BaseGeometry = v.object({

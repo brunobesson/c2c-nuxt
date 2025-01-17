@@ -103,6 +103,11 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    '/topoguide': { prerender: true },
+    '/serac': { prerender: true },
+  },
+
   runtimeConfig: {
     public: {
       c2cApiBase: 'https://api.camptocamp.org/',

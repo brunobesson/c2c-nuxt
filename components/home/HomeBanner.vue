@@ -28,7 +28,7 @@
                     <NuxtLink to="serac" class="link">SERAC</NuxtLink>
                   </li>
                   <li>
-                    <IconYeti fixed-width />
+                    <Icon :icon="['miscs', 'yeti']" fixed-width />
                     {{ $t('home.banner.yeti') }}
                     <NuxtLink to="yeti" class="link">YETI</NuxtLink>
                   </li>
