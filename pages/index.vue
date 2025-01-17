@@ -17,7 +17,7 @@
             pcToggleButton: {
               root: {
                 class:
-                  '!rounded-full !rounded-s-full bg-transparent border-none before:shadow-none before:!rounded-full before:[&.p-togglebutton-checked]:bg-primary [&.p-togglebutton-checked]:text-white',
+                  'font-normal !rounded-full !rounded-s-full bg-transparent border-none before:shadow-none before:!rounded-full before:[&.p-togglebutton-checked]:bg-primary [&.p-togglebutton-checked]:text-white',
               },
             },
           }" />
