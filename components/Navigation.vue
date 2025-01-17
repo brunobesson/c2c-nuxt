@@ -55,7 +55,7 @@
           <template #item="{ item }">
             <LinkAdd :document-type="item.documentType" class="text-ellipsis">
               <IconDocument :type="item.documentType" fixed-width />
-              <span>TODO</span>
+              {{ $t(`link.add.${item.documentType}`) }}
             </LinkAdd>
           </template>
         </DropdownMenu>

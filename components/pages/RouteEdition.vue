@@ -1,5 +1,5 @@
 <template>
-  <div>TODO following</div>
+  <p>TODO route edition</p>
 </template>
 
 <script setup lang="ts">

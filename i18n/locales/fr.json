@@ -6,7 +6,7 @@
       "available": "Vous trouverez ici :",
       "routes": "des itinéraires à parcourir",
       "outings": "des sorties pour avoir les dernières conditions",
-      "xreports": "Une base de données incidents/accidents :",
+      "xreports": "Une base de données incidents / accidents :",
       "yeti": "Une aide à la gestion du risque d’avalanche :",
       "forum": "Un forum pour discuter de sujets techniques ou bavarder",
       "library": "Une bibliothèque comportant des {articles} et des {books}",
@@ -292,6 +292,14 @@
     "back": "Retournez à la page précédente"
   },
   "link": {
-    "home": "accueil"
+    "home": "Accueil",
+    "add": {
+      "outing": "Ajouter une sortie",
+      "route": "Ajouter un itinéraire",
+      "waypoint": "Ajouter un point de passage",
+      "article": "Ajouter un article",
+      "book": "Ajouter un livre",
+      "xreport": "Ajouter un rapport d'incident / accident"
+    }
   }
 }

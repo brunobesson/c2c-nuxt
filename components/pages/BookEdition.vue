@@ -1,5 +1,5 @@
 <template>
-  <div>TODO following</div>
+  <p>TODO book edition</p>
 </template>
 
 <script setup lang="ts">

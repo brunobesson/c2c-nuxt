@@ -1,5 +1,5 @@
 <template>
-  <div>TODO following</div>
+  <p>Area edition view</p>
 </template>
 
 <script setup lang="ts">

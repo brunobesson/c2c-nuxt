@@ -18,7 +18,7 @@
           to="/"
           class="w-1/3 py-6 flex flex-col items-center font-semibold transition-colors duration-300 hover:bg-hover">
           <Icon icon="home" class="text-5xl text-primary" />
-          <span class="text-center text-xl font-semibold">{{ capitalize($t('link.home')) }}</span>
+          <span class="text-center text-xl font-semibold">{{ $t('link.home') }}</span>
         </NuxtLink>
         <NuxtLink
           v-for="type in docTypes"

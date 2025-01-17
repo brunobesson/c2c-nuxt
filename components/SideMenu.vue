@@ -25,12 +25,12 @@
       </span>
     </NuxtLink>
 
-    <NuxtLink to="/forum">
+    <a :href="forumUrl">
       <span
         class="block py-[6px] px-[10px] text-lg border-l-[5px] border-solid border-transparent hover:bg-hover hover:border-primary-300">
         <IconForum /> <span class="ml-0">{{ capitalize($t('forum')) }}</span>
       </span>
-    </NuxtLink>
+    </a>
 
     <NuxtLink to="/serac">
       <span
@@ -107,7 +107,7 @@
 import { useGdprStore } from '../store/gdpr.js';
 
 const route = useRoute();
-
+const forumUrl = useRuntimeConfig().public.forumBase;
 const showGdpr = () => {
   const { openGdprDialog } = useGdprStore();
   openGdprDialog();
