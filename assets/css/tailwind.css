@@ -4,7 +4,7 @@
 @import "tailwindcss/utilities";
 
 html {
-  @apply text-[87.5%] text-default; /* ensure base font of 14px instead of 16px */
+  @apply text-[87.5%] text-default overflow-x-hidden; /* ensure base font of 14px instead of 16px */
 }
 
 @layer utilities {
