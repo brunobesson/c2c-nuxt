@@ -27,5 +27,4 @@
 * typescript typechecking when building in CI
 * 404 / error page
 * husky
-* scrollbars
 * What else?

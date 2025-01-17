@@ -8,7 +8,6 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   modules: [
-    '@nuxtjs/google-fonts',
     '@nuxtjs/i18n',
     '@nuxt/image',
     '@pinia/nuxt',
@@ -66,13 +65,6 @@ export default defineNuxtConfig({
         },
       },
     ],
-  },
-
-  // TODO remove ?
-  googleFonts: {
-    families: {
-      Inter: true,
-    },
   },
 
   i18n: {
