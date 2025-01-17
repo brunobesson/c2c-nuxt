@@ -25,6 +25,5 @@
 * Configuration sur demo // env demo vs prod, etc
 * Tests
 * typescript typechecking when building in CI
-* 404 / error page
 * husky
 * What else?

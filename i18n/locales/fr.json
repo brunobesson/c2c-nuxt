@@ -277,5 +277,21 @@
     "waypoint": {
       "new": "Nouveau point de passage"
     }
+  },
+  "error-page": {
+    "404": {
+      "subtitle": "Page non trouvée",
+      "details": "La page que vous demandez n'existe pas."
+    },
+    "title": "Ooops",
+    "default": {
+      "subtitle": "Il semble que quelque chose se soit mal passé",
+      "details": "N'hésitez pas à nous remonter ce problème."
+    },
+    "alternatives": "{0} ou essayez les pages suivantes :",
+    "back": "Retournez à la page précédente"
+  },
+  "link": {
+    "home": "accueil"
   }
 }
