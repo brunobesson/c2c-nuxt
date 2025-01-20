@@ -11,6 +11,7 @@
 
 <script lang="ts" setup>
 import { fixedWidthProps } from '~/props/fixed-width.js';
+import { DOCUMENT_TYPES } from '../../api/c2c.js';
 
 const { type } = defineProps({
   type: {
@@ -18,10 +19,7 @@ const { type } = defineProps({
     required: true,
     validator: value => {
       // TODO factorize
-      return (
-        typeof value === 'string' &&
-        ['area', 'article', 'book', 'image', 'map', 'outing', 'profile', 'route', 'waypoint', 'xreport'].includes(value)
-      );
+      return typeof value === 'string' && DOCUMENT_TYPES.includes(value);
     },
   },
   ...fixedWidthProps,

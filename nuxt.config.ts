@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
+import { DOCUMENT_TYPES } from './api/c2c.js';
 import capitalize from './utils/capitalize.js';
 
 const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg\?icon$/;
@@ -99,46 +100,44 @@ export default defineNuxtConfig({
   hooks: {
     'pages:extend'(pages) {
       pages.push(
-        ...['area', 'article', 'book', 'image', 'map', 'outing', 'profile', 'route', 'waypoint', 'xreport'].flatMap(
-          docType => [
-            { path: `/${docType}s`, name: `${docType}s`, file: '~/components/pages/Documents.vue' },
-            {
-              path: `/${docType}s/print`,
-              name: `${docType}s-print`,
-              file: '~/components/pages/DocumentsPrinting.vue',
-            },
-            {
-              path: `/${docType}s/:id(\\d+)/:lang?/:slug?`,
-              name: docType,
-              file: `~/components/pages/${capitalize(docType)}.vue`,
-            },
-            {
-              path: `/${docType}s/version/:id(\\d+)/:lang/:version(\\d+)`,
-              name: `${docType}-version`,
-              file: `~/components/pages/${capitalize(docType)}.vue`,
-            },
-            {
-              path: `/${docType}s/history/:id(\\d+)/:lang`,
-              name: `${docType}-history`,
-              file: '~/components/pages/History.vue',
-            },
-            {
-              path: `/${docType}s/edit/:id(\\d+)/:lang`,
-              name: `${docType}-edit`,
-              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
-            },
-            {
-              path: `/${docType}s/add/lang`,
-              name: `${docType}-add`,
-              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
-            },
-            {
-              path: `/${docType}s/diff/:id(\\d+)/:lang/:versionFrom(\\d+)/:versionTo(\\d+)`,
-              name: `${docType}-history`,
-              file: '~/components/pages/Diff.vue',
-            },
-          ],
-        ),
+        ...DOCUMENT_TYPES.flatMap(docType => [
+          { path: `/${docType}s`, name: `${docType}s`, file: '~/components/pages/Documents.vue' },
+          {
+            path: `/${docType}s/print`,
+            name: `${docType}s-print`,
+            file: '~/components/pages/DocumentsPrinting.vue',
+          },
+          {
+            path: `/${docType}s/:id(\\d+)/:lang?/:slug?`,
+            name: docType,
+            file: `~/components/pages/${capitalize(docType)}.vue`,
+          },
+          {
+            path: `/${docType}s/version/:id(\\d+)/:lang/:version(\\d+)`,
+            name: `${docType}-version`,
+            file: `~/components/pages/${capitalize(docType)}.vue`,
+          },
+          {
+            path: `/${docType}s/history/:id(\\d+)/:lang`,
+            name: `${docType}-history`,
+            file: '~/components/pages/History.vue',
+          },
+          {
+            path: `/${docType}s/edit/:id(\\d+)/:lang`,
+            name: `${docType}-edit`,
+            file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+          },
+          {
+            path: `/${docType}s/add/lang`,
+            name: `${docType}-add`,
+            file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+          },
+          {
+            path: `/${docType}s/diff/:id(\\d+)/:lang/:versionFrom(\\d+)/:versionTo(\\d+)`,
+            name: `${docType}-history`,
+            file: '~/components/pages/Diff.vue',
+          },
+        ]),
       );
     },
   },

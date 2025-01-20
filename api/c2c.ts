@@ -450,7 +450,19 @@ const Geometry = v.object({
 });
 export type Geometry = v.InferOutput<typeof Geometry>;
 
-// TODO archive, whatsnew
+export const DOCUMENT_TYPES = [
+  'area',
+  'article',
+  'book',
+  'image',
+  'map',
+  'outing',
+  'profile',
+  'route',
+  'waypoint',
+  'xreport',
+] as const;
+export type DocumentType = (typeof DOCUMENT_TYPES)[number];
 
 const BaseLocale = v.strictObject({
   lang: ApiLang,
@@ -480,7 +492,7 @@ const BaseDocument = v.object({
 const FullBaseDocument = v.object({
   ...BaseDocument.entries,
   locales: v.array(FullBaseLocale),
-  cooked: v.nullish(FullBaseLocale),
+  cooked: FullBaseLocale,
   associations: v.object({}),
   geometry: Geometry,
   redirects_to: v.nullish(PositiveInt),
@@ -821,7 +833,7 @@ export const Outing = v.strictObject({
   ...FullBaseDocument.entries,
   ...BaseOuting.entries,
   locales: v.array(OutingLocale),
-  cooked: v.nullable(OutingLocale),
+  cooked: OutingLocale,
   associations: v.object({
     articles: v.array(ArticleListing),
     images: v.array(ImageListing),
@@ -873,7 +885,7 @@ export const Route = v.strictObject({
   ...FullBaseDocument.entries,
   ...BaseRoute.entries,
   locales: v.array(RouteLocale),
-  cooked: v.nullable(RouteLocale),
+  cooked: RouteLocale,
   associations: v.object({
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
@@ -912,7 +924,7 @@ export const Waypoint = v.strictObject({
   ...FullBaseDocument.entries,
   ...BaseWaypoint.entries,
   locales: v.array(WaypointLocale),
-  cooked: v.nullable(WaypointLocale),
+  cooked: WaypointLocale,
   associations: v.object({
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
@@ -997,7 +1009,7 @@ export const Xreport = v.strictObject({
   ...FullBaseDocument.entries,
   ...BaseXreport.entries,
   locales: v.array(XreportLocale),
-  cooked: v.nullable(XreportLocale),
+  cooked: XreportLocale,
   associations: v.object({
     articles: v.array(ArticleListing),
     images: v.array(ImageListing),
@@ -1095,6 +1107,111 @@ export const XreportList = v.strictObject({
 });
 export type XreportList = v.InferOutput<typeof XreportList>;
 
+const Version = v.object({
+  version_id: PositiveInt,
+  user_id: PositiveInt,
+  name: v.pipe(v.string(), v.nonEmpty()),
+  comment: v.string(),
+  written_at: IsoDateTime,
+  masked: v.boolean(),
+});
+
+export const DocumentHistory = v.strictObject({
+  title: v.string(),
+  versions: v.pipe(v.array(Version), v.nonEmpty()),
+});
+export type DocumentHistory = v.InferOutput<typeof DocumentHistory>;
+
+const DocumentVersion = v.strictObject({
+  version: Version,
+  previous_version_id: v.nullable(PositiveInt),
+  next_version_id: v.nullable(PositiveInt),
+});
+
+const AssociationHistoryDocument = v.object({
+  document_id: PositiveInt,
+  type: LetterType,
+  locales: v.pipe(
+    v.array(
+      v.object({
+        lang: ApiLang,
+        title: v.string(),
+      }),
+    ),
+    v.nonEmpty(),
+  ),
+});
+const AssociationHistory = v.object({
+  parent_document: AssociationHistoryDocument,
+  child_document: AssociationHistoryDocument,
+  is_creation: v.boolean(),
+  user: v.object({
+    user_id: PositiveInt,
+    name: v.pipe(v.string(), v.nonEmpty()),
+    forum_username: v.pipe(v.string(), v.nonEmpty()),
+    robot: v.boolean(),
+    blocked: v.boolean(),
+    moderator: v.boolean(),
+  }),
+  written_at: IsoDateTime,
+});
+export const AssociationsHistory = v.strictObject({
+  associations: v.array(AssociationHistory),
+  count: Uint,
+});
+export type AssociationsHistory = v.InferOutput<typeof AssociationsHistory>;
+
+export const AreaVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Area,
+});
+export type AreaVersion = v.InferOutput<typeof AreaVersion>;
+export const ArticleVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Article,
+});
+export type ArticleVersion = v.InferOutput<typeof ArticleVersion>;
+export const BookVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Book,
+});
+export type BookVersion = v.InferOutput<typeof BookVersion>;
+export const ImageVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Image,
+});
+export type ImageVersion = v.InferOutput<typeof ImageVersion>;
+export const MapVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Map,
+});
+export type MapVersion = v.InferOutput<typeof MapVersion>;
+export const OutingVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Outing,
+});
+export type OutingVersion = v.InferOutput<typeof OutingVersion>;
+export const ProfileVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Profile,
+});
+export type ProfileVersion = v.InferOutput<typeof ProfileVersion>;
+export const RouteVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Route,
+});
+export type RouteVersion = v.InferOutput<typeof RouteVersion>;
+export const WaypointVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Waypoint,
+});
+export type WaypointVersion = v.InferOutput<typeof WaypointVersion>;
+export const XreportVersion = v.strictObject({
+  ...DocumentVersion.entries,
+  document: Xreport,
+});
+export type XreportVersion = v.InferOutput<typeof XreportVersion>;
+
 export const isAreaListing = (doc: Document): doc is AreaListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'a' && !('associations' in doc);
 export const isArticleListing = (doc: Document): doc is ArticleListing =>
@@ -1165,6 +1282,35 @@ export const Feed = v.strictObject({
   pagination_token: v.pipe(v.string(), v.nonEmpty()),
 });
 export type Feed = v.InferOutput<typeof Feed>;
+
+const WhatsnewItem = v.object({
+  document: v.variant('type', [
+    AreaListing,
+    ArticleListing,
+    BookListing,
+    ImageListing,
+    MapListing,
+    OutingListing,
+    RouteListing,
+    WaypointListing,
+    XreportListing,
+  ]),
+  comment: v.string(),
+  lang: ApiLang,
+  user: v.object({
+    name: v.pipe(v.string(), v.nonEmpty()),
+    username: v.pipe(v.string(), v.nonEmpty()),
+    user_id: PositiveInt,
+    lang: ApiLang,
+  }),
+  version_id: PositiveInt,
+  written_at: IsoDateTime,
+});
+export const Whatsnew = v.strictObject({
+  feed: v.array(WhatsnewItem),
+  pagination_token: v.pipe(v.string(), v.nonEmpty()),
+});
+export type Whatsnew = v.InferOutput<typeof Whatsnew>;
 
 export const UserPreferences = v.variant('followed_only', [
   v.strictObject({

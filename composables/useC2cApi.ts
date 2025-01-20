@@ -2,25 +2,37 @@ import * as v from 'valibot';
 import {
   Area,
   AreaList,
+  AreaVersion,
   Article,
   ArticleList,
+  ArticleVersion,
+  AssociationsHistory,
   Book,
   BookList,
+  BookVersion,
   Feed,
   Image,
   ImageList,
+  ImageVersion,
   Map,
   MapList,
+  MapVersion,
   Outing,
   OutingList,
+  OutingVersion,
   Profile,
+  ProfileVersion,
   Route,
   RouteList,
+  RouteVersion,
   UserPreferences,
   Waypoint,
   WaypointList,
+  WaypointVersion,
+  Whatsnew,
   Xreport,
   XreportList,
+  XreportVersion,
 } from '~/api/c2c.js';
 import type { ApiLang, UiLang } from '~/api/lang.js';
 
@@ -34,6 +46,31 @@ export type FeedQuery = {
    * to request the next page.
    */
   token?: string | undefined;
+};
+
+export type WhatsnewQuery = {
+  /** How many entries should be returned (default: 10). The maximum is 50. */
+  limit?: number;
+  /**
+   * The pagination token. When requesting a feed, the response includes a `pagination_token`. This token is to be used
+   * to request the next page.
+   */
+  token?: string | undefined;
+  /** Changes made by one user. */
+  u?: number;
+};
+
+export type AssociationsHistoryQuery = {
+  /** How many entries should be returned (default: 50). The maximum is 500. */
+  limit?: number;
+  /**
+   * The request offest.
+   */
+  offset?: number | undefined;
+  /** Changes made by one user. */
+  u?: number;
+  /** Changes made on a document */
+  d?: number;
 };
 
 export type Query = Record<string, any>; // TODO
@@ -91,6 +128,28 @@ export const useC2cApi = () => {
       },
     },
 
+    whatsnew: async (query: WhatsnewQuery) => {
+      const result = v.safeParse(Whatsnew, await $fetch('/document/changes', { query }));
+      if (result.success) {
+        return result.output;
+      }
+      console.group('Error fetching data from API');
+      console.trace(result.issues);
+      console.groupEnd();
+      throw new Error('Server API response does not match expectation');
+    },
+
+    associationsHistory: async (query: AssociationsHistoryQuery) => {
+      const result = v.safeParse(AssociationsHistory, await $fetch('/associations-history', { query }));
+      if (result.success) {
+        return result.output;
+      }
+      console.group('Error fetching data from API');
+      console.trace(result.issues);
+      console.groupEnd();
+      throw new Error('Server API response does not match expectation');
+    },
+
     area: {
       getAll: async (query: Query) => {
         const result = v.safeParse(AreaList, await $fetch(`/areas`, { query }));
@@ -102,8 +161,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Area['document_id']) => {
-        const result = v.safeParse(Area, await $fetch(`/areas/${id}`));
+      get: async (id: Area['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Area, await $fetch(`/areas/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Area['document_id'], lang: ApiLang, version: AreaVersion['version']['version_id']) => {
+        const result = v.safeParse(Area, await $fetch(`/area/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -150,8 +219,22 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Article['document_id']) => {
-        const result = v.safeParse(Article, await $fetch(`/articles/${id}`));
+      get: async (id: Article['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Article, await $fetch(`/articles/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (
+        id: Article['document_id'],
+        lang: ApiLang,
+        version: ArticleVersion['version']['version_id'],
+      ) => {
+        const result = v.safeParse(Article, await $fetch(`/article/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -198,8 +281,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Book['document_id']) => {
-        const result = v.safeParse(Book, await $fetch(`/books/${id}`));
+      get: async (id: Book['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Book, await $fetch(`/books/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Book['document_id'], lang: ApiLang, version: BookVersion['version']['version_id']) => {
+        const result = v.safeParse(Book, await $fetch(`/book/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -246,8 +339,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Image['document_id']) => {
-        const result = v.safeParse(Image, await $fetch(`/images/${id}`));
+      get: async (id: Image['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Image, await $fetch(`/images/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Image['document_id'], lang: ApiLang, version: ImageVersion['version']['version_id']) => {
+        const result = v.safeParse(Image, await $fetch(`/image/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -294,8 +397,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Map['document_id']) => {
-        const result = v.safeParse(Map, await $fetch(`/maps/${id}`));
+      get: async (id: Map['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Map, await $fetch(`/maps/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Map['document_id'], lang: ApiLang, version: MapVersion['version']['version_id']) => {
+        const result = v.safeParse(Map, await $fetch(`/map/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -342,8 +455,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Outing['document_id']) => {
-        const result = v.safeParse(Outing, await $fetch(`/outings/${id}`));
+      get: async (id: Outing['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Outing, await $fetch(`/outings/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Outing['document_id'], lang: ApiLang, version: OutingVersion['version']['version_id']) => {
+        const result = v.safeParse(Outing, await $fetch(`/outing/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -380,8 +503,22 @@ export const useC2cApi = () => {
       },
     },
     profile: {
-      get: async (id: Profile['document_id']) => {
-        const result = v.safeParse(Profile, await $fetch(`/profiles/${id}`));
+      get: async (id: Profile['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Profile, await $fetch(`/profiles/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (
+        id: Profile['document_id'],
+        lang: ApiLang,
+        version: ProfileVersion['version']['version_id'],
+      ) => {
+        const result = v.safeParse(Profile, await $fetch(`/profile/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -415,8 +552,18 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Route['document_id']) => {
-        const result = v.safeParse(Route, await $fetch(`/routes/${id}`));
+      get: async (id: Route['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Route, await $fetch(`/routes/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (id: Route['document_id'], lang: ApiLang, version: RouteVersion['version']['version_id']) => {
+        const result = v.safeParse(Route, await $fetch(`/route/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -463,8 +610,22 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Waypoint['document_id']) => {
-        const result = v.safeParse(Waypoint, await $fetch(`/waypoints/${id}`));
+      get: async (id: Waypoint['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Waypoint, await $fetch(`/waypoints/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (
+        id: Waypoint['document_id'],
+        lang: ApiLang,
+        version: WaypointVersion['version']['version_id'],
+      ) => {
+        const result = v.safeParse(Waypoint, await $fetch(`/waypoint/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }
@@ -511,8 +672,22 @@ export const useC2cApi = () => {
         console.groupEnd();
         throw new Error('Server API response does not match expectation');
       },
-      get: async (id: Xreport['document_id']) => {
-        const result = v.safeParse(Xreport, await $fetch(`/xreports/${id}`));
+      get: async (id: Xreport['document_id'], lang: ApiLang) => {
+        const result = v.safeParse(Xreport, await $fetch(`/xreports/${id}`, { query: { cook: lang } }));
+        if (result.success) {
+          return result.output;
+        }
+        console.group('Error fetching data from API');
+        console.trace(result.issues);
+        console.groupEnd();
+        throw new Error('Server API response does not match expectation');
+      },
+      getVersion: async (
+        id: Xreport['document_id'],
+        lang: ApiLang,
+        version: XreportVersion['version']['version_id'],
+      ) => {
+        const result = v.safeParse(Xreport, await $fetch(`/xreport/${id}/${lang}/${version}`));
         if (result.success) {
           return result.output;
         }

@@ -40,6 +40,7 @@
 
 <script setup lang="ts">
 import type { NuxtError } from '#app';
+import { DOCUMENT_TYPES } from './api/c2c.js';
 
 defineProps({
   error: Object as () => NuxtError,
@@ -47,5 +48,14 @@ defineProps({
 
 const handleError = () => clearError({ redirect: '/' });
 
-const docTypes = ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area'];
+const docTypes: (typeof DOCUMENT_TYPES)[number][] = [
+  'outing',
+  'waypoint',
+  'route',
+  'article',
+  'book',
+  'xreport',
+  'image',
+  'area',
+];
 </script>
