@@ -12,7 +12,9 @@
 </template>
 
 <script setup lang="ts">
-const { route } = defineProps<{ route: any }>(); // TODO
+import type { RouteListing } from '~/api/c2c.js';
+
+const { route } = defineProps<{ route: RouteListing }>();
 
 const filteredFields = computed(
   () =>
@@ -31,7 +33,7 @@ const filteredFields = computed(
       }),
       ...(route.activities.includes('rock_climbing') && {
         height_diff_difficulties: route.height_diff_difficulties,
-        equipement_rating: route.equipement_rating,
+        equipement_rating: route.equipment_rating,
         rock_free_rating: route.rock_free_rating,
         rock_required_rating: route.rock_required_rating,
       }),
@@ -58,9 +60,7 @@ const filteredFields = computed(
         height_diff_down: route.height_diff_down,
       }),
       ...(route.activities.includes('slacklining') && {
-        slackline_length: route.slackline_length,
         slackline_height: route.slackline_height,
-        height_diff_access: route.height_diff_access,
       }),
     } as Record<string, unknown>),
 );

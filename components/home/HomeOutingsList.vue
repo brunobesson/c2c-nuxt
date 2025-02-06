@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import type { OutingListing, UserPreferences } from '~/api/c2c.js';
-import type { ISODate } from '../../types/index.js';
+import type { IsoDate } from '~/types/common.js';
 
 const { isPersonal } = defineProps<{ isPersonal: boolean }>();
 
@@ -59,7 +59,7 @@ const { data: userPrefs } = await useAsyncData<UserPreferences | null>('user.pre
   if (!isPersonal) {
     return null;
   }
-  return useC2cApi().userProfile.getPreferences();
+  return useC2cApi().user.getPreferences();
 });
 const outingsQuery = computed((): Record<string, any> => {
   if (!isPersonal) {
@@ -75,12 +75,12 @@ const outingsQuery = computed((): Record<string, any> => {
 });
 const { data, status } = await useAsyncData(() => useC2cApi().outing.getAll(outingsQuery.value));
 
-const outingsByDate = computed((): Record<ISODate, OutingListing[]> => {
+const outingsByDate = computed((): Record<IsoDate, OutingListing[]> => {
   if (!data.value) {
     return {};
   }
-  const result: Record<ISODate, OutingListing[]> = {};
-  for (const outing of data.value) {
+  const result: Record<IsoDate, OutingListing[]> = {};
+  for (const outing of data.value.documents) {
     result[outing.date_end] = result[outing.date_end] ?? [];
     result[outing.date_end].push(outing);
   }

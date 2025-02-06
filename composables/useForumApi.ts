@@ -1,6 +1,7 @@
-import * as v from 'valibot';
 import { Announcement, Latest, type Topic } from '~/api/forum.js';
 import type { UiLang } from '~/api/lang.js';
+
+const { checkResponse } = useSchemaValidation();
 
 const EXCLUDED_CATEGORIES = [
   // https://forum.camptocamp.org/c/comments
@@ -66,11 +67,11 @@ const EXCLUDED_CATEGORIES = [
 ];
 
 export const useForumApi = () => {
-  const $fetch = useNuxtApp().$forumFetch;
+  const $fetch = useNuxtApp().$forumFetch.raw;
   const baseUrl = useRuntimeConfig().public.forumBase;
 
   const getLatest = async (): Promise<Topic[]> => {
-    const data = v.parse(
+    const data = await checkResponse(
       Latest,
       await $fetch('/latest.json', {
         query: { exclude_categoriy_id: EXCLUDED_CATEGORIES },
@@ -85,10 +86,10 @@ export const useForumApi = () => {
   };
 
   const getBoardAnnouncement = async (): Promise<Announcement> =>
-    v.parse(Announcement, await $fetch('/t/publication-ca.json'));
+    checkResponse(Announcement, await $fetch('/t/publication-ca.json'));
 
   const getSiteNotice = async (lang: UiLang): Promise<Announcement> =>
-    v.parse(Announcement, await $fetch(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`));
+    checkResponse(Announcement, await $fetch(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`));
 
   const forumAvatarUrl = `${baseUrl}user_avatar/${baseUrl.replace('https://', '')}`;
 

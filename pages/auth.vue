@@ -60,7 +60,7 @@ async function login(event: Event) {
   pending.value = true;
   hasError.value = undefined;
   try {
-    await authenticate({ username: username.value, password: password.value });
+    await authenticate(username.value, password.value);
     pending.value = false;
   } catch (error: unknown) {
     hasError.value = error;

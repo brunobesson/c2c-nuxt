@@ -23,6 +23,6 @@ defineExpose({
 
 <style scoped lang="css">
 #app:has(.data-retrieval-error) .loading-indicator {
-  background-color: theme(colors.red.600) !important;
+  background-color: theme('colors.red.600') !important;
 }
 </style>

@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import type { AsyncDataRequestStatus } from '#app';
-import type { ArticleListing } from '../../api/c2c.js';
+import type { ArticleListing } from '~/api/c2c.js';
 
-defineProps<{ data: ArticleListing[] | null; status: AsyncDataRequestStatus }>();
+defineProps<{ data: ArticleListing[] | null | undefined; status: AsyncDataRequestStatus }>();
 </script>

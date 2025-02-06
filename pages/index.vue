@@ -41,7 +41,7 @@
       <HomeRoutesList v-if="!config.feed" class="order-8" />
       <HomeArticlesList
         v-if="!config.feed"
-        :data="latestArticles"
+        :data="latestArticles?.documents"
         :status="latestArticlesStatus"
         class="order-8 mobile:hidden" />
       <HomeLinks v-if="!config.feed" class="order-9 mobile:hidden" />
@@ -59,7 +59,7 @@
       </div>
       <HomeLinks />
       <HomeForum :message-count="20" :data="latestPosts" :status="latestPostsStatus" />
-      <HomeArticlesList :data="latestArticles" :status="latestArticlesStatus" />
+      <HomeArticlesList :data="latestArticles?.documents" :status="latestArticlesStatus" />
     </div>
   </main>
 </template>

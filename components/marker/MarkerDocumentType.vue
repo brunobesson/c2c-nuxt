@@ -5,7 +5,9 @@
 </template>
 
 <script setup lang="ts">
-import { requiredDocumentTypeProps } from '../../props/required-document-type.js';
+import type { DocumentType } from '../../api/c2c.js';
 
-defineProps(requiredDocumentTypeProps);
+defineProps<{
+  documentType: DocumentType;
+}>();
 </script>

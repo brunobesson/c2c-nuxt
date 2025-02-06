@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
-import { DOCUMENT_TYPES } from './api/c2c.js';
 import capitalize from './utils/capitalize.js';
 
 const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg\?icon$/;
@@ -99,45 +98,60 @@ export default defineNuxtConfig({
 
   hooks: {
     'pages:extend'(pages) {
-      pages.push(
-        ...DOCUMENT_TYPES.flatMap(docType => [
-          { path: `/${docType}s`, name: `${docType}s`, file: '~/components/pages/Documents.vue' },
-          {
-            path: `/${docType}s/print`,
-            name: `${docType}s-print`,
-            file: '~/components/pages/DocumentsPrinting.vue',
-          },
-          {
-            path: `/${docType}s/:id(\\d+)/:lang?/:slug?`,
-            name: docType,
-            file: `~/components/pages/${capitalize(docType)}.vue`,
-          },
-          {
-            path: `/${docType}s/version/:id(\\d+)/:lang/:version(\\d+)`,
-            name: `${docType}-version`,
-            file: `~/components/pages/${capitalize(docType)}.vue`,
-          },
-          {
-            path: `/${docType}s/history/:id(\\d+)/:lang`,
-            name: `${docType}-history`,
-            file: '~/components/pages/History.vue',
-          },
-          {
-            path: `/${docType}s/edit/:id(\\d+)/:lang`,
-            name: `${docType}-edit`,
-            file: `~/components/pages/${capitalize(docType)}Edition.vue`,
-          },
-          {
-            path: `/${docType}s/add/lang`,
-            name: `${docType}-add`,
-            file: `~/components/pages/${capitalize(docType)}Edition.vue`,
-          },
-          {
-            path: `/${docType}s/diff/:id(\\d+)/:lang/:versionFrom(\\d+)/:versionTo(\\d+)`,
-            name: `${docType}-history`,
-            file: '~/components/pages/Diff.vue',
-          },
-        ]),
+      ['area', 'article', 'book', 'image', 'map', 'outing', 'profile', 'route', 'waypoint', 'xreport'].forEach(
+        docType => {
+          pages.push(
+            // list
+            { path: `/${docType}s`, name: `${docType}s`, file: '~/components/pages/Documents.vue' },
+            // print
+            {
+              path: `/${docType}s/print`,
+              name: `${docType}s-print`,
+              file: '~/components/pages/DocumentsPrinting.vue',
+            },
+            // view
+            {
+              path: `/${docType}s/:id(\\d+)/:lang?/:slug?`,
+              name: docType,
+              file: `~/components/pages/${capitalize(docType)}.vue`,
+            },
+
+            // history
+            {
+              path: `/${docType}s/history/:id(\\d+)/:lang`,
+              name: `${docType}-history`,
+              file: '~/components/pages/History.vue',
+            },
+            // edit
+            {
+              path: `/${docType}s/edit/:id(\\d+)/:lang`,
+              name: `${docType}-edit`,
+              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+            },
+            // create
+            {
+              path: `/${docType}s/add/lang`,
+              name: `${docType}-add`,
+              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+            },
+            // diff
+            {
+              path: `/${docType}s/diff/:id(\\d+)/:lang/:versionFrom(\\d+)/:versionTo(\\d+)`,
+              name: `${docType}-history`,
+              file: '~/components/pages/Diff.vue',
+            },
+          );
+          if (docType !== 'profile') {
+            pages.push(
+              // version
+              {
+                path: `/${docType}s/version/:id(\\d+)/:lang/:version(\\d+)`,
+                name: `${docType}-version`,
+                file: `~/components/pages/${capitalize(docType)}.vue`,
+              },
+            );
+          }
+        },
       );
     },
   },
@@ -151,6 +165,11 @@ export default defineNuxtConfig({
     public: {
       c2cApiBase: 'https://api.camptocamp.org/',
       forumBase: 'https://forum.camptocamp.org/',
+      imagesBase: 'https://images.camptocamp.org/',
+      apiEmailAlertsBase: 'https://brunobesson-c2capiemailalerts.web.val.run',
+      modernThumbnailsTimestamp: 0,
+      modernThumbnailsId: 0,
     },
+    apiEmailAlertsToken: '', // must be overridden by NUXT_API_EMAIL_ALERTS_TOKEN environment variable
   },
 });

@@ -120,6 +120,8 @@
 
 <script setup lang="ts">
 import type { MenuItem } from 'primevue/menuitem';
+import type { DocumentType } from '~/api/c2c.js';
+import type { UiLang } from '~/api/lang.js';
 import { useAuthStore } from '~/store/auth.js';
 
 const config = useRuntimeConfig();
@@ -128,8 +130,7 @@ const { isMobile, isTablet, isDesktop } = useScreen();
 
 const hideSearchInput = ref(true); // only on small screen
 
-// TODO types Activity
-const addMenuItems: { documentType: string }[] = [
+const addMenuItems: { documentType: DocumentType }[] = [
   { documentType: 'outing' },
   { documentType: 'route' },
   { documentType: 'waypoint' },
@@ -155,7 +156,7 @@ function logout() {
 const { t, locale, locales, setLocale } = useI18n();
 const { isUiLang, setPrimeUiLang } = useLang();
 
-function configureLocale(lang: string) {
+function configureLocale(lang: UiLang) {
   if (!isUiLang(lang)) {
     return; // should not happen
   }
@@ -163,7 +164,7 @@ function configureLocale(lang: string) {
   setPrimeUiLang(lang);
 
   if (authenticated) {
-    useC2cApi().userProfile.setPreferredLang(lang);
+    useC2cApi().user.setPreferredLang(lang);
   }
 }
 

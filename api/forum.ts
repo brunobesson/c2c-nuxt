@@ -33,7 +33,7 @@ export const Topic = v.object({
 export type Topic = v.InferOutput<typeof Topic>;
 
 export const Announcement = v.object({
-  tags: v.array(v.pipe(v.string(), v.nonEmpty())),
+  tags: v.array(v.string()),
   post_stream: v.object({
     posts: v.array(
       v.object({

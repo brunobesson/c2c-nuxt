@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Activity } from '../../api/c2c.js';
+import type { Activity } from '~/api/c2c.js';
 
 defineProps<{ activities: Activity[] }>();
 </script>

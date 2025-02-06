@@ -11,14 +11,16 @@
 </template>
 
 <script setup lang="ts">
-import { requiredDocumentProps } from '../../props/required-document.js';
+import type { Document, DocumentListing } from '../../api/c2c.js';
+import type { ApiLang } from '../../api/lang.js';
+import type { VersionedDocument } from '../../types/common.js';
 
-const { document } = defineProps({
-  lang: { type: String, default: null },
-  uppercaseFirstLetter: { type: Boolean, default: false },
-  target: { type: String, default: undefined },
-  ...requiredDocumentProps,
-});
+const { document, uppercaseFirstLetter = false } = defineProps<{
+  document: Document | DocumentListing | VersionedDocument;
+  lang?: ApiLang;
+  uppercaseFirstLetter?: boolean;
+  target?: string;
+}>();
 
 const { documentType, documentTitle } = useDocument(document);
 </script>

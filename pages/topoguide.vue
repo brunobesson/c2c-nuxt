@@ -91,7 +91,7 @@ const { locale: lang } = useI18n();
 
 const mainLinks: { to: string; label: string; icon: string | string[] }[] = [
   { to: '/outings', label: t('outings'), icon: 'outing' },
-  { to: '/routess', label: t('routes'), icon: 'route' },
+  { to: '/routes', label: t('routes'), icon: 'route' },
   { to: '/waypoints', label: t('waypoints'), icon: 'waypoint' },
   { to: '/images', label: t('images'), icon: 'image' },
   { to: '/books', label: t('books'), icon: 'book' },

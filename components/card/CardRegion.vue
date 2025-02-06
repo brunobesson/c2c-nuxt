@@ -6,9 +6,9 @@
 </template>
 
 <script setup lang="ts">
-import {requiredDocumentProps} from '~/props/required-document';
+import type { Document, DocumentListing } from '../../api/c2c.js';
 
-const { document} = defineProps(requiredDocumentProps);
+const { document } = defineProps<{ document: Document | DocumentListing }>();
 
 const text = computed(() => useDocument(document).sortedAreaList);
 </script>

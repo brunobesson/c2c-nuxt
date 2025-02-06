@@ -10,7 +10,7 @@
         <h2 class="text-2xl font-semibold pb-4">{{ $t('error-page.404.subtitle') }}</h2>
         <p class="pb-4">{{ $t('error-page.404.details') }}</p>
       </template>
-      <i18n-t keypath="error-page.alternatives" tag="p" class="pb-4">
+      <i18n-t keypath="error-page.alternatives" tag="p" class="pb-4" scope="global">
         <a @click="handleError" class="link">{{ $t('error-page.back') }}</a>
       </i18n-t>
       <div class="flex flex-wrap justify-center max-w-[600px] m-auto">

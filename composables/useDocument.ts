@@ -1,4 +1,16 @@
-import type { AreaType, Document, Route, RouteListing } from '~/api/c2c.js';
+import type {
+  AreaType,
+  Article,
+  ArticleListing,
+  ArticleVersionDocument,
+  Document,
+  DocumentListing,
+  DocumentType,
+  License,
+  WhatsnewDocument,
+} from '~/api/c2c.js';
+import type { UiLang } from '~/api/lang.js';
+import type { VersionedDocument } from '~/types/common.js';
 import {
   isImage,
   isImageListing,
@@ -9,35 +21,32 @@ import {
   isRoute,
   isRouteListing,
   isWaypoint,
-} from '~/api/c2c.js';
-import type { UiLang } from '~/api/lang.js';
+  isWhatnewDocument,
+} from '~/types/common.js';
 
-export const useDocument = (document: Document) => {
-  const documentTitle = (lang: UiLang): string => {
+export const useDocument = (document: Document | DocumentListing | VersionedDocument | WhatsnewDocument) => {
+  const documentTitle = (lang?: UiLang): string => {
     // profile does not have locale, get profile's name
     if (isProfile(document) || isProfileListing(document)) {
       return document.name ?? '';
     }
 
-    // TODO typing
-    // document object returned by whatsnew does not have locale either
-    // but provides title property
-    if (!document.locales) {
-      return /* document.title ?? */ '';
+    // document object returned by whatsnew doesn't have locale either but provides title property
+    if (isWhatnewDocument(document)) {
+      return document.title;
     }
-
-    const locale = useDocumentLocale().getLocaleSmart(document, lang);
 
     if (isRoute(document) || isRouteListing(document)) {
-      const colon = ['fr', 'es', 'ca'].includes(locale.lang) ? ' : ' : ': ';
-      return (locale as Route['locales'][0] | RouteListing['locales'][0]).title_prefix + colon + locale.title;
+      const { title, title_prefix } = useDocumentLocale().getLocaleSmart(document, lang);
+      const colon = lang && ['fr', 'es', 'ca'].includes(lang) ? ' : ' : ': ';
+      return title_prefix + colon + title;
     }
 
-    return locale.title ?? '';
+    const { title } = useDocumentLocale().getLocaleSmart(document, lang);
+    return title ?? '';
   };
 
-  const documentType = computed(() => {
-    // TODO return constants.letterToDocumentType[letterType];
+  const documentType: ComputedRef<DocumentType> = computed(() => {
     switch (document.type) {
       case 'a':
         return 'area';
@@ -59,8 +68,43 @@ export const useDocument = (document: Document) => {
         return 'waypoint';
       case 'x':
         return 'xreport';
-      default:
-        throw new Error('TODO');
+    }
+  });
+
+  const documentLicense: ComputedRef<License | undefined> = computed(() => {
+    if (isWhatnewDocument(document)) {
+      return undefined;
+    }
+    switch (document.type) {
+      case 'r':
+      case 'w':
+      case 'a':
+      case 'b':
+      case 'm':
+        return 'by-sa';
+      case 'o':
+      case 'u':
+      case 'x':
+        return 'by-nc-nd';
+      case 'c':
+        return (document as Article | ArticleListing | ArticleVersionDocument).article_type === 'personal'
+          ? 'by-nc-nd'
+          : 'by-sa';
+      case 'i': {
+        if (isImage(document)) {
+          switch (document.image_type) {
+            case 'collaborative':
+              return 'by-sa';
+            case 'personal':
+              return 'by-nc-nd';
+            case 'copyright':
+              return 'copyright';
+          }
+        } else {
+          // image listing => we don't know (but we don't use it)
+          return undefined;
+        }
+      }
     }
   });
 
@@ -86,5 +130,5 @@ export const useDocument = (document: Document) => {
     return orderedAreas.range.concat(orderedAreas.admin_limits).concat(orderedAreas.country).join(' - ');
   });
 
-  return { documentTitle, documentType, sortedAreaList };
+  return { documentTitle, documentType, documentLicense, sortedAreaList };
 };

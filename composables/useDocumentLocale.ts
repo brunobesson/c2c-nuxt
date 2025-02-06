@@ -1,9 +1,13 @@
-import type { Document } from '~/api/c2c.js';
-import { API_LANGS, type UiLang } from '~/api/lang.js';
+import type { Document, DocumentListing } from '~/api/c2c.js';
+import { API_LANGS, UiLang } from '~/api/lang.js';
 import { useAuthStore } from '~/store/auth.js';
+import type { VersionedDocument } from '~/types/common.js';
 
 export const useDocumentLocale = () => {
-  function getLocaleSmart(document: Document, lang?: UiLang) {
+  function getLocaleSmart<T extends Document | DocumentListing | VersionedDocument>(
+    document: T,
+    lang?: UiLang,
+  ): T['locales'][0] {
     // first of all try to search asked lang
     let result = lang ? getLocaleStupid(document, lang) : undefined;
 
@@ -32,7 +36,7 @@ export const useDocumentLocale = () => {
     throw new Error('No matching locale found');
   }
 
-  function getLocaleStupid(document: Document, lang: string) {
+  function getLocaleStupid(document: Document | DocumentListing | VersionedDocument, lang: string) {
     if (!document.locales) {
       return undefined;
     }

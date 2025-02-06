@@ -1,21 +1,5 @@
+import type { LoginResponse } from '~/api/c2c.js';
 import type { UiLang } from '~/api/lang.js';
-
-type UserPayload = {
-  username: string;
-  password: string;
-};
-
-type LoginResponse = {
-  id: number;
-  name: string;
-  username: string;
-  forum_username: string;
-  lang: UiLang;
-  token: string;
-  expire: number;
-  roles: string[]; // TODO
-  redirect_internal: string;
-};
 
 type User = {
   id: number;
@@ -34,6 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
   const user = computed(() => userInfo.value);
   const authenticated = computed(() => !!userInfo.value);
   const isModerator = computed(() => user.value?.roles.includes('moderator'));
+  useNuxtApp().$c2cFetch;
 
   useIntervalFn(() => {
     if (!user.value) {
@@ -45,16 +30,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }, 5000);
 
-  async function authenticate({ username: usernameInput, password: passwordInput }: UserPayload): Promise<void> {
-    const loginResponse = await useNuxtApp().$c2cFetch<LoginResponse>('/users/login', {
-      method: 'POST',
-      body: {
-        username: usernameInput,
-        password: passwordInput,
-        discourse: true,
-      },
-    });
-
+  async function authenticate(usernameInput: string, passwordInput: string): Promise<void> {
     const {
       id,
       name,
@@ -65,7 +41,14 @@ export const useAuthStore = defineStore('auth', () => {
       roles,
       token,
       redirect_internal: discourseUrl,
-    } = loginResponse;
+    } = await useNuxtApp().$c2cFetch<LoginResponse>('/users/login', {
+      method: 'POST',
+      body: {
+        username: usernameInput,
+        password: passwordInput,
+        discourse: true,
+      },
+    });
 
     await new Promise<void>(resolve => {
       if (!discourseUrl) {
@@ -80,7 +63,7 @@ export const useAuthStore = defineStore('auth', () => {
       sandbox.value = 'allow-same-origin';
       iframe.style.display = 'none';
       iframe.setAttributeNode(sandbox);
-      iframe.src = discourseUrl;
+      iframe.src = discourseUrl!;
 
       // 10s to complete discourse authentication
       window.setTimeout(() => resolve(), 10000);

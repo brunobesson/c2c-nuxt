@@ -10,12 +10,13 @@
 </template>
 
 <script setup lang="ts">
-import type { Feed, FeedItem } from '../../api/c2c.js';
-import type { ApiLang } from '../../api/lang.js';
-import type { FeedQuery } from '../../composables/useC2cApi.js';
+import type { Feed, FeedItem } from '~/api/c2c.js';
+import type { FeedQuery } from '~/composables/useC2cApi.js';
 
 const { type } = defineProps<{ type: 'personal' | 'default' | 'profile' }>();
 const { params } = useRoute();
+const { locale } = useI18n();
+const { apiLang } = useLang();
 const cards = ref<FeedItem[]>([]);
 const canLoadMore = ref(true);
 const error = ref(false);
@@ -38,13 +39,6 @@ if (import.meta.client) {
     },
   );
   watchEffect(() => (loading.value = isLoading.value));
-  /* 
-  onMounted(async () => {
-    if (useNuxtApp().payload.)
-    if (cards.value.length === 0 && !isLoading.value) {
-      onLoad(await load());
-    }
-  }); */
 }
 
 const { data: initialData, clear } = useAsyncData(async () => load(20));
@@ -65,7 +59,7 @@ watch(
 
 async function load(limit = 10): Promise<Feed> {
   const query: FeedQuery = {
-    pl: 'fr' as ApiLang, // TODO getApiLang(),
+    pl: apiLang(locale.value),
     token: paginationToken.value,
     limit,
   };

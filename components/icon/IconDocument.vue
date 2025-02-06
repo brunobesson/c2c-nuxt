@@ -10,20 +10,12 @@
 </template>
 
 <script lang="ts" setup>
-import { fixedWidthProps } from '~/props/fixed-width.js';
-import { DOCUMENT_TYPES } from '../../api/c2c.js';
+import { type DocumentType } from '~/api/c2c.js';
 
-const { type } = defineProps({
-  type: {
-    type: String,
-    required: true,
-    validator: value => {
-      // TODO factorize
-      return typeof value === 'string' && DOCUMENT_TYPES.includes(value);
-    },
-  },
-  ...fixedWidthProps,
-});
+const { type, fixedWidth = false } = defineProps<{
+  type: DocumentType;
+  fixedWidth?: boolean;
+}>();
 
 const icon = computed(() => {
   switch (type) {

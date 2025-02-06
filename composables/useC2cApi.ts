@@ -1,5 +1,5 @@
-import * as v from 'valibot';
 import {
+  Account,
   Area,
   AreaList,
   AreaVersion,
@@ -10,18 +10,26 @@ import {
   Book,
   BookList,
   BookVersion,
+  CookerResponse,
+  CreateImagesOutput,
+  DocumentHistory,
   Feed,
+  Following,
   Image,
   ImageList,
   ImageVersion,
+  IsBlocked,
+  IsFollowing,
+  IsTagged,
+  LoginResponse,
+  LogoutResponse,
   Map,
   MapList,
-  MapVersion,
   Outing,
   OutingList,
   OutingVersion,
   Profile,
-  ProfileVersion,
+  RegisterResponse,
   Route,
   RouteList,
   RouteVersion,
@@ -33,6 +41,8 @@ import {
   Xreport,
   XreportList,
   XreportVersion,
+  type CreateImagesInput,
+  type Document,
 } from '~/api/c2c.js';
 import type { ApiLang, UiLang } from '~/api/lang.js';
 
@@ -75,654 +85,347 @@ export type AssociationsHistoryQuery = {
 
 export type Query = Record<string, any>; // TODO
 
+const { checkResponse } = useSchemaValidation();
+
+function checkTagType(type: Document['type']) {
+  if (type !== 'r') {
+    // As for now, only routes may be tagged.
+    throw new Error('Tags are not supported for this kind of document');
+  }
+}
+
 export const useC2cApi = () => {
-  const $fetch = useNuxtApp().$c2cFetch;
+  const $fetch = useNuxtApp().$c2cFetch.raw;
   const baseUrl = useRuntimeConfig().public.c2cApiBase;
 
   return {
-    userProfile: {
-      getPreferences: async () => {
-        const result = v.safeParse(UserPreferences, await $fetch('/user/preferences'));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+    user: {
+      getPreferences: async () => checkResponse(UserPreferences, await $fetch('/user/preferences')),
+      updatePreferences: async (preferences: UserPreferences) =>
+        await $fetch<void>('/user/preferences', { method: 'POST', body: preferences }),
       setPreferredLang: async (lang: UiLang) =>
-        $fetch('/users/update_preferred_language', { method: 'POST', body: { lang } }),
+        $fetch<void>('/users/update_preferred_language', { method: 'POST', body: { lang } }),
+      following: async () => checkResponse(Following, await $fetch('/users/following')),
+      follow: async (user: Profile['document_id']) =>
+        await $fetch<void>('/users/follow', { method: 'POST', body: { user_id: user } }),
+      unfollow: async (user: Profile['document_id']) =>
+        await $fetch<void>('/users/unfollow', { method: 'POST', body: { user_id: user } }),
+      isFollowing: async (user: Profile['document_id']) =>
+        checkResponse(IsFollowing, await $fetch(`/users/following-user/${user}`)),
+      getAccount: async () => checkResponse(Account, await $fetch('/account')),
+      updateAccount: async (
+        currentPassword: string,
+        name: string | null,
+        forumUsername: string | null,
+        email: string | null,
+        isProfilePublic: boolean | null,
+        newPassword: string | null,
+      ) => {
+        return await $fetch<void>('/account', {
+          method: 'POST',
+          body: {
+            currentpassord: currentPassword,
+            ...(name !== null && { name }),
+            ...(forumUsername !== null && { forum_username: forumUsername }),
+            ...(email !== null && { email }),
+            ...(isProfilePublic !== null && { is_profile_public: isProfilePublic }),
+            ...(newPassword !== null && { newpassword: newPassword }),
+          },
+        });
+      },
+      login: async (username: string, password: string) =>
+        checkResponse(LoginResponse, await $fetch('/users/login', { body: { username, password, discourse: true } })),
+      logout: async () =>
+        await checkResponse(
+          LogoutResponse,
+          await $fetch('/users/logout', { method: 'POST', body: { discourse: true } }),
+        ),
+      expiredTokenLogout: async (expiredToken: string) =>
+        await checkResponse(
+          LogoutResponse,
+          await $fetch('/users/logout', {
+            method: 'POST',
+            body: { discourse: true },
+            headers: { Authorization: `JWT token='${expiredToken}'` },
+          }),
+        ),
+      requestPasswordChange: async (email: string) =>
+        await $fetch<void>('/users/request_password_change', { method: 'POST', body: { email } }),
+      validateNewPassword: async (nonce: string, password: string) =>
+        await checkResponse(
+          LoginResponse,
+          await $fetch(`/users/validate_new_password/${nonce}`, { method: 'POST', body: { password } }),
+        ),
+      register: async (data: {
+        name: string;
+        username: string;
+        forum_username: string;
+        password: string;
+        email: string;
+        lang: UiLang;
+        captch: string;
+      }) => await checkResponse(RegisterResponse, await $fetch('/users/register', { method: 'POST', body: data })),
+      validateChangeEmail: async (nonce: string) => await $fetch<void>(`/users/validate_change_email/${nonce}`),
+      validateRegisterEmail: async (nonce: string) =>
+        await checkResponse(LoginResponse, await $fetch(`/users/validate_register_email/${nonce}`)),
     },
 
     feed: {
-      getDefaultFeed: async (query: FeedQuery) => {
-        const result = v.safeParse(Feed, await $fetch('/feed', { query }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getProfileFeed: async (user: Profile['document_id'], query: FeedQuery) => {
-        const result = v.safeParse(Feed, await $fetch('/profile-feed', { query: { ...query, u: user } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getPersonalFeed: async (query: FeedQuery) => {
-        const result = v.safeParse(Feed, await $fetch('/personal-feed', { query }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+      getDefaultFeed: async (query: FeedQuery) => checkResponse(Feed, await $fetch('/feed', { query })),
+      getProfileFeed: async (user: Profile['document_id'], query: FeedQuery) =>
+        checkResponse(Feed, await $fetch('/profile-feed', { query: { ...query, u: user } })),
+      getPersonalFeed: async (query: FeedQuery) => checkResponse(Feed, await $fetch('/personal-feed', { query })),
     },
 
-    whatsnew: async (query: WhatsnewQuery) => {
-      const result = v.safeParse(Whatsnew, await $fetch('/document/changes', { query }));
-      if (result.success) {
-        return result.output;
-      }
-      console.group('Error fetching data from API');
-      console.trace(result.issues);
-      console.groupEnd();
-      throw new Error('Server API response does not match expectation');
-    },
-
-    associationsHistory: async (query: AssociationsHistoryQuery) => {
-      const result = v.safeParse(AssociationsHistory, await $fetch('/associations-history', { query }));
-      if (result.success) {
-        return result.output;
-      }
-      console.group('Error fetching data from API');
-      console.trace(result.issues);
-      console.groupEnd();
-      throw new Error('Server API response does not match expectation');
+    document: {
+      whatsnew: async (query: WhatsnewQuery) => checkResponse(Whatsnew, await $fetch('/documents/changes', { query })),
+      search: (params: unknown) => undefined, // TODO
+      history: async (document: Document['document_id'], lang: ApiLang) =>
+        checkResponse(DocumentHistory, await $fetch(`/document/${document}/history/${lang}`)),
+      mask: async (document: Document['document_id'], lang: ApiLang, version: number) =>
+        await $fetch('/versions/mask', { method: 'POST', body: { document_id: document, lang, version_id: version } }),
+      unmask: async (document: Document['document_id'], lang: ApiLang, version: number) =>
+        await $fetch('/versions/unmask', {
+          method: 'POST',
+          body: { document_id: document, lang, version_id: version },
+        }),
+      cook: async (content: Record<string, string>) =>
+        await checkResponse(CookerResponse, await $fetch('/cooker', { method: 'POST', body: { content } })),
     },
 
     area: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(AreaList, await $fetch(`/areas`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Area['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Area, await $fetch(`/areas/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Area['document_id'], lang: ApiLang, version: AreaVersion['version']['version_id']) => {
-        const result = v.safeParse(Area, await $fetch(`/area/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Area, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(AreaList, await $fetch(`/areas`, { query })),
+      get: async (id: Area['document_id'], lang: ApiLang) =>
+        checkResponse(Area, await $fetch(`/areas/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Area['document_id'], lang: ApiLang, version: AreaVersion['version']['version_id']) =>
+        checkResponse(AreaVersion, await $fetch(`/areas/${id}/${lang}/${version}`)),
+      save: async (document: Area, comment: string) =>
+        checkResponse(
           Area,
-          $fetch(`/areas/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Area) => {
-        const result = v.safeParse(
-          Area,
-          $fetch(`/areas/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/areas/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Area) =>
+        checkResponse(Area, await $fetch(`/areas/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     article: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(ArticleList, await $fetch(`/articles`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Article['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Article, await $fetch(`/articles/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (
-        id: Article['document_id'],
-        lang: ApiLang,
-        version: ArticleVersion['version']['version_id'],
-      ) => {
-        const result = v.safeParse(Article, await $fetch(`/article/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Article, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(ArticleList, await $fetch(`/articles`, { query })),
+      get: async (id: Article['document_id'], lang: ApiLang) =>
+        checkResponse(Article, await $fetch(`/articles/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Article['document_id'], lang: ApiLang, version: ArticleVersion['version']['version_id']) =>
+        checkResponse(ArticleVersion, await $fetch(`/articles/${id}/${lang}/${version}`)),
+      save: async (document: Article, comment: string) =>
+        checkResponse(
           Article,
-          $fetch(`/articles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Article) => {
-        const result = v.safeParse(
+          await $fetch(`/articles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Article) =>
+        checkResponse(
           Article,
-          $fetch(`/articles/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/articles/${document.document_id}`, { method: 'POST', body: { document } }),
+        ),
     },
     book: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(BookList, await $fetch(`/books`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Book['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Book, await $fetch(`/books/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Book['document_id'], lang: ApiLang, version: BookVersion['version']['version_id']) => {
-        const result = v.safeParse(Book, await $fetch(`/book/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Book, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(BookList, await $fetch(`/books`, { query })),
+      get: async (id: Book['document_id'], lang: ApiLang) =>
+        checkResponse(Book, await $fetch(`/books/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Book['document_id'], lang: ApiLang, version: BookVersion['version']['version_id']) =>
+        checkResponse(BookVersion, await $fetch(`/books/${id}/${lang}/${version}`)),
+      save: async (document: Book, comment: string) =>
+        checkResponse(
           Book,
-          $fetch(`/books/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Book) => {
-        const result = v.safeParse(
-          Book,
-          $fetch(`/books/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/books/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Book) =>
+        checkResponse(Book, await $fetch(`/books/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     image: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(ImageList, await $fetch(`/images`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Image['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Image, await $fetch(`/images/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Image['document_id'], lang: ApiLang, version: ImageVersion['version']['version_id']) => {
-        const result = v.safeParse(Image, await $fetch(`/image/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Image, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(ImageList, await $fetch(`/images`, { query })),
+      get: async (id: Image['document_id'], lang: ApiLang) =>
+        checkResponse(Image, await $fetch(`/images/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Image['document_id'], lang: ApiLang, version: ImageVersion['version']['version_id']) =>
+        checkResponse(ImageVersion, await $fetch(`/images/${id}/${lang}/${version}`)),
+      save: async (document: Image, comment: string) =>
+        checkResponse(
           Image,
-          $fetch(`/images/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Image) => {
-        const result = v.safeParse(
-          Image,
-          $fetch(`/images/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/images/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Image) =>
+        checkResponse(Image, await $fetch(`/images/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     map: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(MapList, await $fetch(`/maps`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Map['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Map, await $fetch(`/maps/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Map['document_id'], lang: ApiLang, version: MapVersion['version']['version_id']) => {
-        const result = v.safeParse(Map, await $fetch(`/map/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Map, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(MapList, await $fetch(`/maps`, { query })),
+      get: async (id: Map['document_id'], lang: ApiLang) =>
+        checkResponse(Map, await $fetch(`/maps/${id}`, { query: { cook: lang } })),
+      save: async (document: Map, comment: string) =>
+        checkResponse(
           Map,
-          $fetch(`/maps/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Map) => {
-        const result = v.safeParse(
-          Map,
-          $fetch(`/maps/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/maps/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Map) =>
+        checkResponse(Map, await $fetch(`/maps/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     outing: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(OutingList, await $fetch(`/outings`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Outing['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Outing, await $fetch(`/outings/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Outing['document_id'], lang: ApiLang, version: OutingVersion['version']['version_id']) => {
-        const result = v.safeParse(Outing, await $fetch(`/outing/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Outing, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(OutingList, await $fetch(`/outings`, { query })),
+      get: async (id: Outing['document_id'], lang: ApiLang) =>
+        checkResponse(Outing, await $fetch(`/outings/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Outing['document_id'], lang: ApiLang, version: OutingVersion['version']['version_id']) =>
+        checkResponse(OutingVersion, await $fetch(`/outings/${id}/${lang}/${version}`)),
+      save: async (document: Outing, comment: string) =>
+        checkResponse(
           Outing,
-          $fetch(`/outings/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Outing) => {
-        const result = v.safeParse(
-          Outing,
-          $fetch(`/outings/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/outings/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Outing) =>
+        checkResponse(Outing, await $fetch(`/outings/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     profile: {
-      get: async (id: Profile['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Profile, await $fetch(`/profiles/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (
-        id: Profile['document_id'],
-        lang: ApiLang,
-        version: ProfileVersion['version']['version_id'],
-      ) => {
-        const result = v.safeParse(Profile, await $fetch(`/profile/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Profile, comment: string) => {
-        const result = v.safeParse(
+      get: async (id: Profile['document_id'], lang: ApiLang) =>
+        checkResponse(Profile, await $fetch(`/profiles/${id}`, { query: { cook: lang } })),
+      save: async (document: Profile, comment: string) =>
+        checkResponse(
           Profile,
-          $fetch(`/profiles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/profiles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
     },
     route: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(RouteList, await $fetch(`/routes`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Route['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Route, await $fetch(`/routes/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (id: Route['document_id'], lang: ApiLang, version: RouteVersion['version']['version_id']) => {
-        const result = v.safeParse(Route, await $fetch(`/route/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Route, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(RouteList, await $fetch(`/routes`, { query })),
+      get: async (id: Route['document_id'], lang: ApiLang) =>
+        checkResponse(Route, await $fetch(`/routes/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Route['document_id'], lang: ApiLang, version: RouteVersion['version']['version_id']) =>
+        checkResponse(RouteVersion, await $fetch(`/routes/${id}/${lang}/${version}`)),
+      save: async (document: Route, comment: string) =>
+        checkResponse(
           Route,
-          $fetch(`/routes/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Route) => {
-        const result = v.safeParse(
-          Route,
-          $fetch(`/routes/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/routes/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Route) =>
+        checkResponse(Route, await $fetch(`/routes/${document.document_id}`, { method: 'POST', body: { document } })),
     },
     waypoint: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(WaypointList, await $fetch(`/waypoints`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Waypoint['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Waypoint, await $fetch(`/waypoints/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+      getAll: async (query: Query) => checkResponse(WaypointList, await $fetch(`/waypoints`, { query })),
+      get: async (id: Waypoint['document_id'], lang: ApiLang) =>
+        checkResponse(Waypoint, await $fetch(`/waypoints/${id}`, { query: { cook: lang } })),
       getVersion: async (
         id: Waypoint['document_id'],
         lang: ApiLang,
         version: WaypointVersion['version']['version_id'],
-      ) => {
-        const result = v.safeParse(Waypoint, await $fetch(`/waypoint/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Waypoint, comment: string) => {
-        const result = v.safeParse(
+      ) => checkResponse(WaypointVersion, await $fetch(`/waypoints/${id}/${lang}/${version}`)),
+      save: async (document: Waypoint, comment: string) =>
+        checkResponse(
           Waypoint,
-          $fetch(`/waypoints/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Waypoint) => {
-        const result = v.safeParse(
+          await $fetch(`/waypoints/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Waypoint) =>
+        checkResponse(
           Waypoint,
-          $fetch(`/waypoints/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
+          await $fetch(`/waypoints/${document.document_id}`, { method: 'POST', body: { document } }),
+        ),
     },
     xreport: {
-      getAll: async (query: Query) => {
-        const result = v.safeParse(XreportList, await $fetch(`/xreports`, { query }));
-        if (result.success) {
-          return result.output.documents;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      get: async (id: Xreport['document_id'], lang: ApiLang) => {
-        const result = v.safeParse(Xreport, await $fetch(`/xreports/${id}`, { query: { cook: lang } }));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      getVersion: async (
-        id: Xreport['document_id'],
-        lang: ApiLang,
-        version: XreportVersion['version']['version_id'],
-      ) => {
-        const result = v.safeParse(Xreport, await $fetch(`/xreport/${id}/${lang}/${version}`));
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      save: async (document: Xreport, comment: string) => {
-        const result = v.safeParse(
+      getAll: async (query: Query) => checkResponse(XreportList, await $fetch(`/xreports`, { query })),
+      get: async (id: Xreport['document_id'], lang: ApiLang) =>
+        checkResponse(Xreport, await $fetch(`/xreports/${id}`, { query: { cook: lang } })),
+      getVersion: async (id: Xreport['document_id'], lang: ApiLang, version: XreportVersion['version']['version_id']) =>
+        checkResponse(XreportVersion, await $fetch(`/xreports/${id}/${lang}/${version}`)),
+      save: async (document: Xreport, comment: string) =>
+        checkResponse(
           Xreport,
-          $fetch(`/xreports/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
-      },
-      create: async (document: Xreport) => {
-        const result = v.safeParse(
+          await $fetch(`/xreports/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
+        ),
+      create: async (document: Xreport) =>
+        checkResponse(
           Xreport,
-          $fetch(`/xreports/${document.document_id}`, { method: 'POST', body: { document } }),
-        );
-        if (result.success) {
-          return result.output;
-        }
-        console.group('Error fetching data from API');
-        console.trace(result.issues);
-        console.groupEnd();
-        throw new Error('Server API response does not match expectation');
+          await $fetch(`/xreports/${document.document_id}`, { method: 'POST', body: { document } }),
+        ),
+    },
+
+    associations: {
+      create: async (parent: Document, child: Document) => {
+        const parentType = parent.type;
+        const childType = child.type;
+        // https://github.com/c2corg/v6_ui/blob/c9962a6c3bac0670eab732d563f9f480379f84d1/c2corg_ui/static/js/addassociation.js#L91
+        // parent and child type are predetermined
+        const invert =
+          (parentType === 'c' && ['w', 'o', 'r', 'b', 'c', 'x', 'u'].includes(childType)) ||
+          parentType === 'i' ||
+          (parentType === 'o' && ['r', 'u'].includes(childType)) ||
+          (parentType === 'r' && ['w', 'b'].includes(childType)) ||
+          (parentType === 'w' && childType === 'b') ||
+          (parentType === 'x' && ['w', 'o', 'r', 'u'].includes(childType));
+        const body: { parent_document_id: Document['document_id']; child_document_id: Document['document_id'] } = invert
+          ? { parent_document_id: child.document_id, child_document_id: parent.document_id }
+          : { parent_document_id: parent.document_id, child_document_id: child.document_id };
+        return $fetch<void>('/associations', {
+          method: 'POST',
+          body,
+        });
+      },
+      remove: async (parent: Document, child: Document) =>
+        await $fetch<void>('/associations', {
+          method: 'DELETE',
+          body: { parent_document_id: parent.document_id, child_document_id: child.document_id },
+        }),
+      history: async (query: AssociationsHistoryQuery) =>
+        checkResponse(AssociationsHistory, await $fetch('/associations-history', { query })),
+    },
+
+    tags: {
+      isTagged: async ({ document_id, type }: Document) => {
+        checkTagType(type);
+        return await checkResponse(IsTagged, await $fetch(`/tags/has/${document_id}`));
+      },
+      add: async ({ document_id, type }: Document) => {
+        checkTagType(type);
+        return await $fetch<void>('/tags/add', { method: 'POST', body: { document_id } });
+      },
+      remove: async ({ document_id, type }: Document) => {
+        checkTagType(type);
+        return await $fetch<void>('/tags/remove', { method: 'POST', body: { document_id } });
       },
     },
+
+    images: {
+      create: async (images: CreateImagesInput) =>
+        await checkResponse(CreateImagesOutput, await $fetch('/images/list', { method: 'POST', body: { images } })),
+    },
+
+    moderator: {
+      protectDocument: async (document: Document['document_id']) =>
+        await $fetch<void>('/documents/protect', { method: 'POST', body: { document_id: document } }),
+      unprotectDocument: async (document: Document['document_id']) =>
+        await $fetch<void>('/documents/unprotect', { method: 'POST', body: { document_id: document } }),
+      deleteDocument: async (document: Document['document_id']) =>
+        await $fetch<void>(`/documents/delete/${document}`, { method: 'DELETE' }),
+      deleteLocale: async (document: Document['document_id'], lang: ApiLang) =>
+        await $fetch<void>(`/documents/delete/${document}/${lang}`, { method: 'DELETE' }),
+      mergeDocuments: async (source: Document['document_id'], target: Document['document_id']) =>
+        await $fetch<void>('/documents/merge', {
+          method: 'POST',
+          body: { source_document_id: source, target_document_id: target },
+        }),
+      revertDocument: async (document: Document['document_id'], lang: ApiLang, version: number) =>
+        await $fetch<void>('/documents/revert', {
+          method: 'POST',
+          body: { document_id: document, lang, version_id: version },
+        }),
+      isAccountBlocked: async (user: Profile['document_id']) =>
+        await checkResponse(IsBlocked, await $fetch(`/users/blocked/${user}`)),
+      blockAccount: async (user: Profile['document_id']) =>
+        await $fetch<void>('/users/block', { method: 'POST', body: { user_id: user } }),
+      unblockAccount: async (user: Profile['document_id']) =>
+        await $fetch<void>('/users/unblock', { method: 'POST', body: { user_id: user } }),
+      maskVersion: async (document: Document['document_id'], lang: ApiLang, version: number) =>
+        await $fetch<void>('/versions/mask', {
+          method: 'POST',
+          body: { document_id: document, lang, version_id: version },
+        }),
+      unmaskVersion: async (document: Document['document_id'], lang: ApiLang, version: number) =>
+        await $fetch<void>('/versions/unmask', {
+          method: 'POST',
+          body: { document_id: document, lang, version_id: version },
+        }),
+    },
+
     baseUrl,
   };
 };

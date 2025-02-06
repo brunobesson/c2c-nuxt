@@ -104,7 +104,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useGdprStore } from '../store/gdpr.js';
+import { useGdprStore } from '~/store/gdpr.js';
 
 const route = useRoute();
 const forumUrl = useRuntimeConfig().public.forumBase;

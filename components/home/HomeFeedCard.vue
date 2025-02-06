@@ -78,7 +78,11 @@
               <MarkerCondition
                 v-if="isOutingListing(item.document) && item.document.condition_rating"
                 :condition="item.document.condition_rating" />
-              <MarkerQuality :quality="item.document.quality" />
+              <MarkerQuality
+                v-if="
+                  !isAreaListing(item.document) && !isImageListing(item.document) && !isProfileListing(item.document)
+                "
+                :quality="item.document.quality" />
             </span>
           </CardRow>
         </div>
@@ -89,20 +93,18 @@
 
 <script setup lang="ts">
 import * as v from 'valibot';
-import type { FeedItem } from '../../api/c2c.js';
+import type { FeedItem } from '~/api/c2c.js';
+import { ArticleListing, BookListing, OutingListing, RouteListing, WaypointListing } from '~/api/c2c.js';
 import {
-  ArticleListing,
-  BookListing,
+  isAreaListing,
   isArticleListing,
   isBookListing,
+  isImageListing,
   isOutingListing,
   isProfileListing,
   isRouteListing,
   isWaypoint,
-  OutingListing,
-  RouteListing,
-  WaypointListing,
-} from '../../api/c2c.js';
+} from '~/types/common.js';
 
 const { item } = defineProps<{ item: FeedItem }>();
 const { locale: lang, t } = useI18n();

@@ -1,7 +1,6 @@
 <template>
   <section class="p-5 has-text-centered">
-    <!-- TODO <html-header :title="$t('Page not found')" /> -->
-    <!-- TODO styling -->
+    <!-- TODO SEO <html-header :title="$t('Page not found')" /> -->
     <div class="content">
       <h1>{{ $t('Ooops') }}</h1>
       <h3>{{ $t('Page not found') }}</h3>
@@ -23,7 +22,7 @@
         </div>
       </NuxtLink>
       <NuxtLink
-        v-for="docType of ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area']"
+        v-for="docType of ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area'] as const"
         :to="`/${docType}s`"
         class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <IconDocument :type="docType" class="has-text-secondary is-size-1" />
@@ -39,8 +38,6 @@
 
 <script setup lang="ts">
 useSeoMeta({ robots: { noindex: true } });
-
-const button = ['outing', 'waypoint', 'route', 'article', 'book', 'xreport', 'image', 'area'].map(type => ({}));
 </script>
 
 <style lang="scss" scoped>

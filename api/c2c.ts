@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import { ApiLang } from '~/api/lang.js';
+import { ApiLang, UiLang } from '~/api/lang.js';
 import { IsoDate, IsoDateTime, PositiveInt, Uint } from '~/types/common.js';
 import { LineString, MultiLineString, MultiPolygon, Point, Polygon } from '~/types/geojson.js';
 
@@ -412,7 +412,8 @@ const WeatherStationType = v.picklist([
 ]);
 export type WeatherStationType = v.InferOutput<typeof WeatherStationType>;
 
-const LetterType = v.picklist(['a', 'c', 'i', 'm', 'o', 'r', 'u', 'w', 'b', 'x']);
+export const LETTER_TYPES = ['a', 'c', 'i', 'm', 'o', 'r', 'u', 'w', 'b', 'x'] as const;
+const LetterType = v.picklist(LETTER_TYPES);
 export type LetterType = v.InferOutput<typeof LetterType>;
 
 export const ACTIVITIES = [
@@ -431,15 +432,16 @@ export const ACTIVITIES = [
 const Activity = v.picklist(ACTIVITIES);
 export type Activity = v.InferOutput<typeof Activity>;
 
-const BaseGeometry = v.object({
+const Geom = v.pipe(
+  v.string(),
+  v.transform(input => v.parse(Point, JSON.parse(input))),
+);
+const BaseGeometry = v.strictObject({
   version: PositiveInt,
-  geom: v.pipe(
-    v.string(),
-    v.transform(input => v.parse(Point, JSON.parse(input))),
-  ),
+  geom: Geom,
 });
 export type BaseGeometry = v.InferOutput<typeof BaseGeometry>;
-const Geometry = v.object({
+const Geometry = v.strictObject({
   ...BaseGeometry.entries,
   geom_detail: v.nullable(
     v.pipe(
@@ -449,6 +451,7 @@ const Geometry = v.object({
   ),
 });
 export type Geometry = v.InferOutput<typeof Geometry>;
+const NullableGometry = v.strictObject({ ...Geometry.entries, geom: v.nullable(Geom) });
 
 export const DOCUMENT_TYPES = [
   'area',
@@ -475,11 +478,11 @@ const FullBaseLocale = v.strictObject({
   ...BaseLocale.entries,
   description: v.nullable(v.string()),
   summary: v.nullable(v.string()),
-  topic_id: PositiveInt,
+  topic_id: v.nullable(PositiveInt),
 });
 export type FullBaseLocale = v.InferOutput<typeof FullBaseLocale>;
 
-const BaseDocument = v.object({
+const BaseDocument = v.strictObject({
   document_id: PositiveInt,
   type: LetterType,
   version: PositiveInt,
@@ -489,16 +492,16 @@ const BaseDocument = v.object({
   locales: v.array(BaseLocale),
 });
 
-const FullBaseDocument = v.object({
+const FullBaseDocument = v.strictObject({
   ...BaseDocument.entries,
   locales: v.array(FullBaseLocale),
   cooked: FullBaseLocale,
-  associations: v.object({}),
+  associations: v.strictObject({}),
   geometry: Geometry,
   redirects_to: v.nullish(PositiveInt),
 });
 
-const BaseArea = v.object({
+const BaseArea = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('a'),
   area_type: AreaType,
@@ -511,7 +514,7 @@ export const AreaListing = v.strictObject({
 });
 export type AreaListing = v.InferOutput<typeof AreaListing>;
 
-const BaseArticle = v.object({
+const BaseArticle = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('c'),
   activities: v.array(Activity),
@@ -521,11 +524,11 @@ const BaseArticle = v.object({
 
 export const ArticleListing = v.strictObject({
   ...BaseArticle.entries,
-  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+  locales: v.array(v.strictObject({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
 });
 export type ArticleListing = v.InferOutput<typeof ArticleListing>;
 
-const BaseBook = v.object({
+const BaseBook = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('b'),
   author: v.nullable(v.string()),
@@ -535,11 +538,11 @@ const BaseBook = v.object({
 
 export const BookListing = v.strictObject({
   ...BaseBook.entries,
-  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+  locales: v.array(v.strictObject({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
 });
 export type BookListing = v.InferOutput<typeof BookListing>;
 
-const BaseImage = v.object({
+const BaseImage = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('i'),
   areas: v.array(AreaListing),
@@ -550,7 +553,7 @@ const BaseImage = v.object({
 export const ImageListing = v.strictObject({
   ...v.omit(BaseImage, ['quality']).entries,
   geometry: v.nullable(
-    v.object({
+    v.strictObject({
       ...BaseGeometry.entries,
       geom: v.nullable(
         v.pipe(
@@ -563,7 +566,7 @@ export const ImageListing = v.strictObject({
 });
 export type ImageListing = v.InferOutput<typeof ImageListing>;
 
-const BaseMap = v.object({
+const BaseMap = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('m'),
   areas: v.array(AreaListing),
@@ -576,7 +579,7 @@ export const MapListing = v.strictObject({
 });
 export type MapListing = v.InferOutput<typeof MapListing>;
 
-const BaseOuting = v.object({
+const BaseOuting = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('o'),
   areas: v.array(AreaListing),
@@ -604,17 +607,17 @@ const BaseOuting = v.object({
 
 export const OutingListing = v.strictObject({
   ...BaseOuting.entries,
-  author: v.object({
+  author: v.strictObject({
     name: v.string(),
     user_id: PositiveInt,
   }),
   img_count: Uint,
-  locales: v.array(v.object({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
-  geometry: v.object({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
+  locales: v.array(v.strictObject({ ...BaseLocale.entries, ...v.pick(FullBaseLocale, ['summary']).entries })),
+  geometry: v.strictObject({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
 });
 export type OutingListing = v.InferOutput<typeof OutingListing>;
 
-const BaseProfile = v.object({
+const BaseProfile = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('u'),
   areas: v.array(AreaListing),
@@ -630,12 +633,13 @@ const ProfileListing = v.strictObject({
 });
 export type ProfileListing = v.InferOutput<typeof ProfileListing>;
 
-const BaseRoute = v.object({
+const BaseRoute = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('r'),
   areas: v.array(AreaListing),
   elevation_max: v.nullish(Uint), // NOT for slacklining
   elevation_min: v.nullish(Uint), // NOT for slacklining
+  height_diff_access: v.nullish(Uint), // NOT for slacklining
   height_diff_difficulties: v.nullish(Uint), // NOT for slacklining
   height_diff_down: v.nullish(Uint), // NOT for slacklining
   height_diff_up: v.nullish(Uint), // NOT for slacklining
@@ -670,17 +674,17 @@ const BaseRoute = v.object({
 export const RouteListing = v.strictObject({
   ...BaseRoute.entries,
   locales: v.array(
-    v.object({
+    v.strictObject({
       ...BaseLocale.entries,
       ...v.pick(FullBaseLocale, ['summary']).entries,
       title_prefix: v.nullable(v.string()),
     }),
   ),
-  geometry: v.object({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
+  geometry: v.strictObject({ ...v.omit(Geometry, ['geom_detail']).entries, has_geom_detail: v.boolean() }),
 });
 export type RouteListing = v.InferOutput<typeof RouteListing>;
 
-const BaseWaypoint = v.object({
+const BaseWaypoint = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('w'),
   areas: v.array(AreaListing),
@@ -695,7 +699,7 @@ export const WaypointListing = v.strictObject({
   slackline_length_min: v.nullish(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())), // slackline_spot
   slackline_types: v.nullish(v.array(SlacklineType)),
   locales: v.array(
-    v.object({
+    v.strictObject({
       ...BaseLocale.entries,
       ...v.pick(FullBaseLocale, ['summary']).entries,
       access_period: v.nullish(v.string()), // climbing_outdoor
@@ -705,7 +709,7 @@ export const WaypointListing = v.strictObject({
 });
 export type WaypointListing = v.InferOutput<typeof WaypointListing>;
 
-const BaseXreport = v.object({
+const BaseXreport = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('x'),
   areas: v.array(AreaListing),
@@ -727,12 +731,13 @@ export const XreportListing = v.strictObject({
 export type XreportListing = v.InferOutput<typeof XreportListing>;
 
 export const Area = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseArea.entries,
-  associations: v.object({
+  ...FullBaseDocument.entries,
+  type: v.literal('a'),
+  associations: v.strictObject({
     images: v.array(ImageListing),
   }),
-  geometry: v.object({
+  geometry: v.strictObject({
     ...BaseGeometry.entries,
     geom_detail: v.nullable(
       v.pipe(
@@ -745,9 +750,10 @@ export const Area = v.strictObject({
 export type Area = v.InferOutput<typeof Area>;
 
 export const Article = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseArticle.entries,
-  associations: v.object({
+  ...v.omit(FullBaseDocument, ['geometry']).entries,
+  type: v.literal('c'),
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
     outings: v.array(OutingListing),
@@ -757,13 +763,18 @@ export const Article = v.strictObject({
     users: v.array(ProfileListing),
     xreports: v.array(XreportListing),
   }),
+  author: v.strictObject({
+    name: v.string(),
+    user_id: PositiveInt,
+  }),
 });
 export type Article = v.InferOutput<typeof Article>;
 
 export const Book = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseBook.entries,
-  associations: v.object({
+  ...FullBaseDocument.entries,
+  type: v.literal('b'),
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     routes: v.array(RouteListing),
     waypoints: v.array(WaypointListing),
@@ -779,9 +790,10 @@ export const Book = v.strictObject({
 export type Book = v.InferOutput<typeof Book>;
 
 export const Image = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseImage.entries,
-  associations: v.object({
+  ...FullBaseDocument.entries,
+  type: v.literal('i'),
+  associations: v.strictObject({
     areas: v.array(AreaListing),
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
@@ -791,6 +803,10 @@ export const Image = v.strictObject({
     images: v.array(ImageListing),
     users: v.array(ProfileListing),
     xreports: v.array(XreportListing),
+  }),
+  creator: v.strictObject({
+    name: v.string(),
+    user_id: PositiveInt,
   }),
   activities: v.array(Activity),
   camera_name: v.nullable(v.string()),
@@ -809,13 +825,14 @@ export const Image = v.strictObject({
 export type Image = v.InferOutput<typeof Image>;
 
 export const Map = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseMap.entries,
+  ...FullBaseDocument.entries,
+  type: v.literal('m'),
   scale: v.nullable(v.string()),
 });
 export type Map = v.InferOutput<typeof Map>;
 
-const OutingLocale = v.object({
+const OutingLocale = v.strictObject({
   ...FullBaseLocale.entries,
   access_comment: v.nullable(v.string()),
   avalanches: v.nullable(v.string()),
@@ -830,11 +847,12 @@ const OutingLocale = v.object({
   weather: v.nullable(v.string()),
 });
 export const Outing = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseOuting.entries,
+  ...FullBaseDocument.entries,
+  type: v.literal('o'),
   locales: v.array(OutingLocale),
   cooked: OutingLocale,
-  associations: v.object({
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     images: v.array(ImageListing),
     routes: v.array(RouteListing),
@@ -862,15 +880,18 @@ export const Outing = v.strictObject({
 export type Outing = v.InferOutput<typeof Outing>;
 
 export const Profile = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseProfile.entries,
-  associations: v.object({
+  ...FullBaseDocument.entries,
+  type: v.literal('u'),
+  // geom might be null for pofiles
+  geometry: NullableGometry,
+  associations: v.strictObject({
     images: v.array(ImageListing),
   }),
 });
 export type Profile = v.InferOutput<typeof Profile>;
 
-const RouteLocale = v.object({
+const RouteLocale = v.strictObject({
   ...FullBaseLocale.entries,
   title_prefix: v.nullable(v.string()),
   slackline_anchor1: v.nullish(v.string()), // slacklining
@@ -882,18 +903,19 @@ const RouteLocale = v.object({
   route_history: v.nullable(v.string()),
 });
 export const Route = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseRoute.entries,
+  ...FullBaseDocument.entries,
+  type: v.literal('r'),
   locales: v.array(RouteLocale),
   cooked: RouteLocale,
-  associations: v.object({
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
     images: v.array(ImageListing),
     routes: v.array(RouteListing),
     waypoints: v.array(WaypointListing),
     xreports: v.array(XreportListing),
-    recent_outings: v.object({
+    recent_outings: v.strictObject({
       documents: v.array(OutingListing),
       total: Uint,
     }),
@@ -903,7 +925,6 @@ export const Route = v.strictObject({
   difficulties_height: v.nullable(Uint),
   durations: v.nullable(v.array(RouteDurationType)),
   glacier_gear: v.nullable(GlacierGearType),
-  height_diff_access: v.nullable(Uint),
   lift_access: v.nullable(v.boolean()),
   main_waypoint_id: v.nullable(PositiveInt),
   mtb_height_diff_portages: v.nullable(Uint),
@@ -914,29 +935,30 @@ export const Route = v.strictObject({
 });
 export type Route = v.InferOutput<typeof Route>;
 
-const WaypointLocale = v.object({
+const WaypointLocale = v.strictObject({
   ...FullBaseLocale.entries,
   external_resources: v.nullable(v.string()),
   access: v.nullable(v.string()),
   access_period: v.nullable(v.string()),
 });
 export const Waypoint = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseWaypoint.entries,
+  ...FullBaseDocument.entries,
+  type: v.literal('w'),
   locales: v.array(WaypointLocale),
   cooked: WaypointLocale,
-  associations: v.object({
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     books: v.array(BookListing),
     images: v.array(ImageListing),
     waypoints: v.array(WaypointListing),
     waypoint_children: v.array(WaypointListing),
     xreports: v.array(XreportListing),
-    recent_outings: v.object({
+    recent_outings: v.strictObject({
       document: v.array(OutingListing),
       total: Uint,
     }),
-    all_routes: v.object({
+    all_routes: v.strictObject({
       documents: v.array(RouteListing),
       total: Uint,
     }),
@@ -988,7 +1010,7 @@ export const Waypoint = v.strictObject({
 });
 export type Waypoint = v.InferOutput<typeof Waypoint>;
 
-const XreportLocale = v.object({
+const XreportLocale = v.strictObject({
   ...FullBaseLocale.entries,
   place: v.nullable(v.string()),
   access: v.nullable(v.string()),
@@ -1006,11 +1028,12 @@ const XreportLocale = v.object({
   other_comments: v.nullable(v.string()),
 });
 export const Xreport = v.strictObject({
-  ...FullBaseDocument.entries,
   ...BaseXreport.entries,
+  ...FullBaseDocument.entries,
+  type: v.literal('x'),
   locales: v.array(XreportLocale),
   cooked: XreportLocale,
-  associations: v.object({
+  associations: v.strictObject({
     articles: v.array(ArticleListing),
     images: v.array(ImageListing),
     outings: v.array(OutingListing),
@@ -1018,40 +1041,37 @@ export const Xreport = v.strictObject({
     users: v.array(ProfileListing),
     waypoints: v.array(WaypointListing),
   }),
+  author: v.strictObject({
+    name: v.string(),
+    user_id: PositiveInt,
+  }),
   rescue: v.nullable(v.boolean()),
-  author_status: v.nullable(AuthorStatus),
-  activity_rate: v.nullable(ActivityRate),
-  age: v.nullable(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())),
-  gender: v.nullable(Gender),
-  previous_injuries: v.nullable(PreviousInjury),
-  autonomy: v.nullable(Autonomy),
   qualification: v.nullable(Qualification),
   supervision: v.nullable(Supervision),
   anonymous: v.boolean(),
+  // fields below are not visible to 'common' user
+  author_status: v.nullish(AuthorStatus),
+  activity_rate: v.nullish(ActivityRate),
+  age: v.nullish(v.pipe(v.number(), v.integer(), v.minValue(1), v.finite())),
+  gender: v.nullish(Gender),
+  previous_injuries: v.nullish(PreviousInjury),
+  autonomy: v.nullish(Autonomy),
 });
 export type Xreport = v.InferOutput<typeof Xreport>;
 
-export type Document =
-  | Area
+export type DocumentListing =
   | AreaListing
-  | Article
   | ArticleListing
-  | Book
   | BookListing
-  | Image
   | ImageListing
-  | Map
   | MapListing
-  | Outing
   | OutingListing
-  | Profile
   | ProfileListing
-  | Route
   | RouteListing
-  | Waypoint
   | WaypointListing
-  | Xreport
   | XreportListing;
+
+export type Document = Area | Article | Book | Image | Map | Outing | Profile | Route | Waypoint | Xreport;
 
 export const AreaList = v.strictObject({
   documents: v.array(AreaListing),
@@ -1107,7 +1127,7 @@ export const XreportList = v.strictObject({
 });
 export type XreportList = v.InferOutput<typeof XreportList>;
 
-const Version = v.object({
+const VersionInfo = v.strictObject({
   version_id: PositiveInt,
   user_id: PositiveInt,
   name: v.pipe(v.string(), v.nonEmpty()),
@@ -1115,25 +1135,26 @@ const Version = v.object({
   written_at: IsoDateTime,
   masked: v.boolean(),
 });
+export type VersionInfo = v.InferOutput<typeof VersionInfo>;
 
 export const DocumentHistory = v.strictObject({
   title: v.string(),
-  versions: v.pipe(v.array(Version), v.nonEmpty()),
+  versions: v.pipe(v.array(VersionInfo), v.nonEmpty()),
 });
 export type DocumentHistory = v.InferOutput<typeof DocumentHistory>;
 
-const DocumentVersion = v.strictObject({
-  version: Version,
+const BaseDocumentVersion = v.strictObject({
+  version: VersionInfo,
   previous_version_id: v.nullable(PositiveInt),
   next_version_id: v.nullable(PositiveInt),
 });
 
-const AssociationHistoryDocument = v.object({
+const AssociationHistoryDocument = v.strictObject({
   document_id: PositiveInt,
   type: LetterType,
   locales: v.pipe(
     v.array(
-      v.object({
+      v.strictObject({
         lang: ApiLang,
         title: v.string(),
       }),
@@ -1141,11 +1162,11 @@ const AssociationHistoryDocument = v.object({
     v.nonEmpty(),
   ),
 });
-const AssociationHistory = v.object({
+const AssociationHistory = v.strictObject({
   parent_document: AssociationHistoryDocument,
   child_document: AssociationHistoryDocument,
   is_creation: v.boolean(),
-  user: v.object({
+  user: v.strictObject({
     user_id: PositiveInt,
     name: v.pipe(v.string(), v.nonEmpty()),
     forum_username: v.pipe(v.string(), v.nonEmpty()),
@@ -1161,98 +1182,121 @@ export const AssociationsHistory = v.strictObject({
 });
 export type AssociationsHistory = v.InferOutput<typeof AssociationsHistory>;
 
+const AreaVersionDocument = v.strictObject({
+  ...v.omit(Area, ['available_langs', 'associations']).entries,
+  locales: v.array(v.omit(FullBaseLocale, ['topic_id'])),
+  cooked: v.omit(FullBaseLocale, ['topic_id']),
+});
+export type AreaVersionDocument = v.InferOutput<typeof AreaVersionDocument>;
 export const AreaVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Area,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(AreaVersionDocument),
 });
 export type AreaVersion = v.InferOutput<typeof AreaVersion>;
+
+const ArticleVersionDocument = v.strictObject({
+  ...v.omit(Article, ['available_langs', 'associations', 'author']).entries,
+  locales: v.array(v.omit(FullBaseLocale, ['topic_id'])),
+  cooked: v.omit(FullBaseLocale, ['topic_id']),
+});
+export type ArticleVersionDocument = v.InferOutput<typeof ArticleVersionDocument>;
 export const ArticleVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Article,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(ArticleVersionDocument),
 });
 export type ArticleVersion = v.InferOutput<typeof ArticleVersion>;
+
+const BookVersionDocument = v.strictObject({
+  ...v.omit(Book, ['available_langs', 'associations', 'author']).entries,
+  locales: v.array(v.omit(FullBaseLocale, ['topic_id'])),
+  cooked: v.omit(FullBaseLocale, ['topic_id']),
+});
+export type BookVersionDocument = v.InferOutput<typeof BookVersionDocument>;
 export const BookVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Book,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(BookVersionDocument),
 });
 export type BookVersion = v.InferOutput<typeof BookVersion>;
+
+const ImageVersionDocument = v.strictObject({
+  ...v.omit(Image, ['available_langs', 'associations', 'areas', 'creator']).entries,
+  locales: v.array(v.omit(FullBaseLocale, ['topic_id'])),
+  cooked: v.omit(FullBaseLocale, ['topic_id']),
+});
+export type ImageVersionDocument = v.InferOutput<typeof ImageVersionDocument>;
 export const ImageVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Image,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(ImageVersionDocument),
 });
 export type ImageVersion = v.InferOutput<typeof ImageVersion>;
-export const MapVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Map,
+
+// no map version is available
+
+const OutingVersionDocument = v.strictObject({
+  ...v.omit(Outing, ['available_langs', 'associations', 'areas']).entries,
+  locales: v.array(v.omit(OutingLocale, ['topic_id'])),
+  cooked: v.omit(OutingLocale, ['topic_id']),
 });
-export type MapVersion = v.InferOutput<typeof MapVersion>;
+export type OutingVersionDocument = v.InferOutput<typeof OutingVersionDocument>;
 export const OutingVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Outing,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(OutingVersionDocument),
 });
 export type OutingVersion = v.InferOutput<typeof OutingVersion>;
-export const ProfileVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Profile,
+
+// no profile version is available
+
+const RouteVersionDocument = v.strictObject({
+  ...v.omit(Route, ['available_langs', 'associations', 'maps', 'areas']).entries,
+  locales: v.array(v.omit(RouteLocale, ['topic_id', 'title_prefix'])),
+  cooked: v.omit(RouteLocale, ['topic_id', 'title_prefix']),
 });
-export type ProfileVersion = v.InferOutput<typeof ProfileVersion>;
+export type RouteVersionDocument = v.InferOutput<typeof RouteVersionDocument>;
 export const RouteVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Route,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(RouteVersionDocument),
 });
 export type RouteVersion = v.InferOutput<typeof RouteVersion>;
+
+const WaypointVersionDocument = v.strictObject({
+  ...v.omit(Waypoint, ['available_langs', 'associations', 'maps', 'areas']).entries,
+  locales: v.array(v.omit(WaypointLocale, ['topic_id'])),
+  cooked: v.omit(WaypointLocale, ['topic_id']),
+});
+export type WaypointVersionDocument = v.InferOutput<typeof WaypointVersionDocument>;
 export const WaypointVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Waypoint,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(WaypointVersionDocument),
 });
 export type WaypointVersion = v.InferOutput<typeof WaypointVersion>;
+
+const XreportVersionDocument = v.strictObject({
+  ...v.omit(Xreport, ['available_langs', 'associations', 'areas', 'author']).entries,
+  locales: v.array(v.omit(XreportLocale, ['topic_id'])),
+  cooked: v.omit(XreportLocale, ['topic_id']),
+});
+export type XreportVersionDocument = v.InferOutput<typeof XreportVersionDocument>;
 export const XreportVersion = v.strictObject({
-  ...DocumentVersion.entries,
-  document: Xreport,
+  ...BaseDocumentVersion.entries,
+  document:
+    // document version can be masked
+    v.nullable(XreportVersionDocument),
 });
 export type XreportVersion = v.InferOutput<typeof XreportVersion>;
-
-export const isAreaListing = (doc: Document): doc is AreaListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'a' && !('associations' in doc);
-export const isArticleListing = (doc: Document): doc is ArticleListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'c' && !('associations' in doc);
-export const isBookListing = (doc: Document): doc is BookListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'b' && !('associations' in doc);
-export const isImageListing = (doc: Document): doc is ImageListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'i' && !('associations' in doc);
-export const isMapListing = (doc: Document): doc is MapListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'm' && !('associations' in doc);
-export const isOutingListing = (doc: Document): doc is OutingListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'o' && !('associations' in doc);
-export const isProfileListing = (doc: Document): doc is ProfileListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'u' && !('associations' in doc);
-export const isRouteListing = (doc: Document): doc is RouteListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'r' && !('associations' in doc);
-export const isWaypointListing = (doc: unknown): doc is WaypointListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'w' && !('associations' in doc);
-export const isXreportListing = (doc: Document): doc is XreportListing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'x' && !('associations' in doc);
-
-export const isArea = (doc: Document): doc is Area =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'a' && 'associations' in doc;
-export const isArticle = (doc: Document): doc is Article =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'c' && 'associations' in doc;
-export const isBook = (doc: Document): doc is Book =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'b' && 'associations' in doc;
-export const isImage = (doc: Document): doc is Image =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'i' && 'associations' in doc;
-export const isMap = (doc: Document): doc is Map =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'm' && 'associations' in doc;
-export const isOuting = (doc: Document): doc is Outing =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'o' && 'associations' in doc;
-export const isProfile = (doc: Document): doc is Profile =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'u' && 'associations' in doc;
-export const isRoute = (doc: Document): doc is Route =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'r' && 'associations' in doc;
-export const isWaypoint = (doc: unknown): doc is Waypoint =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'w' && 'associations' in doc;
-export const isXreport = (doc: Document): doc is Xreport =>
-  doc instanceof Object && 'type' in doc && doc['type'] === 'x' && 'associations' in doc;
 
 const FeedItem = v.strictObject({
   id: PositiveInt,
@@ -1283,21 +1327,21 @@ export const Feed = v.strictObject({
 });
 export type Feed = v.InferOutput<typeof Feed>;
 
-const WhatsnewItem = v.object({
-  document: v.variant('type', [
-    AreaListing,
-    ArticleListing,
-    BookListing,
-    ImageListing,
-    MapListing,
-    OutingListing,
-    RouteListing,
-    WaypointListing,
-    XreportListing,
-  ]),
+const whatsnewLetters: Extract<LetterType, 'o' | 'u'>[] = ['o', 'u'];
+const WhatsnewDocument = v.strictObject({
+  version: PositiveInt,
+  document_id: PositiveInt,
+  title: v.string(),
+  type: v.picklist(whatsnewLetters),
+  quality: QualityType,
+});
+export type WhatsnewDocument = v.InferOutput<typeof WhatsnewDocument>;
+
+const WhatsnewItem = v.strictObject({
+  document: WhatsnewDocument,
   comment: v.string(),
   lang: ApiLang,
-  user: v.object({
+  user: v.strictObject({
     name: v.pipe(v.string(), v.nonEmpty()),
     username: v.pipe(v.string(), v.nonEmpty()),
     user_id: PositiveInt,
@@ -1327,3 +1371,59 @@ export const UserPreferences = v.variant('followed_only', [
   }),
 ]);
 export type UserPreferences = v.InferOutput<typeof UserPreferences>;
+
+export const Following = v.strictObject({ following: v.array(ProfileListing) });
+
+export const IsFollowing = v.strictObject({ is_following: v.boolean() });
+
+export const IsBlocked = v.strictObject({ blocked: v.boolean() });
+
+export const IsTagged = v.strictObject({ todo: v.boolean() });
+
+export const Account = v.strictObject({
+  email: v.pipe(v.string(), v.email()),
+  forum_username: v.pipe(v.string(), v.nonEmpty()),
+  is_profile_public: v.boolean(),
+  name: v.pipe(v.string(), v.nonEmpty()),
+});
+
+export const LoginResponse = v.strictObject({
+  id: PositiveInt,
+  name: v.pipe(v.string(), v.nonEmpty()),
+  username: v.pipe(v.string(), v.nonEmpty()),
+  forum_username: v.pipe(v.string(), v.nonEmpty()),
+  lang: UiLang,
+  token: v.pipe(v.string(), v.nonEmpty()),
+  expire: v.pipe(v.number(), v.integer(), v.minValue(1), v.finite()),
+  roles: v.pipe(v.array(v.picklist(['moderator'])), v.maxLength(1)),
+  redirect_internal: v.nullable(v.pipe(v.string(), v.url())),
+});
+export type LoginResponse = v.InferOutput<typeof LoginResponse>;
+
+export const LogoutResponse = v.strictObject({
+  user: PositiveInt,
+  logged_out_discourse_user: PositiveInt,
+});
+export type LogoutResponse = v.InferOutput<typeof LogoutResponse>;
+
+export const RegisterResponse = v.strictObject({
+  id: PositiveInt,
+  username: v.pipe(v.string(), v.nonEmpty()),
+  forum_username: v.pipe(v.string(), v.nonEmpty()),
+  name: v.pipe(v.string(), v.nonEmpty()),
+  email: v.pipe(v.string(), v.email()),
+  email_validated: v.boolean(),
+  moderator: v.boolean(),
+});
+
+export type CreateImagesInput = {
+  images: Image[];
+};
+
+export const CreateImagesOutput = v.strictObject({
+  images: v.pipe(v.array(v.strictObject({ document_id: PositiveInt })), v.nonEmpty()),
+});
+
+export const CookerResponse = v.record(v.string(), v.string());
+
+export type License = 'by-sa' | 'by-nc-nd' | 'copyright';

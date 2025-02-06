@@ -3,7 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { fixedWidthProps } from '~/props/fixed-width.js';
+import type { QualityType } from '../../api/c2c.js';
 
-defineProps({ quality: { type: String, required: true }, ...fixedWidthProps });
+const { fixedWidth = false } = defineProps<{
+  fixedWidth?: boolean;
+  quality: QualityType;
+}>();
 </script>

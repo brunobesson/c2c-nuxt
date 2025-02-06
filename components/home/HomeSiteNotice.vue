@@ -14,11 +14,11 @@
 </template>
 
 <script setup lang="ts">
-import { type ISODateTime } from '~/types/index.js';
+import type { IsoDateTime } from '~/types/common.js';
 
 const hasAnnouncement = ref(false);
-const updatedAt = ref<ISODateTime | undefined>(undefined);
-const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('annoucement.updatedAt', undefined);
+const updatedAt = ref<IsoDateTime | undefined>(undefined);
+const lastAnnoucementRead = useLocalStorage<IsoDateTime | undefined>('annoucement.updatedAt', undefined);
 const hidden = ref(false);
 const showContent = false;
 const { locale: lang } = useI18n();
@@ -62,7 +62,7 @@ const hide = () => {
 <style scoped lang="css">
 :deep(a),
 :deep(a:hover) {
-  color: var(--p-text-color);
+  color: theme('colors.white');
   text-decoration: underline;
 }
 </style>

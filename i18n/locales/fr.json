@@ -1,116 +1,5 @@
 {
-  "home": {
-    "intro": "Bienvenue sur Camptocamp ! La communauté des sports de montagne",
-    "banner": {
-      "title": "Camptocamp.org a pour but de faciliter le partage d'informations entre les pratiquants de sports de montagne et de contribuer à la sécurité des activités montagne.",
-      "available": "Vous trouverez ici :",
-      "routes": "des itinéraires à parcourir",
-      "outings": "des sorties pour avoir les dernières conditions",
-      "xreports": "Une base de données incidents / accidents :",
-      "yeti": "Une aide à la gestion du risque d’avalanche :",
-      "forum": "Un forum pour discuter de sujets techniques ou bavarder",
-      "library": "Une bibliothèque comportant des {articles} et des {books}",
-      "camptocamp": "{0} est la structure bénévole à but non lucratif assurant la gestion du site camptocamp.org",
-      "join": "Pour participer ou vous investir : rejoignez nous !",
-      "donate": "Pour soutenir financièrement (serveurs, développements…) : faites un don"
-    },
-    "links": {
-      "title": "Liens utiles",
-      "prepare": "Préparer sa course",
-      "yeti": "Yeti : un outil pour évaluer le risque d’avalanche",
-      "metaskirando": "Metaskirando : agrégateur de sorties ski en Europe",
-      "serac": "SERAC : accidents et incidents en montagne",
-      "donate": "Faire un don ou adhérer"
-    },
-    "feed": {
-      "personal": {
-        "on": "Fil personnel activé",
-        "off": "Fil personnel désacivé"
-      }
-    },
-    "activate-preferences": "Activer mes préférences",
-    "activate-dashboard": "Tableau de bord",
-    "activate-feed": "Fil d'activité"
-  },
-  "gdpr": {
-    "banner": {
-      "title": "Contrôlez l'utilisation de vos données personnelles",
-      "message": "Notre site Web utilise des cookies fournis par nous et par des tiers. Certains cookies sont nécessaires au fonctionnement du site Web, tandis que d'autres peuvent être ajustés par vous à tout moment, en particulier ceux qui nous permettent de comprendre les performances de notre site Web et de vous fournir des fonctionnalités de médias sociaux. Vous pouvez les accepter ou les refuser tous ou bien {0}.",
-      "configure": "paramétrer vos choix",
-      "denyall": "Tout refuser",
-      "allowall": "Tout accepter"
-    },
-    "modal": {
-      "header": "Paramétrage des cookies",
-      "necessary-cookies": "Cookies nécessaires",
-      "necessary-cookies-details": "Les cookies nécessaires sont indispensables au bon fonctionnement de notre site Web et ne peuvent pas être désactivés. Ils sont envoyés à votre ordinateur ou à votre appareil lorsque vous demandez une action ou un service spécifiques, par exemple lorsque vous vous connectez, remplissez un formulaire ou définissez vos préférences en matière de cookies. Si vous configurez votre navigateur de façon à bloquer ces cookies ou à vous avertir de l'existence de ces derniers, notre site Web ne fonctionnera pas intégralement.",
-      "statistical-cookies-details": "Grâce aux cookies statistiques ou analytiques, fournis par nous et d'autres sociétés, nous pouvons compter les visites sur notre site Web et connaître les sources de trafic. Les données que nous obtenons nous aident à comprendre ce que les visiteurs aiment et améliorer le site Web. Si vous ne les acceptez pas, nous ne pourrons pas améliorer votre expérience.",
-      "statistical-cookies": "Cookies statistiques",
-      "social-cookies": "Cookies sociaux",
-      "social-cookies-details": "Ces cookies permettent d’interagir depuis le site camptocamp.org avec les modules sociaux et de partager les contenus du site avec d’autres personnes ou de les informer de votre consultation ou opinion sur celui-ci, lorsque vous cliquez sur le module \"Partager\" par exemple. En désactivant ces cookies, vous ne pourrez plus partager les contenus de camptocamp.org depuis le site camptocamp.org sur les réseaux sociaux."
-    }
-  },
-  "side-menu": {
-    "serac": "Incidents et accidents",
-    "contact": "Contact",
-    "EULA": "CGU",
-    "licenses": "Licences",
-    "cookies": "Cookies",
-    "donate": "Faire un don à l'association Camptocamp"
-  },
-  "guidebook": "topoguide",
-  "area": "région",
-  "areas": "régions",
-  "article": "article",
-  "articles": "articles",
-  "book": "livre",
-  "books": "livres",
-  "outing": "sortie",
-  "outings": "sorties",
-  "route": "itinéraire",
-  "routes": "itinéraires",
-  "xreport": "rapport incident / accident",
-  "xreports": "rapports incident / accident",
-  "waypoint": "point de passage",
-  "waypoints": "points de passage",
-  "forum": "forum",
-  "more": "Voir plus",
-  "help": "aide",
-  "camptocamp-association": "Camptocamp Association",
-  "navigation": {
-    "join": "Adhérer",
-    "my-profile": "Mon profile",
-    "account": "Mon compte",
-    "preferences": "Mes préférences",
-    "activity-trackers": "Traqueurs d'activité",
-    "my-outings": "Mes sorties",
-    "my-statistics": "Mes statistiques",
-    "my-changes": "Mes contributions",
-    "followed-users": "Mes amis",
-    "bookmarks": "Mes favoris",
-    "search": "Rechercher…"
-  },
-  "login": "Se connecter",
-  "logout": "Me déconnecter",
-  "cancel": "Annuler",
-  "submit": "Enregistrer et continuer",
-  "images": "images",
-  "quality": "qualité du document",
-  "quality-values": {
-    "empty": "vide",
-    "draft": "ébauche",
-    "great": "excellent",
-    "fine": "bon",
-    "medium": "moyen"
-  },
-  "condition_rating": "évaluation des conditions",
-  "condition_rating-values": {
-    "awful": "excécrables",
-    "poor": "mauvaises",
-    "average": "moyennes",
-    "good": "bonnes",
-    "excellent": "excellentes"
-  },
+  "activities": "activités",
   "activity-values": {
     "hiking": "randonnée / trail",
     "ice_climbing": "cascade de glace",
@@ -124,10 +13,42 @@
     "snowshoeing": "raquette",
     "via_ferrata": "via ferrata"
   },
-  "colon": "{0} : {1}",
-  "marker": {
-    "soft-mobility-outing": "Sortie en mobilité douce",
-    "gps-track": "Trace GPS"
+  "area": "région",
+  "areas": "régions",
+  "article": "article",
+  "article_categories-values": {
+    "mountain_environment": "environnement montagne",
+    "gear": "matériel",
+    "technical": "technique",
+    "topoguide_supplements": "suppléments du topoguide",
+    "soft_mobility": "mobilité douce",
+    "expeditions": "expéditions",
+    "stories": "récits",
+    "c2c_meetings": "réunions c2c",
+    "tags": "tags",
+    "site_info": "info site",
+    "association": "association"
+  },
+  "article_type-values": {
+    "collab": "collaboratif (CC by-sa)",
+    "personal": "individuel (CC by-nc-nd)"
+  },
+  "articles": "articles",
+  "book": "livre",
+  "books": "livres",
+  "camptocamp-association": "Camptocamp Association",
+  "cancel": "Annuler",
+  "card": {
+    "elevation_max": "Altitude maximale"
+  },
+  "colon": "{before} : {after}",
+  "condition_rating": "évaluation des conditions",
+  "condition_rating-values": {
+    "average": "moyennes",
+    "awful": "excécrables",
+    "excellent": "excellentes",
+    "good": "bonnes",
+    "poor": "mauvaises"
   },
   "error": {
     "message": {
@@ -135,86 +56,30 @@
       "reload": "recharger"
     }
   },
-  "fields": {
-    "global_rating": {
-      "label": "cotation globale"
+  "error-page": {
+    "404": {
+      "details": "La page que vous demandez n'existe pas.",
+      "subtitle": "Page non trouvée"
     },
-    "via_ferrata_rating": {
-      "label": "cotation via ferrata"
+    "alternatives": "{0} ou essayez les pages suivantes :",
+    "back": "Retournez à la page précédente",
+    "default": {
+      "details": "N'hésitez pas à nous remonter ce problème.",
+      "subtitle": "Il semble que quelque chose se soit mal passé"
     },
-    "rock_free_rating": {
-      "label": "cotation libre"
-    },
-    "aid_rating": {
-      "label": "cotation artificielle"
-    },
-    "rock_required_rating": {
-      "label": "cotation obligatoire"
-    },
-    "engagement_rating": {
-      "label": "engagement"
-    },
-    "risk_rating": {
-      "label": "risques objectifs"
-    },
-    "equipment_rating": {
-      "label": "qualité de l'équipement"
-    },
-    "exposition_rock_rating": {
-      "label": "exposition rocher"
-    },
-    "ice_rating": {
-      "label": "cotation glace"
-    },
-    "mixed_rating": {
-      "label": "cotation mixte"
-    },
-    "ski_rating": {
-      "label": "cotation ski"
-    },
-    "ski_exposition": {
-      "label": "exposition ski"
-    },
-    "labande_global_rating": {
-      "label": "cotation globale ski"
-    },
-    "labande_ski_rating": {
-      "label": "cotation ponctuelle ski"
-    },
-    "snowshoe_rating": {
-      "label": "cotation raquette"
-    },
-    "hiking_rating": {
-      "label": "cotation randonnée / trail"
-    },
-    "mtb_up_rating": {
-      "label": "cotation VTT montée"
-    },
-    "mtb_down_rating": {
-      "label": "cotation VTT descente"
-    },
-    "hiking_mtb_exposition": {
-      "label": "exposition randonnée, trail et VTT"
-    },
-    "height_diff_up": {
-      "label": "dénivelé positif"
-    },
-    "height_diff_difficulties": {
-      "label": "dénivelé des difficultés"
-    }
+    "title": "Ooops"
   },
   "feed": {
     "avatar": "Avatar",
     "change": {
-      "updated": {
-        "area": "{user} a mis à jour une région",
-        "article": "{user} a mis à jour un article",
-        "book": "{user} a mis à jour un livre",
-        "image": "{user} a mis à jour une image",
-        "outing": "{user} a mis à jour une sortie",
-        "route": "{user} a mis à jour un itinéraire",
-        "waypoint": "{user} a mis à jour un point de passage",
-        "xreport": "{user} a mis à jour un rapport d'incident / accident"
+      "added_photos": {
+        "area": "{user} a ajouté des images pour cette région",
+        "article": "{user} a ajouté des images pour cet article",
+        "book": "{user} a ajouté des images pour ce livre",
+        "outing": "{user} a ajouté des images pour cette sortie",
+        "route": "{user} a ajouté des images pour cet itinéraire",
+        "waypoint": "{user} a ajouté des images pour ce point de passage",
+        "xreport": "{user} a ajouté des images pour ce rapport d'incident / accident"
       },
       "created": {
         "article": "{user} a rédigé un nouvel article",
@@ -225,47 +90,216 @@
         "waypoint": "{user} a ajouté un nouveau point de passage",
         "xreport": "{user} a créé un nouveau rapport d'incident / accident"
       },
-      "added_photos": {
-        "article": "{user} a ajouté des images pour cet article",
-        "book": "{user} a ajouté des images pour ce livre",
-        "area": "{user} a ajouté des images pour cette région",
-        "outing": "{user} a ajouté des images pour cette sortie",
-        "route": "{user} a ajouté des images pour cet itinéraire",
-        "waypoint": "{user} a ajouté des images pour ce point de passage",
-        "xreport": "{user} a ajouté des images pour ce rapport d'incident / accident"
+      "updated": {
+        "area": "{user} a mis à jour une région",
+        "article": "{user} a mis à jour un article",
+        "book": "{user} a mis à jour un livre",
+        "image": "{user} a mis à jour une image",
+        "outing": "{user} a mis à jour une sortie",
+        "route": "{user} a mis à jour un itinéraire",
+        "waypoint": "{user} a mis à jour un point de passage",
+        "xreport": "{user} a mis à jour un rapport d'incident / accident"
       }
     }
   },
-  "waypoint_type-values": {
-    "summit": "sommet",
-    "pass": "col",
-    "lake": "lac",
-    "waterfall": "cascade",
-    "locality": "lieu-dit",
-    "bisse": "bisse / béal",
-    "canyon": "canyon",
-    "access": "accès routier / transports en commun",
-    "climbing_outdoor": "site d'escalade",
-    "climbing_indoor": "SAE",
-    "hut": "refuge / cabane",
-    "gite": "gîte",
-    "shelter": "abri",
-    "bivouac": "bivouac",
-    "camp_site": "camping",
-    "base_camp": "camp de base",
-    "local_product": "produits locaux",
-    "paragliding_takeoff": "décollage parapente",
-    "paragliding_landing": "atterrissage parapente",
-    "cave": "grotte",
-    "waterpoint": "point d'eau / source",
-    "weather_station": "station météo",
-    "webcam": "webcam",
-    "virtual": "virtuel",
-    "slackline_spot": "spot de slackline",
-    "misc": "divers"
+  "fields": {
+    "aid_rating": {
+      "label": "cotation artificielle"
+    },
+    "engagement_rating": {
+      "label": "engagement"
+    },
+    "equipment_rating": {
+      "label": "qualité de l'équipement"
+    },
+    "exposition_rock_rating": {
+      "label": "exposition rocher"
+    },
+    "global_rating": {
+      "label": "cotation globale"
+    },
+    "height_diff_difficulties": {
+      "label": "dénivelé des difficultés"
+    },
+    "height_diff_up": {
+      "label": "dénivelé positif"
+    },
+    "hiking_mtb_exposition": {
+      "label": "exposition randonnée, trail et VTT"
+    },
+    "hiking_rating": {
+      "label": "cotation randonnée / trail"
+    },
+    "ice_rating": {
+      "label": "cotation glace"
+    },
+    "labande_global_rating": {
+      "label": "cotation globale ski"
+    },
+    "labande_ski_rating": {
+      "label": "cotation ponctuelle ski"
+    },
+    "mixed_rating": {
+      "label": "cotation mixte"
+    },
+    "mtb_down_rating": {
+      "label": "cotation VTT descente"
+    },
+    "mtb_up_rating": {
+      "label": "cotation VTT montée"
+    },
+    "risk_rating": {
+      "label": "risques objectifs"
+    },
+    "rock_free_rating": {
+      "label": "cotation libre"
+    },
+    "rock_required_rating": {
+      "label": "cotation obligatoire"
+    },
+    "ski_exposition": {
+      "label": "exposition ski"
+    },
+    "ski_rating": {
+      "label": "cotation ski"
+    },
+    "snowshoe_rating": {
+      "label": "cotation raquette"
+    },
+    "via_ferrata_rating": {
+      "label": "cotation via ferrata"
+    },
+    "article_categories": "Catégories",
+    "article_type": "Type d'article"
   },
-  "card": {
-    "elevation_max": "Altitude maximale"
+  "following": {
+    "start": "Voir les activités de ce contributeur dans votre fil",
+    "stop": "Ne plus suivre ce contributeur"
+  },
+  "forum": "forum",
+  "gdpr": {
+    "banner": {
+      "allowall": "Tout accepter",
+      "configure": "paramétrer vos choix",
+      "denyall": "Tout refuser",
+      "message": "Notre site Web utilise des cookies fournis par nous et par des tiers. Certains cookies sont nécessaires au fonctionnement du site Web, tandis que d'autres peuvent être ajustés par vous à tout moment, en particulier ceux qui nous permettent de comprendre les performances de notre site Web et de vous fournir des fonctionnalités de médias sociaux. Vous pouvez les accepter ou les refuser tous ou bien {0}.",
+      "title": "Contrôlez l'utilisation de vos données personnelles"
+    },
+    "modal": {
+      "header": "Paramétrage des cookies",
+      "necessary-cookies": "Cookies nécessaires",
+      "necessary-cookies-details": "Les cookies nécessaires sont indispensables au bon fonctionnement de notre site Web et ne peuvent pas être désactivés. Ils sont envoyés à votre ordinateur ou à votre appareil lorsque vous demandez une action ou un service spécifiques, par exemple lorsque vous vous connectez, remplissez un formulaire ou définissez vos préférences en matière de cookies. Si vous configurez votre navigateur de façon à bloquer ces cookies ou à vous avertir de l'existence de ces derniers, notre site Web ne fonctionnera pas intégralement.",
+      "social-cookies": "Cookies sociaux",
+      "social-cookies-details": "Ces cookies permettent d’interagir depuis le site camptocamp.org avec les modules sociaux et de partager les contenus du site avec d’autres personnes ou de les informer de votre consultation ou opinion sur celui-ci, lorsque vous cliquez sur le module \"Partager\" par exemple. En désactivant ces cookies, vous ne pourrez plus partager les contenus de camptocamp.org depuis le site camptocamp.org sur les réseaux sociaux.",
+      "statistical-cookies": "Cookies statistiques",
+      "statistical-cookies-details": "Grâce aux cookies statistiques ou analytiques, fournis par nous et d'autres sociétés, nous pouvons compter les visites sur notre site Web et connaître les sources de trafic. Les données que nous obtenons nous aident à comprendre ce que les visiteurs aiment et améliorer le site Web. Si vous ne les acceptez pas, nous ne pourrons pas améliorer votre expérience."
+    }
+  },
+  "guidebook": "topoguide",
+  "help": "aide",
+  "home": {
+    "activate-dashboard": "Tableau de bord",
+    "activate-feed": "Fil d'activité",
+    "activate-preferences": "Activer mes préférences",
+    "banner": {
+      "available": "Vous trouverez ici :",
+      "camptocamp": "{0} est la structure bénévole à but non lucratif assurant la gestion du site camptocamp.org",
+      "donate": "Pour soutenir financièrement (serveurs, développements…) : faites un don",
+      "forum": "Un forum pour discuter de sujets techniques ou bavarder",
+      "join": "Pour participer ou vous investir : rejoignez nous !",
+      "library": "Une bibliothèque comportant des {articles} et des {books}",
+      "outings": "des sorties pour avoir les dernières conditions",
+      "routes": "des itinéraires à parcourir",
+      "title": "Camptocamp.org a pour but de faciliter le partage d'informations entre les pratiquants de sports de montagne et de contribuer à la sécurité des activités montagne.",
+      "xreports": "Une base de données incidents / accidents :",
+      "yeti": "Une aide à la gestion du risque d’avalanche :"
+    },
+    "feed": {
+      "personal": {
+        "off": "Fil personnel désacivé",
+        "on": "Fil personnel activé"
+      }
+    },
+    "intro": "Bienvenue sur Camptocamp ! La communauté des sports de montagne",
+    "links": {
+      "donate": "Faire un don ou adhérer",
+      "metaskirando": "Metaskirando : agrégateur de sorties ski en Europe",
+      "prepare": "Préparer sa course",
+      "serac": "SERAC : accidents et incidents en montagne",
+      "title": "Liens utiles",
+      "yeti": "Yeti : un outil pour évaluer le risque d’avalanche"
+    }
+  },
+  "images": "images",
+  "license": {
+    "by-nc-nd": "Ce contenu est sous licence Creative Commons BY-NC-ND 3.0",
+    "by-sa": "Ce contenu est sous licence Creative Commons BY-SA 3.0",
+    "copyright": "Cette couverture de livre est la propriété de son éditeur et/ou auteur",
+    "image": "Les images associées à cette page sont disponibles sous la licence spécifiée sur le document d'origine de chaque image.",
+    "version": "Imprimé le {0}"
+  },
+  "link": {
+    "add": {
+      "article": "Ajouter un article",
+      "book": "Ajouter un livre",
+      "outing": "Ajouter une sortie",
+      "route": "Ajouter un itinéraire",
+      "waypoint": "Ajouter un point de passage",
+      "xreport": "Ajouter un rapport d'incident / accident"
+    },
+    "edit": "Modifier",
+    "home": "Accueil"
+  },
+  "login": "Se connecter",
+  "logout": "Me déconnecter",
+  "marker": {
+    "gps-track": "Trace GPS",
+    "soft-mobility-outing": "Sortie en mobilité douce"
+  },
+  "more": "Voir plus",
+  "navigation": {
+    "account": "Mon compte",
+    "activity-trackers": "Traqueurs d'activité",
+    "bookmarks": "Mes favoris",
+    "followed-users": "Mes amis",
+    "join": "Adhérer",
+    "my-changes": "Mes contributions",
+    "my-outings": "Mes sorties",
+    "my-profile": "Mon profile",
+    "my-statistics": "Mes statistiques",
+    "preferences": "Mes préférences",
+    "search": "Rechercher…"
+  },
+  "outing": "sortie",
+  "outings": "sorties",
+  "quality": "qualité du document",
+  "quality-values": {
+    "draft": "ébauche",
+    "empty": "vide",
+    "fine": "bon",
+    "great": "excellent",
+    "medium": "moyen"
+  },
+  "route": "itinéraire",
+  "routes": "itinéraires",
+  "side-menu": {
+    "EULA": "CGU",
+    "contact": "Contact",
+    "cookies": "Cookies",
+    "donate": "Faire un don à l'association Camptocamp",
+    "licenses": "Licences",
+    "serac": "Incidents et accidents"
+  },
+  "submit": "Enregistrer et continuer",
+  "toast": {
+    "error": {
+      "default": "L'action n'a pas pu être effectuée.",
+      "title": "Erreur"
+    }
+  },
+  "todo": {
+    "start": "Mettre cet itinéraire dans ses favoris",
+    "stop": "Enlever cet itinéraire de ses favoris"
   },
   "topoguide": {
     "outing": {
@@ -278,28 +312,52 @@
       "new": "Nouveau point de passage"
     }
   },
-  "error-page": {
-    "404": {
-      "subtitle": "Page non trouvée",
-      "details": "La page que vous demandez n'existe pas."
-    },
-    "title": "Ooops",
-    "default": {
-      "subtitle": "Il semble que quelque chose se soit mal passé",
-      "details": "N'hésitez pas à nous remonter ce problème."
-    },
-    "alternatives": "{0} ou essayez les pages suivantes :",
-    "back": "Retournez à la page précédente"
+  "version": {
+    "archived": "Ceci est une version archivée du document, datée du {0}",
+    "current": "voir la version actuelle",
+    "first": "Ceci est la première version",
+    "last": "ceci est la dernière version",
+    "masked": "Cette version a été masquée.",
+    "next": "version suivante",
+    "previous": "version précédente",
+    "restore": "Restaurer cette version",
+    "warn-masked": "Vous essayez de visualiser une version masquée d'un document."
   },
-  "link": {
-    "home": "Accueil",
-    "add": {
-      "outing": "Ajouter une sortie",
-      "route": "Ajouter un itinéraire",
-      "waypoint": "Ajouter un point de passage",
-      "article": "Ajouter un article",
-      "book": "Ajouter un livre",
-      "xreport": "Ajouter un rapport d'incident / accident"
-    }
+  "waypoint": "point de passage",
+  "waypoint_type-values": {
+    "access": "accès routier / transports en commun",
+    "base_camp": "camp de base",
+    "bisse": "bisse / béal",
+    "bivouac": "bivouac",
+    "camp_site": "camping",
+    "canyon": "canyon",
+    "cave": "grotte",
+    "climbing_indoor": "SAE",
+    "climbing_outdoor": "site d'escalade",
+    "gite": "gîte",
+    "hut": "refuge / cabane",
+    "lake": "lac",
+    "local_product": "produits locaux",
+    "locality": "lieu-dit",
+    "misc": "divers",
+    "paragliding_landing": "atterrissage parapente",
+    "paragliding_takeoff": "décollage parapente",
+    "pass": "col",
+    "shelter": "abri",
+    "slackline_spot": "spot de slackline",
+    "summit": "sommet",
+    "virtual": "virtuel",
+    "waterfall": "cascade",
+    "waterpoint": "point d'eau / source",
+    "weather_station": "station météo",
+    "webcam": "webcam"
+  },
+  "waypoints": "points de passage",
+  "xreport": "rapport incident / accident",
+  "xreports": "rapports incident / accident",
+  "contributor": "contributeur",
+  "low-quality": {
+    "edit": "Éditez-le.",
+    "banner": "Ce document est une ébauche. {0} Vous êtes invité à compléter les informations et améliorer la qualité du document en suivant les règles de contribution et dans le respect du droit d'auteur."
   }
 }

@@ -17,7 +17,7 @@
 
     <LoadDataError v-if="status === 'error'" />
     <ul v-else>
-      <li v-for="route of data" :key="route.document_id" class="[&:nth-child(even)]:bg-gray-50">
+      <li v-for="route of data!.documents" :key="route.document_id" class="[&:nth-child(even)]:bg-gray-50">
         <HomeRouteLink :route="route" />
       </li>
     </ul>

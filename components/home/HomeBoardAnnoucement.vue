@@ -10,17 +10,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ISODateTime } from '~/types/index.js';
-import type { Announcement } from '../../api/forum.js';
+import type { Announcement } from '~/api/forum.js';
+import type { IsoDateTime } from '~/types/common.js';
 
 const props = defineProps<{ data: Announcement | null }>();
 const data = toRef(props.data);
 
 const hasAnnouncement = ref(false);
-const updatedAt = ref<ISODateTime | undefined>(undefined);
+const updatedAt = ref<IsoDateTime | undefined>(undefined);
 const hidden = ref(false);
 const contentEl = useTemplateRef('content');
-const lastAnnoucementRead = useLocalStorage<ISODateTime | undefined>('boardAnnoucement.updatedAt', undefined);
+const lastAnnoucementRead = useLocalStorage<IsoDateTime | undefined>('boardAnnoucement.updatedAt', undefined);
 
 watch([data, contentEl], ([announcement]) => {
   if (!contentEl.value || !announcement?.tags.includes('visible')) {
@@ -51,12 +51,12 @@ const hide = () => {
 
 <style scoped lang="css">
 :deep(strong) {
-  color: var(--p-text-color);
+  color: theme('colors.white');
 }
 
 :deep(a),
 :deep(a:hover) {
-  color: var(--p-text-color);
+  color: theme('colors.white');
   text-decoration: underline;
 }
 

@@ -10,11 +10,10 @@ import 'dayjs/locale/it';
 import 'dayjs/locale/sl';
 import 'dayjs/locale/zh-cn';
 import type { UiLang } from '~/api/lang.js';
-import type { ISODate } from '~/types/index.js';
+import type { IsoDate } from '~/types/common.js';
 
-export const useDate = (lang: Ref<UiLang>) => {
+export const useDate = (lang: MaybeRef<UiLang>) => {
   const locales = {
-    // TODO factorize
     ca: 'ca',
     es: 'es',
     eu: 'eu',
@@ -27,10 +26,10 @@ export const useDate = (lang: Ref<UiLang>) => {
     en: 'en-gb',
   };
 
-  const locale = computed(() => locales[lang.value]);
+  const locale = computed(() => locales[unref(lang)]);
 
   const longOutingDateFormat = computed(() => {
-    switch (lang.value) {
+    switch (unref(lang)) {
       case 'ca':
         return 'dddd D MMMM [de] YYYY';
       case 'es':
@@ -55,11 +54,11 @@ export const useDate = (lang: Ref<UiLang>) => {
     }
   });
 
-  function longOutingDate(date: ISODate): string {
+  function longOutingDate(date: IsoDate | undefined = undefined): string {
     return dayjs(date).locale(locale.value).format(longOutingDateFormat.value);
   }
 
-  function outingDates(start: ISODate | undefined, end: ISODate | undefined): string | undefined {
+  function outingDates(start: IsoDate | undefined, end: IsoDate | undefined): string | undefined {
     if (!start) {
       return undefined;
     }

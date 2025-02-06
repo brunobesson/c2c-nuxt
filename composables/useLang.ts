@@ -9,11 +9,11 @@ export const useLang = () => {
     return (API_LANGS as readonly string[]).includes(lang);
   }
 
-  function apiLang(lang: string): ApiLang | undefined {
+  function apiLang(lang: string): ApiLang {
     if (lang === 'zh_CN') {
       return 'zh';
     }
-    return isApiLang(lang) ? lang : undefined;
+    return isApiLang(lang) ? lang : 'en';
   }
 
   function setPrimeUiLang(lang: UiLang) {

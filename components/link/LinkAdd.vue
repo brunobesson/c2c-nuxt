@@ -5,12 +5,13 @@
 </template>
 
 <script setup lang="ts">
-import { requiredDocumentTypeProps } from '~/props/required-document-type.js';
+import type { DocumentType } from '../../api/c2c.js';
+import type { Query } from '../../composables/useC2cApi.js';
 
-const { query } = defineProps({
-  query: { type: Object, default: null },
-  ...requiredDocumentTypeProps,
-});
+defineProps<{
+  query?: Query;
+  documentType: DocumentType;
+}>();
 
 const { locale } = useI18n();
 const lang = computed(() => useLang().apiLang(locale.value));
