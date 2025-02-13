@@ -130,14 +130,14 @@ export default defineNuxtConfig({
             },
             // create
             {
-              path: `/${docType}s/add/lang`,
+              path: `/${docType}s/add/:lang`,
               name: `${docType}-add`,
               file: `~/components/pages/${capitalize(docType)}Edition.vue`,
             },
             // diff
             {
               path: `/${docType}s/diff/:id(\\d+)/:lang/:versionFrom(\\d+)/:versionTo(\\d+)`,
-              name: `${docType}-history`,
+              name: `${docType}-diff`,
               file: '~/components/pages/Diff.vue',
             },
           );
