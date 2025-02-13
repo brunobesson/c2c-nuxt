@@ -977,7 +977,7 @@ export const Waypoint = v.strictObject({
   climbing_styles: v.nullable(v.array(ClimbingStyle)),
   custodianship: v.nullable(v.boolean()),
   elevation_min: v.nullable(Uint),
-  equipment_rating: v.nullable(EquipmentRating),
+  equipment_ratings: v.nullable(v.array(EquipmentRating)),
   gas_unstaffed: v.nullable(v.boolean()),
   ground_types: v.nullable(GroundType),
   heating_unstaffed: v.nullable(v.boolean()),

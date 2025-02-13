@@ -50,6 +50,9 @@ export const IsoDateTime = v.pipe(
 );
 export type IsoDateTime = v.InferOutput<typeof IsoDateTime>;
 
+export const isDocumentListing = (
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument,
+): doc is DocumentListing => doc instanceof Object && !('associations' in doc) && !('title' in doc);
 export const isAreaListing = (
   doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument,
 ): doc is AreaListing =>
@@ -89,6 +92,8 @@ export const isXreportListing = (
 ): doc is XreportListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'x' && !('associations' in doc) && !('title' in doc);
 
+export const isDocument = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Area =>
+  doc instanceof Object && 'associations' in doc && !('title' in doc);
 export const isArea = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Area =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'a' && 'associations' in doc && !('title' in doc);
 export const isArticle = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Article =>
@@ -140,15 +145,35 @@ export const isMaskedVersionedDocument = (
   doc: MaskedVersionedDocument | VersionedDocument | Document,
 ): doc is MaskedVersionedDocument =>
   doc instanceof Object && 'version' in doc && typeof doc['version'] === 'object' && !('type' in doc);
-export const isDocumentVersion = (
+export const isVersionedDocument = (
   doc: MaskedVersionedDocument | VersionedDocument | Document,
-): doc is MaskedVersionedDocument =>
+): doc is VersionedDocument =>
   doc instanceof Object && 'version' in doc && typeof doc['version'] === 'object' && 'type' in doc;
+export const isVersionedArea = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedArea =>
+  isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'a';
+export const isVersionedArticle = (
+  doc: MaskedVersionedDocument | VersionedDocument | Document,
+): doc is VersionedArticle => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'a';
+export const isVersionedBook = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedBook =>
+  isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'b';
+export const isVersionedImage = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedImage =>
+  isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'i';
+export const isVersionedOuting = (
+  doc: MaskedVersionedDocument | VersionedDocument | Document,
+): doc is VersionedOuting => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'o';
+export const isVersionedRoute = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedRoute =>
+  isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'r';
+export const isVersionedWaypoint = (
+  doc: MaskedVersionedDocument | VersionedDocument | Document,
+): doc is VersionedWaypoint => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'w';
+export const isVersionedXreport = (
+  doc: MaskedVersionedDocument | VersionedDocument | Document,
+): doc is VersionedXreport => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'x';
 
 export function assertNotDocumentVersion(
   doc: MaskedVersionedDocument | VersionedDocument | Document,
 ): asserts doc is Document {
-  if (isDocumentVersion(doc) || isMaskedVersionedDocument(doc)) {
+  if (isVersionedDocument(doc) || isMaskedVersionedDocument(doc)) {
     throw new Error('Not a document');
   }
 }
@@ -156,3 +181,25 @@ export function assertNotDocumentVersion(
 export const isWhatnewDocument = (
   doc: Document | DocumentListing | VersionedDocument | WhatsnewDocument,
 ): doc is WhatsnewDocument => doc instanceof Object && !('locales' in doc);
+
+export type Associations = {
+  articles?: ArticleListing[];
+  books?: BookListing[];
+  images?: ImageListing[];
+  outings?: OutingListing[];
+  routes?: RouteListing[];
+  users?: ProfileListing[];
+  waypoints?: WaypointListing[];
+  waypoint_children?: WaypointListing[]; // waypoints
+  xreports?: XreportListing[];
+  recent_outings?: {
+    // routes, waypoints
+    documents: OutingListing[];
+    total: number;
+  };
+  all_routes?: {
+    // waypoints
+    documents: RouteListing[];
+    total: number;
+  };
+};
