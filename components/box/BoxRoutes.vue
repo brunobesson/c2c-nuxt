@@ -1,26 +1,27 @@
 <template>
   <Box class="print:hidden">
     <template #title>
-      <!-- TODO translate-->
-      {{ $t('associated routes') }}
+      {{ $t('box.routes.title') }}
     </template>
     <div v-if="!splitActivities" v-for="route of routes">
       <LinkRoutePretty :route="route" :show-areas="false" />
     </div>
     <template v-else>
       <div v-for="[activity, routes] of routesByAct.entries()">
-        <Expendable>
+        <Expandable>
           <template #header>
-            <IconActivity :activity="activity" /> {{ capitalize($t(`activity-values.${activity}`)) }}
+            <span class="text-2xl">
+              <IconActivity :activity="activity" /> {{ capitalize($t(`activity-values.${activity}`)) }}
+            </span>
           </template>
           <LinkRoutePretty v-for="route of routes" :route="route" :show-areas="false" :show-activities="false" />
-        </Expendable>
+        </Expandable>
       </div>
     </template>
     <div v-if="showButtons" class="flex gap-5 justify-center">
       <!-- TODO button styling -->
       <NuxtLink v-if="routes.length" :to="{ name: 'routes', query }">
-        <Button :label="$t('filter results')" :badge="'' + routesCount" />
+        <Button :label="$t('box.routes.filter')" :badge="'' + routesCount" />
       </NuxtLink>
       <LinkAdd document-type="route" :query="query">
         <Button severity="secondary" :label="$t('link.add.route')" />
@@ -30,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Activity, Outing, Route, RouteListing, Waypoint } from '~/api/c2c.js';
+import type { Activity, Article, Outing, Route, RouteListing, Waypoint } from '~/api/c2c.js';
 import { isWaypoint } from '~/types/common.js';
 
 const {
@@ -38,7 +39,7 @@ const {
   showButtons = true,
   splitActivities = true,
 } = defineProps<{
-  document: Outing | Route | Waypoint;
+  document: Outing | Route | Waypoint | Article;
   showButtons?: boolean;
   splitActivities?: boolean;
 }>();

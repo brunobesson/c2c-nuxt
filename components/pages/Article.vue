@@ -34,12 +34,11 @@
             <Markdown :content="document.cooked.description" />
             <!-- TODO <div style="clear: both" /> -->
           </Box>
-          <BoxRoutes :document="document" hide-buttons/>
-          <!-- <routes-box v-if="!isDraftView" :document="document" hide-buttons /> -->
-          <!-- <recent-outings-box v-if="!isDraftView" :document="document" /> -->
-          <!-- <images-box v-if="!isDraftView" :document="document" /> -->
-          <!-- <tool-box :document="document" v-if="$screen.isMobile" /> -->
-          <!-- <comments-box v-if="!isDraftView" :document="document" /> -->
+          <BoxRoutes v-if="!isDraftView" :document="document" :show-buttons="false" />
+          <!-- TODO <recent-outings-box v-if="!isDraftView" :document="document" /> -->
+          <!-- TODO <images-box v-if="!isDraftView" :document="document" /> -->
+          <!-- TODO <tool-box :document="document" v-if="$screen.isMobile" /> -->
+          <!-- TODO <comments-box v-if="!isDraftView" :document="document" /> -->
         </div>
         <DocumentPrintLicense :document="document" />
       </div>
@@ -55,6 +54,7 @@ const { draft } = defineProps<{ draft?: Article }>();
 
 const { locale } = useI18n();
 const { isMobile } = useScreen();
+const { isDraftView } = useDocumentViewType(locale);
 const { document, status } = useDocumentLoad<Article, VersionedArticle>(locale, draft);
 const { version, isEditable } = useDocumentView(locale, document);
 </script>

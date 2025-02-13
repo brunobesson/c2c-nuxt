@@ -17,17 +17,17 @@
   "areas": "régions",
   "article": "article",
   "article_categories-values": {
-    "mountain_environment": "environnement montagne",
-    "gear": "matériel",
-    "technical": "technique",
-    "topoguide_supplements": "suppléments du topoguide",
-    "soft_mobility": "mobilité douce",
-    "expeditions": "expéditions",
-    "stories": "récits",
+    "association": "association",
     "c2c_meetings": "réunions c2c",
-    "tags": "tags",
+    "expeditions": "expéditions",
+    "gear": "matériel",
+    "mountain_environment": "environnement montagne",
     "site_info": "info site",
-    "association": "association"
+    "soft_mobility": "mobilité douce",
+    "stories": "récits",
+    "tags": "tags",
+    "technical": "technique",
+    "topoguide_supplements": "suppléments du topoguide"
   },
   "article_type-values": {
     "collab": "collaboratif (CC by-sa)",
@@ -50,6 +50,7 @@
     "good": "bonnes",
     "poor": "mauvaises"
   },
+  "contributor": "contributeur",
   "error": {
     "message": {
       "default": "Une erreur est survenue lors de la récupération des données. Vous pouvez essayer de {0} la page",
@@ -106,6 +107,8 @@
     "aid_rating": {
       "label": "cotation artificielle"
     },
+    "article_categories": "Catégories",
+    "article_type": "Type d'article",
     "engagement_rating": {
       "label": "engagement"
     },
@@ -168,9 +171,7 @@
     },
     "via_ferrata_rating": {
       "label": "cotation via ferrata"
-    },
-    "article_categories": "Catégories",
-    "article_type": "Type d'article"
+    }
   },
   "following": {
     "start": "Voir les activités de ce contributeur dans votre fil",
@@ -231,12 +232,28 @@
     }
   },
   "images": "images",
+  "langs": {
+    "ca": "catalan",
+    "de": "allemand",
+    "en": "anglais",
+    "es": "espagnol",
+    "eu": "basque",
+    "fr": "français",
+    "it": "italien",
+    "sl": "slovène",
+    "zh": "chinois"
+  },
   "license": {
     "by-nc-nd": "Ce contenu est sous licence Creative Commons BY-NC-ND 3.0",
     "by-sa": "Ce contenu est sous licence Creative Commons BY-SA 3.0",
     "copyright": "Cette couverture de livre est la propriété de son éditeur et/ou auteur",
     "image": "Les images associées à cette page sont disponibles sous la licence spécifiée sur le document d'origine de chaque image.",
-    "version": "Imprimé le {0}"
+    "version": "Imprimé le {0}",
+    "copyright-descr": "Cette image montre une couverture de livre. Elle est la propriété de l'éditeur et/ou de l'auteur et n'est présentée ici qu'à des fins d'illustration.",
+    "nd": "Pas de modifications — Dans le cas où vous effectuez un remix, que vous transformez, ou créez à partir du matériel composant l'Oeuvre originale, vous n'êtes pas autorisé à distribuer ou mettre à disposition l'Oeuvre modifiée.",
+    "sa": "Partage dans les Mêmes Conditions — Dans le cas où vous effectuez un remix, que vous transformez, ou créez à partir du matériel composant l'Oeuvre originale, vous devez diffuser l'Oeuvre modifiée dans les même conditions, c'est à dire avec la même licence avec laquelle l'Oeuvre originale a été diffusée.",
+    "by": "Attribution — Vous devez créditer l'Œuvre, intégrer un lien vers la licence et indiquer si des modifications ont été effectuées à l'Oeuvre.",
+    "nc": "Pas d’Utilisation Commerciale — Vous n'êtes pas autorisé à faire un usage commercial de cette Oeuvre, tout ou partie du matériel la composant."
   },
   "link": {
     "add": {
@@ -252,6 +269,10 @@
   },
   "login": "Se connecter",
   "logout": "Me déconnecter",
+  "low-quality": {
+    "banner": "Ce document est une ébauche. {0} Vous êtes invité à compléter les informations et améliorer la qualité du document en suivant les règles de contribution et dans le respect du droit d'auteur.",
+    "edit": "Éditez-le."
+  },
   "marker": {
     "gps-track": "Trace GPS",
     "soft-mobility-outing": "Sortie en mobilité douce"
@@ -270,6 +291,7 @@
     "preferences": "Mes préférences",
     "search": "Rechercher…"
   },
+  "orientations": "orientations",
   "outing": "sortie",
   "outings": "sorties",
   "quality": "qualité du document",
@@ -283,10 +305,10 @@
   "route": "itinéraire",
   "routes": "itinéraires",
   "side-menu": {
-    "EULA": "CGU",
     "contact": "Contact",
     "cookies": "Cookies",
     "donate": "Faire un don à l'association Camptocamp",
+    "EULA": "CGU",
     "licenses": "Licences",
     "serac": "Incidents et accidents"
   },
@@ -355,9 +377,35 @@
   "waypoints": "points de passage",
   "xreport": "rapport incident / accident",
   "xreports": "rapports incident / accident",
-  "contributor": "contributeur",
-  "low-quality": {
-    "edit": "Éditez-le.",
-    "banner": "Ce document est une ébauche. {0} Vous êtes invité à compléter les informations et améliorer la qualité du document en suivant les règles de contribution et dans le respect du droit d'auteur."
+  "box": {
+    "routes": {
+      "title": "Itinéraires associés",
+      "filter": "Filtrer"
+    },
+    "tools": {
+      "waypoints_children": "Sous-points de passage",
+      "other-langs": "Voir dans une autre langue",
+      "weather-forecast": "Prévisions météo (meteoblue)",
+      "directions": "Se rendre à ce lieu (Google Maps)",
+      "nearby": "À proximité de...",
+      "paragliding-outings": "Sorties parapente",
+      "fundraiser": "Aider les acteurs locaux",
+      "statistics": "Statistiques",
+      "contributions": "Contributions",
+      "edit": "Modifier le document",
+      "edit-associations": "Modifier les associations",
+      "history": "Versions",
+      "translate": "Traduire",
+      "report-issue": "Signaler un problème",
+      "report-issue-subject": "Signalement d'un problème",
+      "report-issu-body": "Décrire le problème ici",
+      "unlock-doc": "Déprotéger ce document",
+      "lock-doc": "Protéger ce document",
+      "merge": "Fusionner avec un autre document",
+      "unlock-user": "Débloquer cet utilisateur",
+      "lock-user": "Bloquer cet utilisateur",
+      "delete-locale": "Supprimer cette version linguistique",
+      "delete": "Supprimer ce document"
+    }
   }
 }

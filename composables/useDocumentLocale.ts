@@ -1,12 +1,12 @@
 import type { Document, DocumentListing } from '~/api/c2c.js';
-import { API_LANGS, UiLang } from '~/api/lang.js';
+import { API_LANGS } from '~/api/lang.js';
 import { useAuthStore } from '~/store/auth.js';
 import type { VersionedDocument } from '~/types/common.js';
 
 export const useDocumentLocale = () => {
   function getLocaleSmart<T extends Document | DocumentListing | VersionedDocument>(
     document: T,
-    lang?: UiLang,
+    lang?: string,
   ): T['locales'][0] {
     // first of all try to search asked lang
     let result = lang ? getLocaleStupid(document, lang) : undefined;

@@ -112,11 +112,11 @@ const computeImages = (images: NodeListOf<HTMLImageElement>) => {
     image.dataset.c2cExtrapoledDocument = JSON.stringify({
       document_id,
       locales: [{ title: '...' }],
-      available_langs: [locale],
+      available_langs: [locale.value],
       type: 'i',
     });
 
-    image.src = config.public.c2cApiBase + image.attributes.getNamedItem('c2c:url-proxy')!.value;
+    image.src = config.public.c2cApiBase.slice(0, -1) + image.attributes.getNamedItem('c2c:url-proxy')!.value;
     image.addEventListener('click', () => {
       // TODO this.$imageViewer.show(JSON.parse(image.dataset.c2cExtrapoledDocument));
     });
@@ -131,13 +131,17 @@ const computeImages = (images: NodeListOf<HTMLImageElement>) => {
       avif.setAttribute('type', 'image/avif');
       avif.setAttribute(
         'srcset',
-        config.public.c2cApiBase + image.attributes.getNamedItem('c2c:url-proxy')!.value + '&extension=avif',
+        config.public.c2cApiBase.slice(0, -1) +
+          image.attributes.getNamedItem('c2c:url-proxy')!.value +
+          '&extension=avif',
       );
       const webp = document.createElement('source');
       webp.setAttribute('type', 'image/webp');
       webp.setAttribute(
         'srcset',
-        config.public.c2cApiBase + image.attributes.getNamedItem('c2c:url-proxy')!.value + '&extension=webp',
+        config.public.c2cApiBase.slice(0, -1) +
+          image.attributes.getNamedItem('c2c:url-proxy')!.value +
+          '&extension=webp',
       );
       picture.appendChild(avif);
       picture.appendChild(webp);

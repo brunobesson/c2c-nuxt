@@ -9,7 +9,6 @@ import type {
   License,
   WhatsnewDocument,
 } from '~/api/c2c.js';
-import type { UiLang } from '~/api/lang.js';
 import type { VersionedDocument } from '~/types/common.js';
 import {
   isImage,
@@ -25,7 +24,7 @@ import {
 } from '~/types/common.js';
 
 export const useDocument = (document: Document | DocumentListing | VersionedDocument | WhatsnewDocument) => {
-  const documentTitle = (lang?: UiLang): string => {
+  const documentTitle = (lang?: string): string => {
     // profile does not have locale, get profile's name
     if (isProfile(document) || isProfileListing(document)) {
       return document.name ?? '';

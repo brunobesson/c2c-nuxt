@@ -2,8 +2,7 @@
   <NuxtLink
     :to="{ path: `/${documentType}s/${document.document_id}${lang ? '/' + lang : ''}` }"
     :target="target"
-    :title="documentTitle(lang)"
-    class="visited:text-surface-400">
+    :title="documentTitle(lang)">
     <slot>
       <DocumentTitle :document="document" :uppercase-first-letter="uppercaseFirstLetter" />
     </slot>

@@ -2,7 +2,7 @@
   <div>
     <!-- TODO <html-header v-if="!isDraftView && !isPrintingView" :title="title" /> -->
     <DocumentVersionBanner
-      v-if="isDocumentVersion(document) || isMaskedVersionedDocument(document)"
+      v-if="isVersionedDocument(document) || isMaskedVersionedDocument(document)"
       :document="document" />
     <div v-if="!isMaskedVersionedDocument(document)">
       <Box>
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import type { Document } from '~/api/c2c.js';
 import type { MaskedVersionedDocument, VersionedDocument } from '~/types/common.js';
-import { isDocumentVersion, isMaskedVersionedDocument, isOuting, isXreport } from '~/types/common.js';
+import { isMaskedVersionedDocument, isOuting, isVersionedDocument, isXreport } from '~/types/common.js';
 
 const { document } = defineProps<{ document: Document | VersionedDocument | MaskedVersionedDocument }>();
 
