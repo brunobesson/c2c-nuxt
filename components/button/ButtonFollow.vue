@@ -22,9 +22,10 @@ const {
 } = useC2cApi();
 const toast = useToast();
 
-// TODO launch only if canfollow
-const { data: followed } = useAsyncData(async () => (await isFollowing(document.document_id)).is_following);
 const canFollow = computed(() => document.type === 'u' && authenticated && user?.id !== document.document_id);
+const { data: followed } = useAsyncData(async () =>
+  canFollow.value ? (await isFollowing(document.document_id)).is_following : false,
+);
 const tooltip = computed(() => (followed ? t('following.stop') : t('following.start')));
 
 const toggle = async (event: Event) => {
