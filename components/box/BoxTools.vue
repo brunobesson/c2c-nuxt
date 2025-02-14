@@ -4,14 +4,17 @@
       <!-- TODO check this is working in all case (e.g. fundraiser, etc) -->
       <BoxToolsAssociatedDocuments :document="document" />
 
+      <!-- TODO display only if appropriate -->
+      <hr class="my-3" />
+
       <div v-if="isDefaultView && availableLangs?.length" class="text-center">
         {{ $t('box.tools.other-langs') }}
-        <!-- TODO styling -->
-        <ul>
-          <li v-for="l of availableLangs" :k="l">
-            <LinkDocument :document="document" :lang="l!">{{ $t(`langs.${l}`) }}</LinkDocument>
-          </li>
-        </ul>
+        <div class="flex flex-wrap justify-center">
+          <template v-for="(l, i) of availableLangs" :k="l">
+            <span v-if="i" class="mx-1">•</span
+            ><LinkDocument :document="document" :lang="l!" class="link">{{ $t(`langs.${l}`) }}</LinkDocument>
+          </template>
+        </div>
       </div>
 
       <NuxtLink v-if="weatherLink" :to="weatherLink" external class="link">
@@ -38,7 +41,7 @@
       </NuxtLink>
 
       <!-- TODO display only if appropriate -->
-      <hr />
+      <hr class="my-3" />
 
       <NuxtLink
         v-if="document.type === 'u'"
@@ -78,7 +81,7 @@
       </NuxtLink>
 
       <!-- TODO display only if appropriate -->
-      <hr />
+      <hr class="my-3" />
 
       <!-- Moderator zone -->
       <template v-if="isEditable && isModerator">
@@ -110,7 +113,7 @@
       </template>
 
       <!-- TODO display only if appropriate -->
-      <hr />
+      <hr class="my-3" />
 
       <BoxToolsLicense :document="document" />
     </div>

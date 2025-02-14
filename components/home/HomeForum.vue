@@ -7,7 +7,6 @@
       <LoadDataError v-if="status === 'error'" />
       <ul>
         <li v-for="topic of topics" :key="topic.id" class="[&:nth-child(even)]:bg-gray-50">
-          <!-- TODO ellipsis not working because  whitespace-nowrap overflow-hidden does no respect fractioning -->
           <NuxtLink
             class="flex gap-1 pb-1 w-full hover:bg-hover"
             :href="getTopicUrl(topic)"

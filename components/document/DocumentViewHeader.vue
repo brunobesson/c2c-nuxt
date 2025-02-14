@@ -7,8 +7,7 @@
     <div v-if="!isMaskedVersionedDocument(document)">
       <Box>
         <h1 class="text-3xl">
-          <IconDocument :type="documentType" />
-          <DocumentTitle :document="document" />
+          <IconDocument :type="documentType" />&nbsp;<DocumentTitle :document="document" />
           <span v-if="isOuting(document)">
             {{ outingDates(document.date_start, document.date_end) }}
           </span>

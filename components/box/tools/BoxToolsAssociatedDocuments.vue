@@ -4,51 +4,58 @@
   <div v-if="waypointsLists.length" v-for="(waypointsList, i) of waypointsLists" :key="i">
     <div class="text-xl">{{ waypointsList.title }}</div>
     <LinkDocument v-for="waypoint of waypointsList.waypoints" :key="waypoint.document_id" :document="waypoint">
-      <IconWaypointType :type="waypoint.waypoint_type" fixed-width />
-      <DocumentTitle :document="waypoint" />
+      <IconWaypointType :type="waypoint.waypoint_type" fixed-width />&nbsp;<DocumentTitle :document="waypoint" />
       {{ waypoint.elevation }}&nbsp;m
     </LinkDocument>
   </div>
   <!-- books -->
-  <template v-if="associations.books?.length">
+  <div v-if="associations.books?.length">
     <div class="text-xl">{{ capitalize($t('books')) }}</div>
-    <div v-for="book of associations.books" :key="book.document_id" class="text-ellipsis">
+    <div
+      v-for="book of associations.books"
+      :key="book.document_id"
+      class="text-ellipsis overflow-hidden whitespace-nowrap">
       <LinkDocument :document="book">
-        <IconDocument type="book" fixed-width />
-        <DocumentTitle :document="book" />
+        <IconDocument type="book" fixed-width />&nbsp;<DocumentTitle :document="book" />
       </LinkDocument>
     </div>
-  </template>
+  </div>
   <!-- articles -->
-  <template v-if="associations.articles?.length">
+  <div v-if="associations.articles?.length">
     <div class="text-xl">{{ capitalize($t('articles')) }}</div>
-    <div v-for="article of associations.articles" :key="article.document_id" class="text-ellipsis">
+    <div
+      v-for="article of associations.articles"
+      :key="article.document_id"
+      class="text-ellipsis overflow-hidden whitespace-nowrap">
       <LinkDocument :document="article">
-        <IconDocument type="article" fixed-width />
-        <DocumentTitle :document="article" />
+        <IconDocument type="article" fixed-width />&nbsp;<DocumentTitle :document="article" class="link" />
       </LinkDocument>
     </div>
-  </template>
+  </div>
   <!-- xreports -->
-  <template v-if="associations.xreports?.length">
+  <div v-if="associations.xreports?.length">
     <div class="text-xl">{{ capitalize($t('book')) }}</div>
-    <div v-for="xreport of associations.xreports" :key="xreport.document_id" class="text-ellipsis">
+    <div
+      v-for="xreport of associations.xreports"
+      :key="xreport.document_id"
+      class="text-ellipsis overflow-hidden whitespace-nowrap">
       <LinkDocument :document="xreport">
-        <IconDocument type="xreport" fixed-width />
-        <DocumentTitle :document="xreport" />
+        <IconDocument type="xreport" fixed-width />&nbsp;<DocumentTitle :document="xreport" />
       </LinkDocument>
     </div>
-  </template>
+  </div>
   <!-- outings -->
-  <template v-if="document.type !== 'x' && associations.outings?.length">
+  <div v-if="document.type !== 'x' && associations.outings?.length">
     <div class="text-xl">{{ capitalize($t('outings')) }}</div>
-    <div v-for="outing of associations.outings" :key="outing.document_id" class="text-ellipsis">
+    <div
+      v-for="outing of associations.outings"
+      :key="outing.document_id"
+      class="text-ellipsis overflow-hidden whitespace-nowrap">
       <LinkDocument :document="outing">
-        <IconDocument type="outing" fixed-width />
-        <DocumentTitle :document="outing" />
+        <IconDocument type="outing" fixed-width />&nbsp;<DocumentTitle :document="outing" />
       </LinkDocument>
     </div>
-  </template>
+  </div>
 </template>
 
 <script setup lang="ts">

@@ -21,10 +21,10 @@ html {
   }
 
   .home-layout {
-    @apply flex flex-col gap-4 p-5 mobile:grid mobile:grid-cols-[7fr_5fr] widescreen:grid-cols-[8fr_4fr];
+    @apply flex flex-col gap-4 p-5 mobile:grid mobile:grid-cols-[auto_calc(100%*5/12)] widescreen:grid-cols-[auto_calc(100%/3)];
 
     &.feed {
-      @apply desktop:grid-cols-[8fr_4fr] widescreen:grid-cols-[9fr_3fr];
+      @apply desktop:grid-cols-[auto_calc(100%/3)] widescreen:grid-cols-[auto_25%];
     }
   }
 }

@@ -7,7 +7,7 @@
       <DocumentViewHeader v-else :document="document" :version="version" />
       <div
         v-if="!isMaskedVersionedDocument(document)"
-        class="flex flex-col mobile:grid mobile:grid-cols-[3fr_9fr] print:flex gap-5 py-5">
+        class="flex flex-col mobile:grid mobile:grid-cols-[25%_auto] print:flex gap-5 py-5">
         <div class="flex flex-col gap-5">
           <Box>
             <FieldActivities :document="document" />
