@@ -1,6 +1,5 @@
 <template>
   <Box>
-    {{ JSON.stringify(availableLangs) }}
     <div class="flex flex-col print:hidden">
       <!-- TODO check this is working in all case (e.g. fundraiser, etc) -->
       <BoxToolsAssociatedDocuments :document="document" />

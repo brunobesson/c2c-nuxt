@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', () => {
   const user = computed(() => userInfo.value);
   const authenticated = computed(() => !!userInfo.value);
   const isModerator = computed(() => user.value?.roles.includes('moderator'));
-  useNuxtApp().$c2cFetch;
+  const fetch = useNuxtApp().$c2cFetch;
 
   useIntervalFn(() => {
     if (!user.value) {
@@ -41,7 +41,7 @@ export const useAuthStore = defineStore('auth', () => {
       roles,
       token,
       redirect_internal: discourseUrl,
-    } = await useNuxtApp().$c2cFetch<LoginResponse>('/users/login', {
+    } = await fetch<LoginResponse>('/users/login', {
       method: 'POST',
       body: {
         username: usernameInput,
@@ -88,7 +88,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function logout() {
-    useNuxtApp().$c2cFetch('/users/logout', { method: 'POST', body: { discourse: true } });
+    fetch('/users/logout', { method: 'POST', body: { discourse: true } });
     userInfo.value = null;
   }
 
