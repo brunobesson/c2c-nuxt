@@ -109,7 +109,6 @@ import { useGdprStore } from '~/store/gdpr.js';
 const route = useRoute();
 const forumUrl = useRuntimeConfig().public.forumBase;
 const showGdpr = () => {
-  const { openGdprDialog } = useGdprStore();
-  openGdprDialog();
+  useGdprStore().openGdprDialog();
 };
 </script>
