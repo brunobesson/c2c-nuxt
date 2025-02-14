@@ -12,11 +12,6 @@ const { locale } = useI18n();
 const router = useRouter();
 const config = useRuntimeConfig();
 
-type Processor = {
-  parse(content: string): Document | HTMLElement;
-  serialize(doc: Document | HTMLElement): string;
-};
-
 let processor: (content: string) => string;
 if (import.meta.client) {
   processor = content => {
@@ -26,6 +21,7 @@ if (import.meta.client) {
     return el.innerHTML;
   };
 } else {
+  // TODO runtime-core.esm-bun…er.js?v=6a622b40:50 [Vue warn]: onMounted is called when there is no active component instance to be associated with. Lifecycle injection APIs can only be used during execution of setup(). If you are using async setup(), make sure to register lifecycle hooks before the first await statement.
   const { JSDOM } = await import('jsdom');
   processor = content => {
     const jsdom = new JSDOM(content);
@@ -156,23 +152,26 @@ const computeImages = (images: NodeListOf<HTMLImageElement>, doc: Document) => {
 const computeAnchors = (anchors: NodeListOf<HTMLAnchorElement>) => {
   for (const anchor of anchors) {
     const attributes = anchor.attributes;
+    try {
+      const { href } = router.resolve({
+        name: attributes.getNamedItem('c2c:document-type')!.value.slice(0, -1),
+        params: {
+          id: parseInt(attributes.getNamedItem('c2c:document-id')!.value, 10),
+          lang: attributes.getNamedItem('c2c:lang')?.value ?? undefined,
+          title: attributes.getNamedItem('c2c:slug')?.value ?? undefined,
+        },
+        hash: attributes.getNamedItem('c2c:anchor') ? '#' + attributes.getNamedItem('c2c:anchor')!.value : undefined,
+      });
 
-    const { href } = router.resolve({
-      name: attributes.getNamedItem('c2c:document-type')!.value.slice(0, -1),
-      params: {
-        id: parseInt(attributes.getNamedItem('c2c:document-id')!.value, 10),
-        lang: attributes.getNamedItem('c2c:lang')?.value ?? undefined,
-        title: attributes.getNamedItem('c2c:slug')?.value ?? undefined,
-      },
-      hash: attributes.getNamedItem('c2c:anchor') ? '#' + attributes.getNamedItem('c2c:anchor')!.value : undefined,
-    });
-
-    anchor.href = href;
-    anchor.addEventListener('click', e => {
-      if (guardEvent(e)) {
-        router.push(href); // TODO check working
-      }
-    });
+      anchor.href = href;
+      anchor.addEventListener('click', e => {
+        if (guardEvent(e)) {
+          router.push(href); // TODO check working
+        }
+      });
+    } catch (error: unknown) {
+      // just ignore
+    }
   }
 };
 
