@@ -47,14 +47,30 @@
 </template>
 
 <script setup lang="ts">
-import type { Article } from '~/api/c2c.js';
+import type { Article, DocumentType } from '~/api/c2c.js';
+import type { ApiLang } from '../../api/lang.js';
 import { isMaskedVersionedDocument, type VersionedArticle } from '../../types/common.js';
 
 const { draft } = defineProps<{ draft?: Article }>();
 
 const { locale } = useI18n();
 const { isMobile } = useScreen();
-const { isDraftView } = useDocumentViewType(locale);
-const { document, status } = useDocumentLoad<Article, VersionedArticle>(locale, draft);
+const { isDraftView, isVersionView, isPrintingView, documentType, expectedLang } = useDocumentViewType(locale);
+const { loadDocument, loadVersionedDocument, cook } = useDocumentLoad<Article, VersionedArticle>();
+const { data: document, status } = useAsyncData(async () => {
+  if (isVersionView.value) {
+    return loadVersionedDocument(
+      useRouteParams('id', 0, { transform: Number }),
+      documentType.value as Exclude<DocumentType, 'map' | 'profile'>,
+      useRouteParams('lang').value as ApiLang,
+      useRouteParams('version', 0, { transform: Number }),
+    );
+  } else if (isDraftView.value || isPrintingView.value) {
+    return cook(draft!);
+  } else {
+    return loadDocument(useRouteParams('id', 0, { transform: Number }).value, documentType.value, expectedLang);
+  }
+});
+
 const { version, isEditable } = useDocumentView(locale, document);
 </script>
