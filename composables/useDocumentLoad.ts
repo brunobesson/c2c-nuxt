@@ -58,7 +58,7 @@ export const useDocumentLoad = <D extends Document, V extends VersionedDocument 
               next_version_id,
               previous_version_id,
             },
-          };
+          } as MaskedVersionedDocument;
         }
         return {
           ...document,
