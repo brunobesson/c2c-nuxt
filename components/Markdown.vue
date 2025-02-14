@@ -22,14 +22,14 @@ if (import.meta.client) {
   processor = content => {
     const el = document.createElement('div');
     el.innerHTML = content;
-    process(el);
+    process(el, document);
     return el.innerHTML;
   };
 } else {
   const { JSDOM } = await import('jsdom');
   processor = content => {
     const jsdom = new JSDOM(content);
-    process(jsdom.window.document);
+    process(jsdom.window.document, jsdom.window.document);
     return jsdom.serialize();
   };
 }
@@ -41,19 +41,19 @@ const html = computed(() => {
   return processor(content);
 });
 
-const process = (doc: Document | HTMLElement) => {
+const process = (el: Document | HTMLElement, doc: Document) => {
   if (content!.includes('c2c:role')) {
-    computeFigures(doc.querySelectorAll('figure[c2c\\:role=embedded-figure]'));
-    computeImages(doc.querySelectorAll('img[c2c\\:role=embedded-image]'));
-    computeEmojis(doc.querySelectorAll('img[c2c\\:role=emoji]'));
-    computeAnchors(doc.querySelectorAll('a[c2c\\:role=internal-link]'));
-    computeVideos(doc.querySelectorAll('div[c2c\\:role=video] > iframe'));
+    computeFigures(el.querySelectorAll('figure[c2c\\:role=embedded-figure]'));
+    computeImages(el.querySelectorAll('img[c2c\\:role=embedded-image]'), doc);
+    computeEmojis(el.querySelectorAll('img[c2c\\:role=emoji]'));
+    computeAnchors(el.querySelectorAll('a[c2c\\:role=internal-link]'));
+    computeVideos(el.querySelectorAll('div[c2c\\:role=video] > iframe'));
 
-    addClasses(doc, 'div[c2c\\:role=info]', 'notification', 'is-info'); // TODO!
-    addClasses(doc, 'div[c2c\\:role=warning]', 'notification', 'is-warning');
-    addClasses(doc, 'div[c2c\\:role=danger]', 'notification', 'is-danger');
-    addClasses(doc, 'div[c2c\\:role=video]', 'no-print');
-    addClasses(doc, 'table[c2c\\:role=ltag]', 'table');
+    addClasses(el, 'div[c2c\\:role=info]', 'notification', 'is-info'); // TODO!
+    addClasses(el, 'div[c2c\\:role=warning]', 'notification', 'is-warning');
+    addClasses(el, 'div[c2c\\:role=danger]', 'notification', 'is-danger');
+    addClasses(el, 'div[c2c\\:role=video]', 'no-print');
+    addClasses(el, 'table[c2c\\:role=ltag]', 'table');
   }
 };
 
@@ -106,7 +106,7 @@ const computeFigures = (figures: NodeListOf<HTMLElement>) => {
   }
 };
 
-const computeImages = (images: NodeListOf<HTMLImageElement>) => {
+const computeImages = (images: NodeListOf<HTMLImageElement>, doc: Document) => {
   for (const image of images) {
     const document_id = parseInt(image.attributes.getNamedItem('c2c:document-id')!.value, 10);
     image.dataset.c2cExtrapoledDocument = JSON.stringify({
@@ -122,12 +122,12 @@ const computeImages = (images: NodeListOf<HTMLImageElement>) => {
     });
 
     const parent = image.parentNode!;
-    const picture = document.createElement('picture');
+    const picture = doc.createElement('picture');
 
     // Until all images are migrated only images uploaded after a given timestamp
     // or with an id greater than a given one have their webp and avif versions
     if (config.public.modernThumbnailsId && document_id > config.public.modernThumbnailsId) {
-      const avif = document.createElement('source');
+      const avif = doc.createElement('source');
       avif.setAttribute('type', 'image/avif');
       avif.setAttribute(
         'srcset',
@@ -135,7 +135,7 @@ const computeImages = (images: NodeListOf<HTMLImageElement>) => {
           image.attributes.getNamedItem('c2c:url-proxy')!.value +
           '&extension=avif',
       );
-      const webp = document.createElement('source');
+      const webp = doc.createElement('source');
       webp.setAttribute('type', 'image/webp');
       webp.setAttribute(
         'srcset',
