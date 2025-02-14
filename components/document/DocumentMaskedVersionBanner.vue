@@ -36,9 +36,8 @@ const { locale } = useI18n();
 const { documentType } = useDocumentViewType(locale);
 const { version } = useDocumentView(locale, document);
 
-const documentId = computed(() => parseInt(route.params.id as string, 10));
-const lang = computed(() => route.params.lang as ApiLang);
-const currentVersion = computed(() => Number.parseInt(route.params.version as string, 10));
+const documentId = useRouteParams('id', 0, { transform: Number });
+const lang = useRouteParams('lang') as Ref<ApiLang>;
 const firstVersion = computed(() => !version.value?.previous_version_id);
 const lastVersion = computed(() => !version.value?.next_version_id);
 </script>

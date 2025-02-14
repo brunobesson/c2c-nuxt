@@ -5,7 +5,7 @@ export const useDocumentViewType = (uiLang: MaybeRef<UiLang>) => {
   const route = useRoute();
   const { apiLang } = useLang();
 
-  const expectedLang = computed(() => (route.params.lang ? (route.params.lang as ApiLang) : apiLang(unref(uiLang))));
+  const expectedLang: Ref<ApiLang> = useRouteParams('lang', apiLang(unref(uiLang)));
 
   const documentType = computed((): DocumentType => {
     if (isPrintingView) {

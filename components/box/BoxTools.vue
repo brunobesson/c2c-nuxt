@@ -130,7 +130,7 @@ import GeoJSON from 'ol/format/GeoJSON.js';
 import type { Point } from 'ol/geom.js';
 import { toLonLat } from 'ol/proj.js';
 import type { Document } from '../../api/c2c.js';
-import { API_LANGS } from '../../api/lang.js';
+import { API_LANGS, ApiLang } from '../../api/lang.js';
 import { useAuthStore } from '../../store/auth.js';
 import {
   isArea,
@@ -149,19 +149,17 @@ import {
 const { document } = defineProps<{ document: Document | VersionedDocument }>();
 
 const { locale, t } = useI18n();
-const route = useRoute();
 const { isDefaultView, documentType } = useDocumentViewType(locale);
 const { isEditable, isDeletable } = useDocumentView(locale, document);
 const { isModerator, user } = useAuthStore();
 const toast = useToast();
 
-// TODO not working?
+const currentLang = useRouteParams('lang', document.cooked.lang) as Ref<ApiLang>;
 const availableLangs = computed(() => {
   if (isVersionedDocument(document)) {
     return undefined;
   }
-  let currentLang = (route.params.lang as string | undefined) ?? document.cooked.lang;
-  return document.available_langs.filter(lang => lang !== currentLang);
+  return document.available_langs.filter(lang => lang !== currentLang.value);
 });
 
 const weatherLink = computed(() => {

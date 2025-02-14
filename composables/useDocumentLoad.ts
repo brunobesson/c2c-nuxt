@@ -37,7 +37,7 @@ export const useDocumentLoad = <D extends Document, V extends VersionedDocument 
     if (isDraftView.value || isPrintingView.value) {
       return draft!.document_id;
     }
-    return parseInt(route.params.id as string, 10);
+    return useRouteParams('id', 0, { transform: Number }).value;
   });
 
   const {
@@ -49,7 +49,11 @@ export const useDocumentLoad = <D extends Document, V extends VersionedDocument 
       if (isVersionView.value) {
         const { document, next_version_id, previous_version_id, version } = await useC2cApi()[
           documentType.value as Exclude<DocumentType, 'map' | 'profile'>
-        ].getVersion(documentId.value, route.params.lang as ApiLang, parseInt(route.params.version as string, 10));
+        ].getVersion(
+          documentId.value,
+          useRouteParams('lang').value as ApiLang,
+          useRouteParams('version', 0, { transform: Number }).value,
+        );
         if (document === null) {
           // document may be asked and unavailable
           return {
