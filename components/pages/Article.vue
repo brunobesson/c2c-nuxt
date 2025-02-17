@@ -47,9 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import type { Article, DocumentType } from '~/api/c2c.js';
+import type { Article, Document, DocumentType } from '~/api/c2c.js';
 import type { ApiLang } from '../../api/lang.js';
-import { isMaskedVersionedDocument, type VersionedArticle } from '../../types/common.js';
+import { isDocument, isMaskedVersionedDocument, type VersionedArticle } from '../../types/common.js';
 
 const { draft } = defineProps<{ draft?: Article }>();
 
@@ -71,6 +71,61 @@ const { data: document, status } = useAsyncData(async () => {
     return loadDocument(useRouteParams('id', 0, { transform: Number }).value, documentType.value, expectedLang);
   }
 });
+
+onMounted(() => {
+  const doc = unref(document);
+  if (!doc || isMaskedVersionedDocument(doc)) {
+    return;
+  }
+  if (isDocument(doc) && doc.redirects_to) {
+    // TODO check working
+    useRouter().push({ params: { id: doc.redirects_to } });
+  }
+
+  // TODO updateHead (et pas ici car SSR !!)
+
+  if (isDocument(doc)) {
+    scrollToHash();
+    updateUrl(doc);
+  }
+});
+
+const scrollToHash = () => {
+  // TODO working ? how to factorize watch?
+  const hash = useRoute().hash;
+  if (!hash || !import.meta.client) {
+    return;
+  }
+
+  nextTick(() => {
+    globalThis.document.querySelector(hash)?.scrollIntoView();
+  });
+};
+
+const getCurrentPath = (doc: Document) => {
+  let title = useDocument(doc).documentTitle(locale.value);
+
+  // transform any unicode into its ascii value
+  title = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  // and clean
+  title = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+  let path = `/${documentType.value}s/${doc.document_id}/${locale.value}/${title}`;
+
+  if (useRoute().hash) {
+    path += useRoute().hash;
+  }
+
+  return path;
+};
+
+const updateUrl = (doc: Document) => {
+  const currentPath = getCurrentPath(doc);
+  if (useRoute().path !== currentPath) {
+    window.history.replaceState({}, '', currentPath);
+  }
+};
 
 const { version, isEditable } = useDocumentView(locale, document);
 </script>
