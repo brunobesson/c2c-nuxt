@@ -92,7 +92,7 @@ export const isXreportListing = (
 ): doc is XreportListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'x' && !('associations' in doc) && !('title' in doc);
 
-export const isDocument = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Area =>
+export const isDocument = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Document =>
   doc instanceof Object && 'associations' in doc && !('title' in doc);
 export const isArea = (doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument): doc is Area =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'a' && 'associations' in doc && !('title' in doc);

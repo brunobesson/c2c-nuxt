@@ -9,8 +9,11 @@ import 'dayjs/locale/hu';
 import 'dayjs/locale/it';
 import 'dayjs/locale/sl';
 import 'dayjs/locale/zh-cn';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
 import type { UiLang } from '~/api/lang.js';
 import type { IsoDate } from '~/types/common.js';
+
+dayjs.extend(localizedFormat);
 
 export const useDate = (lang: MaybeRef<UiLang>) => {
   const locales = {
