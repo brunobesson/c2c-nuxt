@@ -32,16 +32,23 @@ export const Topic = v.object({
 });
 export type Topic = v.InferOutput<typeof Topic>;
 
-export const Announcement = v.object({
+// no ta strict object, because we consider only part of the information
+export const Posts = v.object({
   tags: v.array(v.string()),
   post_stream: v.object({
     posts: v.array(
       v.object({
+        id: PositiveInt,
+        name: v.pipe(v.string(), v.nonEmpty()),
+        username: v.pipe(v.string(), v.nonEmpty()),
+        avatar_template: v.pipe(v.string(), v.nonEmpty()),
+        created_at: IsoDateTime,
         updated_at: IsoDateTime,
         cooked: v.string(),
       }),
     ),
   }),
   posts_count: Uint,
+  slug: v.pipe(v.string(), v.nonEmpty()),
 });
-export type Announcement = v.InferOutput<typeof Announcement>;
+export type Posts = v.InferOutput<typeof Posts>;

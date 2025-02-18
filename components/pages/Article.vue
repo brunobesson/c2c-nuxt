@@ -32,13 +32,13 @@
             <!-- TODO des fois un problème d'ordre au refresh? -->
             <Markdown :content="document.cooked.summary" is-summary />
             <Markdown :content="document.cooked.description" />
-            <!-- TODO <div style="clear: both" /> -->
+            <div class="clear-both" />
           </Box>
           <BoxRoutes v-if="!isDraftView" :document="document" :show-buttons="false" />
-          <!-- TODO <recent-outings-box v-if="!isDraftView" :document="document" /> -->
+          <BoxRecentOutings v-if="!isDraftView" :document="document" />
           <!-- TODO <images-box v-if="!isDraftView" :document="document" /> -->
-          <!-- TODO <tool-box :document="document" v-if="$screen.isMobile" /> -->
-          <!-- TODO <comments-box v-if="!isDraftView" :document="document" /> -->
+          <BoxTools v-if="isMobile" :document="document" />
+          <BoxComments v-if="isDefaultView" :document="document" />
         </div>
         <DocumentPrintLicense :document="document" />
       </div>
@@ -55,9 +55,11 @@ const { draft } = defineProps<{ draft?: Article }>();
 
 const { locale } = useI18n();
 const { isMobile } = useScreen();
-const { isDraftView, isVersionView, isPrintingView, documentType, expectedLang } = useDocumentViewType(locale);
+const { isDraftView, isVersionView, isPrintingView, isDefaultView, documentType, expectedLang } =
+  useDocumentViewType(locale);
 const { loadDocument, loadVersionedDocument, cook } = useDocumentLoad<Article, VersionedArticle>();
 const { data: document, status } = useAsyncData(async () => {
+  // TODO updateHead
   if (isVersionView.value) {
     return loadVersionedDocument(
       useRouteParams('id', 0, { transform: Number }),
@@ -81,8 +83,6 @@ onMounted(() => {
     // TODO check working
     useRouter().push({ params: { id: doc.redirects_to } });
   }
-
-  // TODO updateHead (et pas ici car SSR !!)
 
   if (isDocument(doc)) {
     scrollToHash();

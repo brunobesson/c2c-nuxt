@@ -43,7 +43,7 @@ const {
   status,
 } = defineProps<{ messageCount?: number; data: Topic[] | null; status: AsyncDataRequestStatus }>();
 
-const { baseUrl, getLatest } = useForumApi();
+const { baseUrl, getAvatarUrl } = useForumApi();
 
 const topics = computed(() => {
   if (messageCount > 0 && data) {
@@ -51,11 +51,6 @@ const topics = computed(() => {
   }
   return data;
 });
-
-const getAvatarUrl = (avatarTemplate: string) => {
-  const template = avatarTemplate.startsWith('/') ? baseUrl + avatarTemplate : avatarTemplate;
-  return template.replace('{size}', '20');
-};
 
 const getTopicUrl = (topic: Topic) => {
   return `${baseUrl}/t/${topic.slug}/${topic.id}/${topic.highest_post_number}`;

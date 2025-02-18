@@ -262,7 +262,8 @@
       "outing": "Ajouter une sortie",
       "route": "Ajouter un itinéraire",
       "waypoint": "Ajouter un point de passage",
-      "xreport": "Ajouter un rapport d'incident / accident"
+      "xreport": "Ajouter un rapport d'incident / accident",
+      "first-outing": "Ajouter la première sortie"
     },
     "edit": "Modifier",
     "home": "Accueil"
@@ -406,6 +407,18 @@
       "lock-user": "Bloquer cet utilisateur",
       "delete-locale": "Supprimer cette version linguistique",
       "delete": "Supprimer ce document"
+    },
+    "recent-outings": {
+      "title": "Dernières sorties"
+    },
+    "comments": {
+      "title": "Commentaires",
+      "disabled": "Les commentaires ne sont pas autorisés sur ce document.",
+      "error": "Oups ! Il y a eu un souci avec le forum. Voici le message : {0}",
+      "login": "Se connecter pour poster un commentaire",
+      "first": "Publier le premier commentaire",
+      "continue": "Continuer la discussion",
+      "expand": "Voir les commentaires suivants et continuer la discussion"
     }
   }
 }

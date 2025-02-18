@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Announcement } from '~/api/forum.js';
 import type { IsoDateTime } from '~/types/common.js';
 
 const props = defineProps<{ data: Announcement | null }>();

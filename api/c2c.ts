@@ -955,7 +955,7 @@ export const Waypoint = v.strictObject({
     waypoint_children: v.array(WaypointListing),
     xreports: v.array(XreportListing),
     recent_outings: v.strictObject({
-      document: v.array(OutingListing),
+      documents: v.array(OutingListing),
       total: Uint,
     }),
     all_routes: v.strictObject({
@@ -1427,3 +1427,9 @@ export const CreateImagesOutput = v.strictObject({
 export const CookerResponse = v.record(v.string(), v.string());
 
 export type License = 'by-sa' | 'by-nc-nd' | 'copyright';
+
+export const CreateTopicOutput = v.object({
+  topic_id: PositiveInt,
+});
+
+export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;

@@ -3,7 +3,7 @@
     <template #title>
       {{ $t('box.routes.title') }}
     </template>
-    <div v-if="!splitActivities" v-for="route of routes">
+    <div v-if="!splitActivities" v-for="route of routes" :key="route.document_id">
       <LinkRoutePretty :route="route" :show-areas="false" />
     </div>
     <template v-else>

@@ -1,4 +1,4 @@
-import { Announcement, Latest, type Topic } from '~/api/forum.js';
+import { Latest, Posts, type Topic } from '~/api/forum.js';
 import type { UiLang } from '~/api/lang.js';
 
 const { checkResponse } = useSchemaValidation();
@@ -85,19 +85,25 @@ export const useForumApi = () => {
     }));
   };
 
-  const getBoardAnnouncement = async (): Promise<Announcement> =>
-    checkResponse(Announcement, await $fetch('/t/publication-ca.json'));
+  const getBoardAnnouncement = async (): Promise<Posts> => checkResponse(Posts, await $fetch('/t/publication-ca.json'));
 
-  const getSiteNotice = async (lang: UiLang): Promise<Announcement> =>
-    checkResponse(Announcement, await $fetch(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`));
+  const getSiteNotice = async (lang: UiLang): Promise<Posts> =>
+    checkResponse(Posts, await $fetch(`/t/annonce-${['zh_CN', 'hu', 'sl'].includes(lang) ? 'en' : lang}.json`));
 
-  const forumAvatarUrl = `${baseUrl}user_avatar/${baseUrl.replace('https://', '')}`;
+  const getTopic = async (topicId: number): Promise<Posts> =>
+    checkResponse(Posts, await $fetch(`t/title/${topicId}.json`));
+
+  const getAvatarUrl = (avatarTemplate: string, size = 20) => {
+    const template = avatarTemplate.startsWith('/') ? baseUrl + avatarTemplate : avatarTemplate;
+    return template.replace('{size}', size.toString());
+  };
 
   return {
     getLatest,
     getBoardAnnouncement,
     getSiteNotice,
+    getTopic,
+    getAvatarUrl,
     baseUrl,
-    forumAvatarUrl,
   };
 };

@@ -285,7 +285,7 @@ const showTranslateModal = (e: MouseEvent) => {
 const reportingEmail = 'topo-fr@camptocamp.org';
 const reportingSubject = t('box.tools.report-issue-subject');
 const reportingBody = encodeURIComponent(
-  t('box.tools.report-issu-body') + '\r\n\r\n----\r\n\r\n' + window.location.href,
+  t('box.tools.report-issu-body') + '\r\n\r\n----\r\n\r\n' + useRequestURL().href,
 );
 
 const toggleDocumentLock = async () => {

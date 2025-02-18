@@ -10,10 +10,12 @@ import 'dayjs/locale/it';
 import 'dayjs/locale/sl';
 import 'dayjs/locale/zh-cn';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import type { UiLang } from '~/api/lang.js';
-import type { IsoDate } from '~/types/common.js';
+import type { IsoDate, IsoDateTime } from '~/types/common.js';
 
 dayjs.extend(localizedFormat);
+dayjs.extend(relativeTime);
 
 export const useDate = (lang: MaybeRef<UiLang>) => {
   const locales = {
@@ -79,8 +81,13 @@ export const useDate = (lang: MaybeRef<UiLang>) => {
     }
   }
 
+  function timeAgo(dateTime: IsoDateTime) {
+    return dayjs(dateTime).locale(locale.value).fromNow();
+  }
+
   return {
     longOutingDate,
     outingDates,
+    timeAgo,
   };
 };

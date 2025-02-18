@@ -9,5 +9,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ condition?: string }>();
+import type { ConditionRating } from '../../api/c2c.js';
+
+defineProps<{ condition: ConditionRating | null | undefined }>();
 </script>

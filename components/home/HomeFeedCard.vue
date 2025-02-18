@@ -140,7 +140,8 @@ const images = computed(() => {
   return [item.image1, item.image2, item.image3].filter(truthy);
 });
 
-const { forumAvatarUrl } = useForumApi();
+const { baseUrl } = useForumApi();
+const forumAvatarUrl = `${baseUrl}user_avatar/${baseUrl.replace('https://', '')}`;
 const useDefautlAvatarIcon = ref(false);
 const avatarLetter = computed(() => item.user.name.charAt(0).toUpperCase());
 </script>

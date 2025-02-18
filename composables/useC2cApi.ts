@@ -12,6 +12,7 @@ import {
   BookVersion,
   CookerResponse,
   CreateImagesOutput,
+  CreateTopicOutput,
   DocumentHistory,
   Feed,
   Following,
@@ -424,6 +425,14 @@ export const useC2cApi = () => {
           method: 'POST',
           body: { document_id: document, lang, version_id: version },
         }),
+    },
+
+    forum: {
+      createTopic: async (document: Document['document_id'], lang: ApiLang): Promise<CreateTopicOutput> =>
+        await checkResponse(
+          CreateTopicOutput,
+          await $fetch('/forum/topics', { method: 'POST', body: { document_id: document, lang } }),
+        ),
     },
 
     baseUrl,

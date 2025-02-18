@@ -25,7 +25,8 @@ const { documentLicense } = useDocument(document);
 const { longOutingDate } = useDate(locale);
 
 const qrcode = computed(() => {
-  const shortURL = location.href.substring(0, location.href.lastIndexOf('/'));
+  const url = useRequestURL();
+  const shortURL = url.href.substring(0, url.href.lastIndexOf('/'));
   return renderSVG(shortURL);
 });
 
