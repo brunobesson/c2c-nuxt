@@ -8,11 +8,15 @@
       {{ $t('box.comments.error', [error?.message]) }}
     </LoadDataError>
     <div v-else>
-      <div v-for="post of comments" :key="post.id" class="flex">
-        <NuxtImg :src="getAvatarUrl(post.avatar_template, 45)" class="h-full w-[45px]" loading="lazy" alt="Avatar" />
+      <div v-for="post of comments" :key="post.id" class="flex border-t-[6px] border-primary mb-6">
+        <NuxtImg
+          :src="getAvatarUrl(post.avatar_template, 45)"
+          class="h-full w-[45px] m-4 ml-0 rounded-[4px]"
+          loading="lazy"
+          alt="Avatar" />
         <div class="flex flex-col grow">
-          <div class="flex justify-between">
-            <NuxtLink :href="`${baseUrl}users/${post.username}`">
+          <div class="flex justify-between bg-surface-200 px-3 py-1">
+            <NuxtLink :href="`${baseUrl}users/${post.username}`" class="font-semibold">
               {{ post.username }}
             </NuxtLink>
             {{ timeAgo(post.created_at) }}
