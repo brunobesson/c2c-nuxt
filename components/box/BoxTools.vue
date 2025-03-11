@@ -16,7 +16,15 @@
         </div>
       </div>
 
-      <div>
+      <div
+        v-if="
+          weatherLink ||
+          directionsLink ||
+          closestDocumentsLink ||
+          paraglidingOutingsLink ||
+          fundraiser ||
+          document.type === 'u'
+        ">
         <NuxtLink v-if="weatherLink" :to="weatherLink" external class="link">
           <Icon icon="sun" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.weather-forecast') }}
         </NuxtLink>
@@ -85,7 +93,7 @@
       <hr />
 
       <!-- Moderator zone -->
-      <div class="flex flex-col">
+      <div v-if="(isEditable && isModerator) || (isDeletable && isDocument(document))" class="flex flex-col">
         <template v-if="isEditable && isModerator">
           <a v-if="document.type !== 'u'" href="#" @click="toggleDocumentLock()" class="link">
             <Icon :icon="document.protected ? 'lock' : 'unlock'" fixed-width class="text-[--p-text-color]" />
