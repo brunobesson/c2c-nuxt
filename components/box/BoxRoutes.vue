@@ -1,5 +1,5 @@
 <template>
-  <Box class="print:hidden">
+  <Box v-if="routes.length || showButtons" class="print:hidden">
     <template #title>
       {{ $t('box.routes.title') }}
     </template>

@@ -87,10 +87,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  function logout() {
+  const logout = () => {
     fetch('/users/logout', { method: 'POST', body: { discourse: true } });
     userInfo.value = null;
-  }
+  };
 
   const token = computed(() => user.value?.token);
 
