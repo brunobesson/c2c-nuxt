@@ -20,7 +20,7 @@ const hasAnnouncement = ref(false);
 const updatedAt = ref<IsoDateTime | undefined>(undefined);
 const lastAnnoucementRead = useLocalStorage<IsoDateTime | undefined>('annoucement.updatedAt', undefined);
 const hidden = ref(false);
-const showContent = false;
+const showContent = ref(false);
 const { locale: lang } = useI18n();
 
 const headerEl = useTemplateRef('header');
