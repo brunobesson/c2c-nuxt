@@ -23,30 +23,31 @@ import {
   isWhatnewDocument,
 } from '~/types/common.js';
 
-export const useDocument = (document: Document | DocumentListing | VersionedDocument | WhatsnewDocument) => {
+export const useDocument = (document: MaybeRef<Document | DocumentListing | VersionedDocument | WhatsnewDocument>) => {
+  const doc = toRef(document);
   const documentTitle = (lang?: string): string => {
     // profile does not have locale, get profile's name
-    if (isProfile(document) || isProfileListing(document)) {
-      return document.name ?? '';
+    if (isProfile(doc.value) || isProfileListing(doc.value)) {
+      return doc.value.name ?? '';
     }
 
     // document object returned by whatsnew doesn't have locale either but provides title property
-    if (isWhatnewDocument(document)) {
-      return document.title;
+    if (isWhatnewDocument(doc.value)) {
+      return doc.value.title;
     }
 
-    if (isRoute(document) || isRouteListing(document)) {
-      const { title, title_prefix } = useDocumentLocale().getLocaleSmart(document, lang);
+    if (isRoute(doc.value) || isRouteListing(doc.value)) {
+      const { title, title_prefix } = useDocumentLocale().getLocaleSmart(doc.value, lang);
       const colon = lang && ['fr', 'es', 'ca'].includes(lang) ? ' : ' : ': ';
       return title_prefix + colon + title;
     }
 
-    const { title } = useDocumentLocale().getLocaleSmart(document, lang);
+    const { title } = useDocumentLocale().getLocaleSmart(doc.value, lang);
     return title ?? '';
   };
 
   const documentType: ComputedRef<DocumentType> = computed(() => {
-    switch (document.type) {
+    switch (doc.value.type) {
       case 'a':
         return 'area';
       case 'b':
@@ -71,10 +72,10 @@ export const useDocument = (document: Document | DocumentListing | VersionedDocu
   });
 
   const documentLicense: ComputedRef<License | undefined> = computed(() => {
-    if (isWhatnewDocument(document)) {
+    if (isWhatnewDocument(doc.value)) {
       return undefined;
     }
-    switch (document.type) {
+    switch (doc.value.type) {
       case 'r':
       case 'w':
       case 'a':
@@ -86,12 +87,12 @@ export const useDocument = (document: Document | DocumentListing | VersionedDocu
       case 'x':
         return 'by-nc-nd';
       case 'c':
-        return (document as Article | ArticleListing | ArticleVersionDocument).article_type === 'personal'
+        return (doc.value as Article | ArticleListing | ArticleVersionDocument).article_type === 'personal'
           ? 'by-nc-nd'
           : 'by-sa';
       case 'i': {
-        if (isImage(document)) {
-          switch (document.image_type) {
+        if (isImage(doc.value)) {
+          switch (doc.value.image_type) {
             case 'collaborative':
               return 'by-sa';
             case 'personal':
@@ -109,21 +110,21 @@ export const useDocument = (document: Document | DocumentListing | VersionedDocu
 
   const sortedAreaList = computed(() => {
     if (
-      !isImage(document) &&
-      !isImageListing(document) &&
-      !isOuting(document) &&
-      !isOutingListing(document) &&
-      !isProfile(document) &&
-      !isProfileListing(document) &&
-      !isRoute(document) &&
-      !isRouteListing(document) &&
-      !isWaypoint(document)
+      !isImage(doc.value) &&
+      !isImageListing(doc.value) &&
+      !isOuting(doc.value) &&
+      !isOutingListing(doc.value) &&
+      !isProfile(doc.value) &&
+      !isProfileListing(doc.value) &&
+      !isRoute(doc.value) &&
+      !isRouteListing(doc.value) &&
+      !isWaypoint(doc.value)
     ) {
       return '';
     }
     // the areas often come in different orders within 3 area objects.
     const orderedAreas: Record<AreaType, string[]> = { range: [], admin_limits: [], country: [] };
-    for (const area of document.areas) {
+    for (const area of doc.value.areas) {
       orderedAreas[area.area_type].push(useDocumentLocale().getLocaleSmart(area).title);
     }
     return orderedAreas.range.concat(orderedAreas.admin_limits).concat(orderedAreas.country).join(' - ');

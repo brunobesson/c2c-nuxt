@@ -10,7 +10,7 @@ export const useDocumentView = (
 ) => {
   const { isModerator, user } = storeToRefs(useAuthStore());
   const { documentType, isDefaultView, isVersionView } = useDocumentViewType(uiLang);
-  const doc = unref(document);
+  const doc = toRef(document);
 
   const isDeletable = computed(() => {
     // first of all, if it's not editable, you can't delete it.
@@ -26,11 +26,15 @@ export const useDocumentView = (
     switch (documentType.value) {
       case 'outing':
       case 'xreport':
-        return (doc as Outing | Xreport).associations.users.some(u => u.document_id === user.value?.id);
+        return (doc.value as Outing | Xreport).associations.users.some(u => u.document_id === user.value?.id);
       case 'image':
-        return (doc as Image).image_type !== 'collaborative' && (doc as Image).creator.user_id === user.value?.id;
+        return (
+          (doc.value as Image).image_type !== 'collaborative' && (doc.value as Image).creator.user_id === user.value?.id
+        );
       case 'article':
-        return (doc as Article).article_type === 'personal' && (doc as Article).author.user_id === user.value?.id;
+        return (
+          (doc.value as Article).article_type === 'personal' && (doc.value as Article).author.user_id === user.value?.id
+        );
       default:
         return false;
     }
@@ -41,14 +45,14 @@ export const useDocumentView = (
     if (!isDefaultView.value) {
       return false;
     }
-    if (!doc) {
+    if (!doc.value) {
       return false;
     }
-    assertNotDocumentVersion(doc);
+    assertNotDocumentVersion(doc.value);
     if (isModerator.value) {
       return true;
     }
-    if (doc.protected) {
+    if (doc.value.protected) {
       return false;
     }
     switch (documentType.value) {
@@ -59,33 +63,33 @@ export const useDocumentView = (
       case 'map':
         return true;
       case 'profile':
-        return doc.document_id === user.value?.id;
+        return doc.value.document_id === user.value?.id;
       case 'article': {
-        if ((doc as Article).article_type === 'collab') {
+        if ((doc.value as Article).article_type === 'collab') {
           return true;
         }
-        return (doc as Article).author.user_id === user.value?.id;
+        return (doc.value as Article).author.user_id === user.value?.id;
       }
       case 'xreport': {
-        if ((doc as Xreport).author.user_id === user.value?.id) {
+        if ((doc.value as Xreport).author.user_id === user.value?.id) {
           return true;
         }
-        return (doc as Xreport).associations.users.some(u => u.document_id === user.value?.id);
+        return (doc.value as Xreport).associations.users.some(u => u.document_id === user.value?.id);
       }
       case 'outing':
-        return (doc as Outing).associations.users.some(u => u.document_id === user.value?.id);
+        return (doc.value as Outing).associations.users.some(u => u.document_id === user.value?.id);
       case 'image':
-        return (doc as Image).image_type === 'collaborative';
+        return (doc.value as Image).image_type === 'collaborative';
     }
   });
 
   const version = computed(() =>
-    !isVersionView.value ? undefined : (doc as MaskedVersionedDocument | VersionedDocument | null)?.version,
+    !isVersionView.value ? undefined : (doc.value as MaskedVersionedDocument | VersionedDocument | null)?.version,
   );
 
-  const locale = computed(() => (isVersionView ? undefined : (doc as Document | null)?.cooked));
+  const locale = computed(() => (isVersionView ? undefined : (doc.value as Document | null)?.cooked));
 
-  const lang = computed(() => (isVersionView ? undefined : (doc as Document | null)?.cooked?.lang));
+  const lang = computed(() => (isVersionView ? undefined : (doc.value as Document | null)?.cooked?.lang));
 
   return {
     isEditable,
