@@ -421,5 +421,16 @@
       "continue": "Continuer la discussion",
       "expand": "Voir les commentaires suivants et continuer la discussion"
     }
+  },
+  "markdown": {
+    "outing": {
+      "personal_comment": "Commentaires personnels",
+      "condition-level": {
+        "place": "Lieu / altitude / orientation",
+        "soft-snow": "Neige meuble",
+        "total-snow": "Épaisseur totale",
+        "comment": "Commentaire"
+      }
+    }
   }
 }

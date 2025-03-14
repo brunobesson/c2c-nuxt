@@ -832,11 +832,24 @@ export const Map = v.strictObject({
 });
 export type Map = v.InferOutput<typeof Map>;
 
+const ConditionLevel = v.strictObject({
+  level_place: v.string(),
+  level_snow_height_soft: v.string(),
+  level_snow_height_total: v.string(),
+  level_comment: v.string(),
+});
+export type ConditionLevel = v.InferOutput<typeof ConditionLevel>;
+const ConditionLevels = v.nullable(
+  v.pipe(
+    v.string(),
+    v.transform(input => v.parse(v.array(ConditionLevel), JSON.parse(input))),
+  ),
+);
 const OutingLocale = v.strictObject({
   ...FullBaseLocale.entries,
   access_comment: v.nullable(v.string()),
   avalanches: v.nullable(v.string()),
-  conditions_levels: v.nullable(v.string()),
+  conditions_levels: ConditionLevels,
   conditions: v.nullable(v.string()),
   description: v.nullable(v.string()),
   hut_comment: v.nullable(v.string()),
@@ -861,7 +874,7 @@ export const Outing = v.strictObject({
   }),
   access_condition: v.nullable(AccessCondition),
   avalanche_signs: v.nullish(v.array(AvalancheSigns)),
-  disable_comments: v.boolean(),
+  disable_comments: v.nullable(v.boolean()),
   elevation_access: v.nullable(v.number()),
   elevation_down_snow: v.nullish(v.number()),
   elevation_min: v.nullable(v.number()),
@@ -872,7 +885,7 @@ export const Outing = v.strictObject({
   hut_status: v.nullable(HutStatus),
   length_total: v.nullable(v.number()),
   lift_status: v.nullable(LiftStatus),
-  partial_trip: v.boolean(),
+  partial_trip: v.nullable(v.boolean()),
   participant_count: v.nullable(v.number()),
   snow_quality: v.nullish(SnowQualityRating),
   snow_quantity: v.nullish(SnowQuantityRating),

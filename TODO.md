@@ -17,8 +17,10 @@
   * slug
   * optimization (cf. doc)
 * swiper (module nuxt-swiper)
+* erreurs
+  * gerer les 404 correctement
 * Forms
-  * vee validate? (cf module) - vs valibot maybe?
+  * vee validate? (cf module) - vs valibot maybe? - tanstack ?
 * scrolltotop (<https://nuxt.com/docs/api/utils/define-page-meta>)
 * Ads
 * Media print

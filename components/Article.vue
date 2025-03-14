@@ -26,14 +26,13 @@
         <DocumentLowQualityBanner
           v-if="isEditable && ['empty', 'draft'].includes(document.quality)"
           :document="document" />
-        <!-- TODO des fois un problème d'ordre au refresh? -->
         <Markdown :content="document.cooked.summary" is-summary />
         <Markdown :content="document.cooked.description" />
         <div class="clear-both" />
       </Box>
       <BoxRoutes v-if="isDefaultView" :document="document" :show-buttons="false" />
       <BoxRecentOutings v-if="isDefaultView" :document="document" />
-      <!-- TODO <images-box v-if="isDefaultView" :document="document" /> -->
+      <!-- TODO <BoxImages v-if="isDefaultView" :document="document" /> -->
       <BoxTools v-if="isMobile" :document="document" />
       <BoxComments v-if="isDefaultView" :document="document" />
     </div>
@@ -43,13 +42,13 @@
 
 <script setup lang="ts">
 import type { Article } from '~/api/c2c.js';
-import { isMaskedVersionedDocument } from '~/types/common.js';
+import { isMaskedVersionedDocument, type MaskedVersionedDocument, type VersionedArticle } from '~/types/common.js';
 
-const { document } = defineProps<{ document: Article }>();
+const { document } = defineProps<{ document: Article | VersionedArticle | MaskedVersionedDocument }>();
 
 const { locale } = useI18n();
 const { isMobile } = useScreen();
-const { isDraftView, isDefaultView } = useDocumentViewType(locale);
+const { isDefaultView } = useDocumentViewType(locale);
 
 const { version, isEditable } = useDocumentView(locale, document);
 </script>

@@ -152,9 +152,9 @@ import { buffer } from 'ol/extent.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
 import type { Point } from 'ol/geom.js';
 import { toLonLat } from 'ol/proj.js';
-import type { Document } from '../../api/c2c.js';
-import { API_LANGS, ApiLang } from '../../api/lang.js';
-import { useAuthStore } from '../../store/auth.js';
+import type { Document } from '~/api/c2c.js';
+import { API_LANGS, ApiLang } from '~/api/lang.js';
+import { useAuthStore } from '~/store/auth.js';
 import {
   isArea,
   isArticle,
@@ -167,7 +167,7 @@ import {
   isVersionedWaypoint,
   isWaypoint,
   type VersionedDocument,
-} from '../../types/common.js';
+} from '~/types/common.js';
 
 const { document } = defineProps<{ document: Document | VersionedDocument }>();
 
@@ -255,7 +255,7 @@ const closestDocumentsLink = computed(() => {
   const point = new GeoJSON().readFeatures(document.geometry.geom)[0]!.getGeometry() as Point;
   const extent = buffer(point.getExtent(), 10000);
   return {
-    name: documentType + 's',
+    name: documentType.value + 's',
     query: {
       wtyp: document.type === 'w' ? document.waypoint_type : undefined,
       bbox: extent.map(Math.floor).join(','),

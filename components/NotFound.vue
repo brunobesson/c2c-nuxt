@@ -14,6 +14,7 @@
       </p>
     </div>
 
+    <!-- TODO styling -->
     <div class="notfound-buttons">
       <NuxtLink to="/" class="is-size-4 has-text-normal has-hover-background has-text-weight-bold">
         <Icon icon="home" class="has-text-secondary is-size-1" />
