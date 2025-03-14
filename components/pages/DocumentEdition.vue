@@ -1,5 +1,5 @@
 <template>
-  <p>TODO outing edition</p>
+  <p>Document edition view</p>
 </template>
 
 <script setup lang="ts">

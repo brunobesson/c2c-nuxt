@@ -1,6 +1,6 @@
 <template>
   <Box class="print:hidden">
-    <div class="flex flex-col [&_hr]:my-3 [&_hr:first-child]:hidden [&_hr:has(+_hr)]:hidden">
+    <div class="flex flex-col [&_hr]:my-3 [&_hr:first-child]:hidden [&_hr_+_hr]:hidden">
       <!-- TODO check this is working in all case (e.g. fundraiser, etc) -->
       <BoxToolsAssociatedDocuments :document="document" />
 

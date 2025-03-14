@@ -12,10 +12,10 @@ const { document, uppercaseFirstLetter = false } = defineProps<{
   uppercaseFirstLetter?: boolean;
 }>();
 
-const { documentTitle } = useDocument(document);
 const { params } = useRoute();
 const { apiLang } = useLang();
 const title = computed(() => {
+  const { documentTitle } = useDocument(document);
   let s = documentTitle(apiLang(params.lang as UiLang));
   if (uppercaseFirstLetter) {
     s = capitalize(s);

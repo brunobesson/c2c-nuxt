@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-5">
     <!-- TODO <html-header v-if="!isDraftView && !isPrintingView" :title="title" /> -->
     <DocumentVersionBanner
       v-if="isVersionedDocument(document) || isMaskedVersionedDocument(document)"

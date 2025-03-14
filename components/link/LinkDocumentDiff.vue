@@ -1,5 +1,7 @@
 <template>
-  <NuxtLink :to="{ name: documentType + '-diff', params: { id, versionFrom, versionTo, lang } }" />
+  <NuxtLink :to="{ name: documentType + '-diff', params: { id, versionFrom, versionTo, lang } }">
+    <slot>{{ $t('version.diff') }}</slot>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

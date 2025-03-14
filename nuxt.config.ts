@@ -1,6 +1,5 @@
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
-import capitalize from './utils/capitalize.js';
 
 const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg\?icon$/;
 
@@ -113,7 +112,7 @@ export default defineNuxtConfig({
             {
               path: `/${docType}s/:id(\\d+)/:lang?/:slug?`,
               name: docType,
-              file: `~/components/pages/${capitalize(docType)}.vue`,
+              file: `~/components/pages/DocumentView.vue`,
             },
 
             // history
@@ -126,13 +125,13 @@ export default defineNuxtConfig({
             {
               path: `/${docType}s/edit/:id(\\d+)/:lang`,
               name: `${docType}-edit`,
-              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+              file: `~/components/pages/DocumentEdition.vue`,
             },
             // create
             {
               path: `/${docType}s/add/:lang`,
               name: `${docType}-add`,
-              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
+              file: `~/components/pages/DocumentEdition.vue`,
             },
             // diff
             {
@@ -147,7 +146,7 @@ export default defineNuxtConfig({
               {
                 path: `/${docType}s/version/:id(\\d+)/:lang/:version(\\d+)`,
                 name: `${docType}-version`,
-                file: `~/components/pages/${capitalize(docType)}.vue`,
+                file: `~/components/pages/DocumentVersion.vue`,
               },
             );
           }

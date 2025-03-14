@@ -153,7 +153,7 @@ export const isVersionedArea = (doc: MaskedVersionedDocument | VersionedDocument
   isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'a';
 export const isVersionedArticle = (
   doc: MaskedVersionedDocument | VersionedDocument | Document,
-): doc is VersionedArticle => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'a';
+): doc is VersionedArticle => isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'c';
 export const isVersionedBook = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedBook =>
   isVersionedDocument(doc) && 'type' in doc && doc['type'] === 'b';
 export const isVersionedImage = (doc: MaskedVersionedDocument | VersionedDocument | Document): doc is VersionedImage =>

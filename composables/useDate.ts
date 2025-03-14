@@ -33,6 +33,10 @@ export const useDate = (lang: MaybeRef<UiLang>) => {
 
   const locale = computed(() => locales[unref(lang)]);
 
+  function format(date: IsoDateTime | IsoDate, format: string): string {
+    return dayjs(date).locale(locale.value).format(format);
+  }
+
   const longOutingDateFormat = computed(() => {
     switch (unref(lang)) {
       case 'ca':
@@ -86,6 +90,7 @@ export const useDate = (lang: MaybeRef<UiLang>) => {
   }
 
   return {
+    format,
     longOutingDate,
     outingDates,
     timeAgo,

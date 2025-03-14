@@ -8,7 +8,7 @@ export const useDocumentViewType = (uiLang: MaybeRef<UiLang>) => {
   const expectedLang: Ref<ApiLang> = useRouteParams('lang', apiLang(unref(uiLang)));
 
   const documentType = computed((): DocumentType => {
-    if (isPrintingView) {
+    if (isPrintingView.value) {
       return (route.name as string).split('s-')[0] as DocumentType;
     }
     return (route.name as string).split('-')[0] as DocumentType;

@@ -1,8 +1,12 @@
 <template>
-  <Message severity="warn" class="text-center">
+  <Message
+    severity="warn"
+    :pt="{
+      text: 'w-full text-center',
+    }">
     <p>
       <i18n-t keypath="version.archived">
-        {{ longOutingDate(document.version.written_at) }}
+        {{ format(document.version.written_at, 'LLLL') }}
       </i18n-t>
     </p>
     <p v-if="isMaskedVersionedDocument(document)">{{ $t('version.masked') }}</p>
@@ -25,8 +29,7 @@
     <template v-if="!isMaskedVersionedDocument(document)">
       |
       <LinkDocument :document="document" :lang="lang">{{ $t('version.current') }}</LinkDocument>
-      (
-      <DocumentDiffLink
+      (<LinkDocumentDiff
         :document-type="documentType"
         :id="documentId"
         :lang="lang"
@@ -34,6 +37,7 @@
         version-to="last" />)
     </template>
     <span v-if="!lastVersion">
+      |
       <LinkDocumentVersion
         :document-type="documentType"
         :id="documentId"
@@ -51,17 +55,19 @@
     <span v-else>{{ $t('version.last') }}</span>
 
     <p>
-      <i18n-t keypath="colon" scope="global">
+      <i18n-t v-if="document.version.comment" keypath="colon" scope="global">
         <template #before>
-          <IconDocument type="profile" />
           <NuxtLink :to="{ name: 'profile', params: { id: document.version.user_id } }">
-            {{ document.version.name }}
+            <IconDocument type="profile" />&nbsp;<LinkContributor :contributor="document.version" />
           </NuxtLink>
         </template>
         <template #after>
           <em>{{ document.version.comment }}</em>
         </template>
       </i18n-t>
+      <NuxtLink v-else :to="{ name: 'profile', params: { id: document.version.user_id } }">
+        <IconDocument type="profile" />&nbsp;<LinkContributor :contributor="document.version" />
+      </NuxtLink>
     </p>
     <p v-if="isModerator">
       <!-- TODO styling + open confirmation dialog -->
@@ -79,9 +85,8 @@ import { isMaskedVersionedDocument, type MaskedVersionedDocument, type Versioned
 
 const { document } = defineProps<{ document: MaskedVersionedDocument | VersionedDocument }>();
 
-const route = useRoute();
 const { locale } = useI18n();
-const { longOutingDate } = useDate(locale);
+const { format } = useDate(locale);
 const { documentType } = useDocumentViewType(locale);
 const { version } = useDocumentView(locale, document);
 const { isModerator } = useAuthStore();

@@ -344,7 +344,8 @@
     "next": "version suivante",
     "previous": "version précédente",
     "restore": "Restaurer cette version",
-    "warn-masked": "Vous essayez de visualiser une version masquée d'un document."
+    "warn-masked": "Vous essayez de visualiser une version masquée d'un document.",
+    "diff": "diff"
   },
   "waypoint": "point de passage",
   "waypoint_type-values": {

@@ -1162,18 +1162,21 @@ const AssociationHistoryDocument = v.strictObject({
     v.nonEmpty(),
   ),
 });
+export type AssociationHistoryDocument = v.InferOutput<typeof AssociationHistoryDocument>;
+const AssociationHistoryUser = v.strictObject({
+  user_id: PositiveInt,
+  name: v.pipe(v.string(), v.nonEmpty()),
+  forum_username: v.pipe(v.string(), v.nonEmpty()),
+  robot: v.boolean(),
+  blocked: v.boolean(),
+  moderator: v.boolean(),
+});
+export type AssociationHistoryUser = v.InferOutput<typeof AssociationHistoryUser>;
 const AssociationHistory = v.strictObject({
   parent_document: AssociationHistoryDocument,
   child_document: AssociationHistoryDocument,
   is_creation: v.boolean(),
-  user: v.strictObject({
-    user_id: PositiveInt,
-    name: v.pipe(v.string(), v.nonEmpty()),
-    forum_username: v.pipe(v.string(), v.nonEmpty()),
-    robot: v.boolean(),
-    blocked: v.boolean(),
-    moderator: v.boolean(),
-  }),
+  user: AssociationHistoryUser,
   written_at: IsoDateTime,
 });
 export const AssociationsHistory = v.strictObject({
@@ -1336,17 +1339,18 @@ const WhatsnewDocument = v.strictObject({
   quality: QualityType,
 });
 export type WhatsnewDocument = v.InferOutput<typeof WhatsnewDocument>;
-
+const WhatsnewUser = v.strictObject({
+  name: v.pipe(v.string(), v.nonEmpty()),
+  username: v.pipe(v.string(), v.nonEmpty()),
+  user_id: PositiveInt,
+  lang: ApiLang,
+});
+export type WhatsnewUser = v.InferOutput<typeof WhatsnewUser>;
 const WhatsnewItem = v.strictObject({
   document: WhatsnewDocument,
   comment: v.string(),
   lang: ApiLang,
-  user: v.strictObject({
-    name: v.pipe(v.string(), v.nonEmpty()),
-    username: v.pipe(v.string(), v.nonEmpty()),
-    user_id: PositiveInt,
-    lang: ApiLang,
-  }),
+  user: WhatsnewUser,
   version_id: PositiveInt,
   written_at: IsoDateTime,
 });
