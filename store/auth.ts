@@ -18,7 +18,6 @@ export const useAuthStore = defineStore('auth', () => {
   const user = computed(() => userInfo.value);
   const authenticated = computed(() => !!userInfo.value);
   const isModerator = computed(() => user.value?.roles.includes('moderator'));
-  const fetch = useNuxtApp().$c2cFetch;
 
   useIntervalFn(() => {
     if (!user.value) {
@@ -30,7 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }, 5000);
 
-  async function authenticate(usernameInput: string, passwordInput: string): Promise<void> {
+  const authenticate = async (usernameInput: string, passwordInput: string): Promise<void> => {
     const {
       id,
       name,
@@ -41,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
       roles,
       token,
       redirect_internal: discourseUrl,
-    } = await fetch<LoginResponse>('/users/login', {
+    } = await useNuxtApp().$c2cFetch<LoginResponse>('/users/login', {
       method: 'POST',
       body: {
         username: usernameInput,
@@ -85,10 +84,10 @@ export const useAuthStore = defineStore('auth', () => {
     if (isUiLang(lang)) {
       useNuxtApp().$i18n.setLocale(lang);
     }
-  }
+  };
 
   const logout = () => {
-    fetch('/users/logout', { method: 'POST', body: { discourse: true } });
+    useNuxtApp().$c2cFetch('/users/logout', { method: 'POST', body: { discourse: true } });
     userInfo.value = null;
   };
 
