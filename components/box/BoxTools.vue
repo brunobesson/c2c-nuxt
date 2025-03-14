@@ -16,75 +16,79 @@
         </div>
       </div>
 
-      <div
-        v-if="
-          weatherLink ||
-          directionsLink ||
-          closestDocumentsLink ||
-          paraglidingOutingsLink ||
-          fundraiser ||
-          document.type === 'u'
-        ">
-        <NuxtLink v-if="weatherLink" :to="weatherLink" external class="link">
+      <div v-if="weatherLink">
+        <NuxtLink :to="weatherLink" external class="link">
           <Icon icon="sun" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.weather-forecast') }}
         </NuxtLink>
-        <NuxtLink v-if="directionsLink" :to="directionsLink" external class="link">
+      </div>
+      <div v-if="directionsLink">
+        <NuxtLink :to="directionsLink" external class="link">
           <Icon icon="directions" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.directions') }}
         </NuxtLink>
-        <NuxtLink v-if="closestDocumentsLink" :to="closestDocumentsLink" class="link">
+      </div>
+      <div v-if="closestDocumentsLink">
+        <NuxtLink :to="closestDocumentsLink" class="link">
           <Icon icon="compass" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.nearby') }}
         </NuxtLink>
-        <NuxtLink v-if="paraglidingOutingsLink" :to="paraglidingOutingsLink" class="link">
+      </div>
+      <div v-if="paraglidingOutingsLink">
+        <NuxtLink :to="paraglidingOutingsLink" class="link">
           <IconActivity activity="paragliding" fixed-width class="text-[--p-text-color]" />
           {{ $t('box.tools.paragliding-outings') }}
         </NuxtLink>
-        <NuxtLink v-if="fundraiser" :to="fundraiser" external class="link">
+      </div>
+      <div v-if="fundraiser">
+        <NuxtLink :to="fundraiser" external class="link">
           <Icon :icon="['misc', 'drill']" fixed-width class="text-red-500" /> {{ $t('box.tools.fundraiser') }}
         </NuxtLink>
-        <NuxtLink
-          v-if="document.type === 'u'"
-          :to="{ name: 'outings-stats', query: { u: document.document_id } }"
-          class="link">
+      </div>
+      <div v-if="document.type === 'u'">
+        <NuxtLink :to="{ name: 'outings-stats', query: { u: document.document_id } }" class="link">
           <Icon icon="chart-bar" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.statistics') }}
         </NuxtLink>
       </div>
 
       <hr />
 
-      <div class="flex flex-col">
-        <NuxtLink
-          v-if="document.type === 'u'"
-          :to="{ name: 'whatsnew', query: { u: document.document_id } }"
-          class="link">
+      <div v-if="document.type === 'u'">
+        <NuxtLink :to="{ name: 'whatsnew', query: { u: document.document_id } }" class="link">
           <Icon icon="edit" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.contributions') }}
         </NuxtLink>
-        <div v-if="document.quality">
-          <IconQuality :quality="document.quality" fixed-width class="text-[--p-text-color]" />&nbsp;<i18n-t
-            keypath="colon"
-            scope="global">
-            <template #before>{{ capitalize($t('quality')) }}</template>
-            <template #after>{{ $t(`quality-values.${document.quality}`) }}</template>
-          </i18n-t>
-        </div>
+      </div>
+      <div v-if="document.quality">
+        <IconQuality :quality="document.quality" fixed-width class="text-[--p-text-color]" />&nbsp;<i18n-t
+          keypath="colon"
+          scope="global">
+          <template #before>{{ capitalize($t('quality')) }}</template>
+          <template #after>{{ $t(`quality-values.${document.quality}`) }}</template>
+        </i18n-t>
+      </div>
+      <div v-if="isEditable">
         <NuxtLink
-          v-if="isEditable"
           :to="{ name: `${documentType}-edit`, params: { id: document.document_id, lang: locale } }"
           class="link">
           <Icon icon="edit" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.edit') }}
         </NuxtLink>
-        <a v-if="isEditable && document.type !== 'a'" href="#" @click="showAssociationEditor($event)" class="link">
+      </div>
+      <div v-if="isEditable && document.type !== 'a'">
+        <a href="#" @click="showAssociationEditor($event)" class="link">
           <Icon icon="link" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.edit-associations') }}
         </a>
+      </div>
+      <div v-if="document.type !== 'u' || isModerator || document.document_id === user?.id">
         <NuxtLink
-          v-if="document.type !== 'u' || isModerator || document.document_id === user?.id"
           :to="{ name: documentType + '-history', params: { id: document.document_id, lang: document.cooked.lang } }"
           rel="nofollow"
           class="link">
           <Icon icon="history" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.history') }}
         </NuxtLink>
-        <a v-if="isEditable && missingLangs.length > 0" href="#" @click="showTranslateModal($event)" class="link">
+      </div>
+      <div v-if="isEditable && missingLangs.length > 0">
+        <a href="#" @click="showTranslateModal($event)" class="link">
           <Icon icon="globe" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.translate') }}
         </a>
+      </div>
+      <div>
         <NuxtLink :href="`mailto:${reportingEmail}?subject=${reportingSubject}&body=${reportingBody}`" class="link">
           <Icon icon="exclamation-circle" fixed-width class="text-red-500" /> {{ $t('box.tools.report-issue') }}
         </NuxtLink>
@@ -93,15 +97,19 @@
       <hr />
 
       <!-- Moderator zone -->
-      <div v-if="(isEditable && isModerator) || (isDeletable && isDocument(document))" class="flex flex-col">
-        <template v-if="isEditable && isModerator">
+      <template v-if="isEditable && isModerator">
+        <div>
           <a v-if="document.type !== 'u'" href="#" @click="toggleDocumentLock()" class="link">
             <Icon :icon="document.protected ? 'lock' : 'unlock'" fixed-width class="text-[--p-text-color]" />
             {{ document.protected ? $t('box.tools.unlock-doc') : $t('box.tools.lock-doc') }}
           </a>
+        </div>
+        <div>
           <a href="#" @click="showMergeModal($event)" class="link">
             <Icon icon="object-group" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.merge') }}
           </a>
+        </div>
+        <div>
           <a
             v-if="document.type === 'u'"
             href="#"
@@ -111,17 +119,20 @@
             <Icon icon="user-lock" fixed-width class="text-[--p-text-color]" />
             {{ isAccountLocked ? $t('box.tools.unlock-user') : $t('box.tools.lock-user') }}
           </a>
-        </template>
-        <template v-if="isDeletable && isDocument(document)">
+        </div>
+      </template>
+      <template v-if="isDeletable && isDocument(document)">
+        <div>
           <a v-if="document.available_langs.length > 1" href="#" @click="showDeleteLocaleModal($event)" class="link">
             <Icon icon="trash" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.delete-locale') }}
           </a>
-
+        </div>
+        <div>
           <a v-if="document.available_langs.length > 1" href="#" @click="showDeleteModal($event)" class="link">
             <Icon icon="trash" fixed-width class="text-[--p-text-color]" /> {{ $t('box.tools.delete') }}
           </a>
-        </template>
-      </div>
+        </div>
+      </template>
 
       <hr />
 
