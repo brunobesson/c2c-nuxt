@@ -1,20 +1,32 @@
 <template>
-  <EditionContainer :document="document" :mode="mode">
-    <!-- TODO -->
-  </EditionContainer>
-  <p>TODO Article edition</p>
+  <div class="flex flex-col gap-5 p-5">
+    <LoadDataError v-if="status === 'error'" />
+    <EditionContainer :document="document" :mode="mode">
+      <!-- TODO -->
+    </EditionContainer>
+  </div>
 </template>
 
 <script setup lang="ts">
-import type { Article, ArticleAddInitial, ArticleEdit } from '~/api/c2c.js';
+import { ArticleEdit, type Article, type ArticleAddInitial } from '~/api/c2c.js';
 import type { ApiLang } from '~/api/lang.js';
 
-const { document: doc } = defineProps<{ document: Article | null; mode: 'edit' | 'add' }>();
+const documentId = useRouteParams('id', 0, { transform: Number });
 const lang = useRouteParams<ApiLang>('lang', 'fr');
-
-const document: Ref<ArticleEdit | ArticleAddInitial> = computed(() => {
-  if (doc) {
-    const { available_langs, version, protected: p, redirects_to, cooked, author, locales, ...rest } = doc;
+const route = useRoute();
+const mode = (route.name as string).split('-')[1] as 'edit' | 'add';
+const { data: document, status } = useAsyncData<ArticleEdit | ArticleAddInitial>(async () => {
+  if (mode === 'edit') {
+    const {
+      available_langs,
+      version,
+      protected: p,
+      redirects_to,
+      cooked,
+      author,
+      locales,
+      ...rest
+    } = await useDocumentLoad<Article>().loadDocument(documentId, 'article', lang);
     return {
       ...rest,
       'locale.lang': locales[0].lang,
@@ -23,7 +35,6 @@ const document: Ref<ArticleEdit | ArticleAddInitial> = computed(() => {
       'locale.description': locales[0].description,
     };
   }
-
   return {
     type: 'c',
     quality: undefined,

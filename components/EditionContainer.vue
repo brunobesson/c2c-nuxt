@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ArticleEdit } from '~/api/c2c.js';
+import type { ArticleAddInitial, ArticleEdit } from '~/api/c2c.js';
 import documentType from '../utils/documentType.js';
 
 const { document, mode } = defineProps<{ document: ArticleEdit | ArticleAddInitial; mode: 'add' | 'edit' }>();
