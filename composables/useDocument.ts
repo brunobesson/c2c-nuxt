@@ -22,6 +22,7 @@ import {
   isWaypoint,
   isWhatnewDocument,
 } from '~/types/common.js';
+import docType from '~/utils/documentType.js';
 
 export const useDocument = (document: MaybeRef<Document | DocumentListing | VersionedDocument | WhatsnewDocument>) => {
   const doc = toRef(document);
@@ -46,30 +47,7 @@ export const useDocument = (document: MaybeRef<Document | DocumentListing | Vers
     return title ?? '';
   };
 
-  const documentType: ComputedRef<DocumentType> = computed(() => {
-    switch (doc.value.type) {
-      case 'a':
-        return 'area';
-      case 'b':
-        return 'book';
-      case 'c':
-        return 'article';
-      case 'i':
-        return 'image';
-      case 'm':
-        return 'map';
-      case 'o':
-        return 'outing';
-      case 'r':
-        return 'route';
-      case 'u':
-        return 'profile';
-      case 'w':
-        return 'waypoint';
-      case 'x':
-        return 'xreport';
-    }
-  });
+  const documentType: ComputedRef<DocumentType> = computed(() => docType(doc.value.type));
 
   const documentLicense: ComputedRef<License | undefined> = computed(() => {
     if (isWhatnewDocument(doc.value)) {

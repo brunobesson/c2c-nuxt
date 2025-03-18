@@ -256,15 +256,6 @@
     "nc": "Pas d’Utilisation Commerciale — Vous n'êtes pas autorisé à faire un usage commercial de cette Oeuvre, tout ou partie du matériel la composant."
   },
   "link": {
-    "add": {
-      "article": "Ajouter un article",
-      "book": "Ajouter un livre",
-      "outing": "Ajouter une sortie",
-      "route": "Ajouter un itinéraire",
-      "waypoint": "Ajouter un point de passage",
-      "xreport": "Ajouter un rapport d'incident / accident",
-      "first-outing": "Ajouter la première sortie"
-    },
     "edit": "Modifier",
     "home": "Accueil"
   },
@@ -430,6 +421,20 @@
         "soft-snow": "Neige meuble",
         "total-snow": "Épaisseur totale",
         "comment": "Commentaire"
+      }
+    }
+  },
+  "edit": {
+    "title": {
+      "edit": "Modifier le document",
+      "add": {
+        "article": "Ajouter un article",
+        "book": "Ajouter un livre",
+        "outing": "Ajouter une sortie",
+        "route": "Ajouter un itinéraire",
+        "waypoint": "Ajouter un point de passage",
+        "xreport": "Ajouter un rapport d'incident / accident",
+        "first-outing": "Ajouter la première sortie"
       }
     }
   }

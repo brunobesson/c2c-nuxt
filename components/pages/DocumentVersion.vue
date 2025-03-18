@@ -41,42 +41,42 @@ const component = computed(() => {
     case 'area':
       return {
         component: AreaComponent,
-        document: document.value as Readonly<VersionedArea | MaskedVersionedDocument>,
+        document: document.value as VersionedArea | MaskedVersionedDocument,
       };
     case 'article':
       return {
         component: ArticleComponent,
-        document: document.value as Readonly<VersionedArticle | MaskedVersionedDocument>,
+        document: document.value as VersionedArticle | MaskedVersionedDocument,
       };
     case 'book':
       return {
         component: BookComponent,
-        document: document.value as Readonly<VersionedBook | MaskedVersionedDocument>,
+        document: document.value as VersionedBook | MaskedVersionedDocument,
       };
     case 'image':
       return {
         component: ImageComponent,
-        document: document.value as Readonly<VersionedImage | MaskedVersionedDocument>,
+        document: document.value as VersionedImage | MaskedVersionedDocument,
       };
     case 'outing':
       return {
         component: OutingComponent,
-        document: document.value as Readonly<VersionedOuting | MaskedVersionedDocument>,
+        document: document.value as VersionedOuting | MaskedVersionedDocument,
       };
     case 'route':
       return {
         component: RouteComponent,
-        document: document.value as Readonly<VersionedRoute | MaskedVersionedDocument>,
+        document: document.value as VersionedRoute | MaskedVersionedDocument,
       };
     case 'waypoint':
       return {
         component: WaypointComponent,
-        document: document.value as Readonly<VersionedWaypoint | MaskedVersionedDocument>,
+        document: document.value as VersionedWaypoint | MaskedVersionedDocument,
       };
     case 'xreport':
       return {
         component: XreportComponent,
-        document: document.value as Readonly<VersionedXreport | MaskedVersionedDocument>,
+        document: document.value as VersionedXreport | MaskedVersionedDocument,
       };
   }
 });

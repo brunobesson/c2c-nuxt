@@ -1,3 +1,4 @@
+import type { SetRequired } from 'type-fest';
 import * as v from 'valibot';
 import { ApiLang, UiLang } from '~/api/lang.js';
 import { IsoDate, IsoDateTime, PositiveInt, Uint } from '~/types/common.js';
@@ -470,7 +471,7 @@ export type DocumentType = (typeof DOCUMENT_TYPES)[number];
 const BaseLocale = v.strictObject({
   lang: ApiLang,
   version: PositiveInt,
-  title: v.string(),
+  title: v.pipe(v.string(), v.nonEmpty()),
 });
 export type BaseLocale = v.InferOutput<typeof BaseLocale>;
 
@@ -517,8 +518,8 @@ export type AreaListing = v.InferOutput<typeof AreaListing>;
 const BaseArticle = v.strictObject({
   ...BaseDocument.entries,
   type: v.literal('c'),
-  activities: v.array(Activity),
-  categories: v.array(ArticleCategory),
+  activities: v.pipe(v.array(Activity), v.nonEmpty()),
+  categories: v.pipe(v.array(ArticleCategory), v.nonEmpty()),
   article_type: ArticleType,
 });
 
@@ -1450,3 +1451,17 @@ export const CreateTopicOutput = v.object({
 });
 
 export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
+
+export const ArticleEdit = v.object({
+  ...v.entriesFromObjects([
+    v.omit(Article, ['available_langs', 'version', 'protected', 'redirects_to', 'cooked', 'author', 'locales']),
+  ]),
+  'locale.lang': ApiLang,
+  'locale.title': v.pipe(v.string(), v.nonEmpty()),
+  'locale.description': v.nullable(v.string()),
+  'locale.summary': v.nullable(v.string()),
+});
+export type ArticleEdit = v.InferOutput<typeof ArticleEdit>;
+export const ArticleAdd = v.omit(ArticleEdit, ['document_id']);
+export type ArticleAdd = v.InferOutput<typeof ArticleAdd>;
+export type ArticleAddInitial = SetRequired<Partial<ArticleAdd>, 'type'>;

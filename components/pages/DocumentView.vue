@@ -39,25 +39,25 @@ const { documentType, expectedLang } = useDocumentViewType(locale);
 const component = computed(() => {
   switch (documentType.value) {
     case 'area':
-      return { component: AreaComponent, document: document.value as Readonly<Area> };
+      return { component: AreaComponent, document: document.value as Area };
     case 'article':
-      return { component: ArticleComponent, document: document.value as Readonly<Article> };
+      return { component: ArticleComponent, document: document.value as Article };
     case 'book':
-      return { component: BookComponent, document: document.value as Readonly<Book> };
+      return { component: BookComponent, document: document.value as Book };
     case 'image':
-      return { component: ImageComponent, document: document.value as Readonly<Image> };
+      return { component: ImageComponent, document: document.value as Image };
     case 'map':
-      return { component: MapComponent, document: document.value as Readonly<Map> };
+      return { component: MapComponent, document: document.value as Map };
     case 'outing':
-      return { component: OutingComponent, document: document.value as Readonly<Outing> };
+      return { component: OutingComponent, document: document.value as Outing };
     case 'profile':
-      return { component: ProfileComponent, document: document.value as Readonly<Profile> };
+      return { component: ProfileComponent, document: document.value as Profile };
     case 'route':
-      return { component: RouteComponent, document: document.value as Readonly<Route> };
+      return { component: RouteComponent, document: document.value as Route };
     case 'waypoint':
-      return { component: WaypointComponent, document: document.value as Readonly<Waypoint> };
+      return { component: WaypointComponent, document: document.value as Waypoint };
     case 'xreport':
-      return { component: XreportComponent, document: document.value as Readonly<Xreport> };
+      return { component: XreportComponent, document: document.value as Xreport };
   }
 });
 const { loadDocument } = useDocumentLoad();
