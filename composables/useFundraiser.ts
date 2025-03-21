@@ -108,7 +108,7 @@ export const useFundraiser = (document: Document) => {
   }
   if (isRoute(document)) {
     // only mountain_climbing and rock_climbing activity
-    if (!intersect(document.activities, ['mountain_climbing', 'rock_climbing'])) {
+    if (!intersects(document.activities, ['mountain_climbing', 'rock_climbing'])) {
       return undefined;
     }
     // only P1 and P1+ routes
@@ -121,7 +121,7 @@ export const useFundraiser = (document: Document) => {
       return undefined;
     }
     // only waypoints with P1 and P1+ routes
-    if (!document.equipment_ratings || !intersect(document.equipment_ratings, ['P1', 'P1+'])) {
+    if (!document.equipment_ratings || !intersects(document.equipment_ratings, ['P1', 'P1+'])) {
       return undefined;
     }
   }

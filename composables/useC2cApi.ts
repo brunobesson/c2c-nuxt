@@ -4,6 +4,7 @@ import {
   AreaList,
   AreaVersion,
   Article,
+  ArticleEdit,
   ArticleList,
   ArticleVersion,
   AssociationsHistory,
@@ -42,6 +43,7 @@ import {
   Xreport,
   XreportList,
   XreportVersion,
+  type ArticleAdd,
   type CreateImagesInput,
   type Document,
 } from '~/api/c2c.js';
@@ -214,16 +216,13 @@ export const useC2cApi = () => {
         checkResponse(Article, await $fetch(`/articles/${id}`, { query: { cook: lang } })),
       getVersion: async (id: Article['document_id'], lang: ApiLang, version: ArticleVersion['version']['version_id']) =>
         checkResponse(ArticleVersion, await $fetch(`/articles/${id}/${lang}/${version}`)),
-      save: async (document: Article, comment: string) =>
+      save: async (document: ArticleEdit, comment: string) =>
         checkResponse(
           Article,
           await $fetch(`/articles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
         ),
-      create: async (document: Article) =>
-        checkResponse(
-          Article,
-          await $fetch(`/articles/${document.document_id}`, { method: 'POST', body: { document } }),
-        ),
+      create: async (document: ArticleAdd) =>
+        checkResponse(Article, await $fetch('/articles', { method: 'POST', body: { document } })),
     },
     book: {
       getAll: async (query: Query) => checkResponse(BookList, await $fetch(`/books`, { query })),

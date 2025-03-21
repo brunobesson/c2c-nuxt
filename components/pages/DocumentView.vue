@@ -63,8 +63,8 @@ const component = computed(() => {
 const { loadDocument } = useDocumentLoad();
 const { data: document, status } = useAsyncData(
   async () => {
-    // TODO updateHead
-    return loadDocument(documentId.value, documentType.value, expectedLang);
+    // TODO updateHead + SEO
+    return loadDocument(documentId, documentType.value, expectedLang);
   },
   {
     watch: [documentId, expectedLang],

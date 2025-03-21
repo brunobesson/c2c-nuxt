@@ -436,6 +436,9 @@
         "xreport": "Ajouter un rapport d'incident / accident",
         "first-outing": "Ajouter la première sortie"
       }
-    }
+    },
+    "preview-mode": "Prévisualiser",
+    "save": "Enregistrer",
+    "comment": "Commentaire"
   }
 }

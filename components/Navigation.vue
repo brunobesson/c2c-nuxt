@@ -103,7 +103,7 @@
               {{ locale }}
             </Button>
           </template>
-          <template #item="{ item }" class="toto">
+          <template #item="{ item }">
             <a
               :key="item.code"
               class="w-full block"

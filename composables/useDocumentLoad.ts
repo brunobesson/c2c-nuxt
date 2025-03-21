@@ -1,8 +1,32 @@
 import QuickLRU from 'quick-lru';
 import type { Stringified } from 'type-fest';
-import type { Document, DocumentType } from '~/api/c2c.js';
+import type {
+  Area,
+  Article,
+  Book,
+  Document,
+  DocumentType,
+  Image,
+  Map,
+  Outing,
+  Profile,
+  Route,
+  Waypoint,
+  Xreport,
+} from '~/api/c2c.js';
 import type { ApiLang } from '~/api/lang.js';
-import type { MaskedVersionedDocument, VersionedDocument } from '~/types/common.js';
+import type {
+  MaskedVersionedDocument,
+  VersionedArea,
+  VersionedArticle,
+  VersionedBook,
+  VersionedDocument,
+  VersionedImage,
+  VersionedOuting,
+  VersionedRoute,
+  VersionedWaypoint,
+  VersionedXreport,
+} from '~/types/common.js';
 
 const NOT_MARKDOWN_PROPERTY = new Set([
   'lang',
@@ -26,49 +50,157 @@ const pick = <O>(document: O, ...props: string[]) =>
     return doc;
   }, {} as O) as Partial<O>;
 
-export const useDocumentLoad = <D extends Document, V extends VersionedDocument | never = never>() => {
-  const loadDocument = async (
-    id: MaybeRef<number>,
-    type: MaybeRef<DocumentType>,
-    expectedLang: MaybeRef<ApiLang>,
-  ): Promise<D> => {
-    return useC2cApi()[unref(type)].get(unref(id), unref(expectedLang)) as Promise<D>;
-  };
+export const useDocumentLoad = () => {
+  const api = useC2cApi();
 
-  const loadVersionedDocument = async (
-    id: MaybeRef<number>,
-    type: MaybeRef<Exclude<DocumentType, 'map' | 'profile'>>,
-    lang: MaybeRef<ApiLang>,
-    version: MaybeRef<number>,
-  ): Promise<V | MaskedVersionedDocument> => {
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'area'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Area>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'article'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Article>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'book'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Book>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'image'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Image>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'map'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Map>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'outing'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Outing>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'profile'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Profile>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'route'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Route>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'waypoint'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Waypoint>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'xreport'>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Xreport>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<DocumentType>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Document>;
+  function loadDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<DocumentType>,
+    expectedLang: MaybeRefOrGetter<ApiLang>,
+  ): Promise<Document> {
+    return api[toValue(type)].get(toValue(id), toValue(expectedLang));
+  }
+
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'area'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedArea | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'article'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedArticle | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'book'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedBook | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'image'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedImage | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'outing'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedOuting | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'route'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedRoute | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'waypoint'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedWaypoint | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<'xreport'>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedXreport | MaskedVersionedDocument>;
+  function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<Exclude<DocumentType, 'map' | 'profile'>>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedDocument | MaskedVersionedDocument>;
+  async function loadVersionedDocument(
+    id: MaybeRefOrGetter<number>,
+    type: MaybeRefOrGetter<Exclude<DocumentType, 'map' | 'profile'>>,
+    lang: MaybeRefOrGetter<ApiLang>,
+    version: MaybeRefOrGetter<number>,
+  ): Promise<VersionedDocument | MaskedVersionedDocument> {
     const {
       document,
       next_version_id,
       previous_version_id,
       version: v,
-    } = await useC2cApi()[unref(type)].getVersion(unref(id), unref(lang), unref(version));
-    if (document === null) {
-      // document may be asked and unavailable
-      return {
-        version: {
-          ...v,
-          next_version_id,
-          previous_version_id,
-        },
-      } as MaskedVersionedDocument;
-    }
-    return {
-      ...document,
+    } = await api[toValue(type)].getVersion(toValue(id), toValue(lang), toValue(version));
+    const mvdoc: MaskedVersionedDocument = {
       version: {
         ...v,
         next_version_id,
         previous_version_id,
       },
-    } as V;
-  };
+    };
+    if (document === null) {
+      // document may be masked and unavailable
+      return mvdoc;
+    }
+    return {
+      ...document,
+      ...mvdoc,
+    } as VersionedDocument;
+  }
 
-  const cook = async (draft: MaybeRef<D>): Promise<D> => {
-    const doc = unref(draft);
+  const cook = async <D extends Document>(draft: MaybeRefOrGetter<D>): Promise<D> => {
+    const doc = toValue(draft);
     const locale = doc.locales[0];
     const missingKeys = Object.keys(locale)
       .filter(k => !NOT_MARKDOWN_PROPERTY.has(k))
@@ -76,7 +208,7 @@ export const useDocumentLoad = <D extends Document, V extends VersionedDocument 
     if (missingKeys.length === 0) {
       return doc;
     }
-    const cooked = await useC2cApi().document.cook(pick(locale, ...missingKeys) as Stringified<Partial<D>>);
+    const cooked = await api.document.cook(pick(locale, ...missingKeys) as Stringified<Partial<D>>);
     return {
       ...doc,
       ...cooked,

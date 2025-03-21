@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises';
 import { parseStringPromise } from 'xml2js';
+import capitalize from './utils/capitalize.js';
 
 const fileRegex = /.*\/assets\/font-awesome-custom\/([^\/]+)\/(.+)\.svg\?icon$/;
 
@@ -92,6 +93,7 @@ export default defineNuxtConfig({
     lazy: true,
     bundle: {
       runtimeOnly: true,
+      compositionOnly: undefined,
     },
   },
 
@@ -125,13 +127,13 @@ export default defineNuxtConfig({
             {
               path: `/${docType}s/edit/:id(\\d+)/:lang`,
               name: `${docType}-edit`,
-              file: `~/components/pages/DocumentEdition.vue`,
+              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
             },
             // create
             {
               path: `/${docType}s/add/:lang`,
               name: `${docType}-add`,
-              file: `~/components/pages/DocumentEdition.vue`,
+              file: `~/components/pages/${capitalize(docType)}Edition.vue`,
             },
             // diff
             {

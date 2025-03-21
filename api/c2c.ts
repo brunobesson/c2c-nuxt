@@ -1,4 +1,4 @@
-import type { SetRequired } from 'type-fest';
+import type { SetOptional } from 'type-fest';
 import * as v from 'valibot';
 import { ApiLang, UiLang } from '~/api/lang.js';
 import { IsoDate, IsoDateTime, PositiveInt, Uint } from '~/types/common.js';
@@ -1452,16 +1452,146 @@ export const CreateTopicOutput = v.object({
 
 export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
 
-export const ArticleEdit = v.object({
+/*export const ArticleEdit2 = v.strictObject({
   ...v.entriesFromObjects([
-    v.omit(Article, ['available_langs', 'version', 'protected', 'redirects_to', 'cooked', 'author', 'locales']),
+    v.omit(Article, [
+      'available_langs',
+      'version',
+      'protected',
+      'redirects_to',
+      'cooked',
+      'author',
+      'locales',
+      'associations',
+    ]),
+  ]),
+  locales: v.array(
+    v.strictObject(v.entriesFromObjects([v.omit(Article.entries.locales.item, ['version', 'topic_id'])])),
+  ),
+  associations: v.strictObject(
+    v.entriesFromList(Object.keys(Article.entries.associations.entries), v.strictObject({ document_id: PositiveInt })),
+  ),
+});*/
+
+// TODO à déplacer hors de l'API, dans l'API on veut seulement ce qu'on va envoyer
+// TODO les associations, il nous suffit d'avoir les document_id de chacun
+export const ArticleFormEdit = v.object({
+  ...v.entriesFromObjects([
+    v.omit(Article, [
+      'available_langs',
+      'version',
+      'protected',
+      'redirects_to',
+      'cooked',
+      'author',
+      'locales',
+      'associations',
+    ]),
   ]),
   'locale.lang': ApiLang,
   'locale.title': v.pipe(v.string(), v.nonEmpty()),
   'locale.description': v.nullable(v.string()),
   'locale.summary': v.nullable(v.string()),
+  'associations.articles': v.array(v.union([Article, ArticleListing])),
+  'associations.books': v.array(v.union([Book, BookListing])),
+  'associations.outings': v.array(v.union([Outing, OutingListing])),
+  'associations.routes': v.array(v.union([Route, RouteListing])),
+  'associations.waypoints': v.array(v.union([Waypoint, WaypointListing])),
+  'associations.images': v.array(v.union([Image, ImageListing])),
+  'associations.users': v.array(v.union([Profile, ProfileListing])),
+  'associations.xreports': v.array(v.union([Xreport, XreportListing])),
 });
+
+export const ArticleEdit = v.pipe(
+  ArticleFormEdit,
+  v.transform(input => {
+    const {
+      'locale.lang': lang,
+      'locale.title': title,
+      'locale.description': description,
+      'locale.summary': summary,
+      'associations.articles': articles,
+      'associations.books': books,
+      'associations.outings': outings,
+      'associations.routes': routes,
+      'associations.waypoints': waypoints,
+      'associations.images': images,
+      'associations.users': users,
+      'associations.xreports': xreports,
+      ...rest
+    } = input;
+    return {
+      ...rest,
+      locales: [{ lang, title, description, summary }],
+      associations: {
+        articles: articles.map(({ document_id }) => ({ document_id })),
+        books: books.map(({ document_id }) => ({ document_id })),
+        outings: outings.map(({ document_id }) => ({ document_id })),
+        routes: routes.map(({ document_id }) => ({ document_id })),
+        waypoints: waypoints.map(({ document_id }) => ({ document_id })),
+        images: images.map(({ document_id }) => ({ document_id })),
+        users: users.map(({ document_id }) => ({ document_id })),
+        xreports: xreports.map(({ document_id }) => ({ document_id })),
+      },
+    };
+  }),
+);
+export type ArticleFormEdit = v.InferOutput<typeof ArticleFormEdit>;
 export type ArticleEdit = v.InferOutput<typeof ArticleEdit>;
-export const ArticleAdd = v.omit(ArticleEdit, ['document_id']);
-export type ArticleAdd = v.InferOutput<typeof ArticleAdd>;
-export type ArticleAddInitial = SetRequired<Partial<ArticleAdd>, 'type'>;
+
+/*
+const x: v.InferInput<typeof ArticleEdit> = {
+  document_id: 1,
+  type: 'c',
+  article_type: 'collab',
+  quality: 'draft',
+  activities: [],
+  categories: [],
+  'locale.lang': 'fr',
+  'locale.title': 'title',
+  'locale.summary': 'summary',
+  'locale.description': 'description',
+  'associations.articles': [{ type: 'c' } as ArticleListing],
+  'associations.books': [],
+  'associations.images': [],
+  'associations.outings': [],
+  'associations.routes': [],
+  'associations.users': [],
+  'associations.waypoints': [],
+  'associations.xreports': [],
+};
+
+const y: v.InferOutput<typeof ArticleEdit> = {
+  document_id: 1,
+  type: 'c',
+  article_type: 'collab',
+  quality: 'draft',
+  activities: [],
+  categories: [],
+  locales: [{ lang: 'fr', title: 'title', summary: 'summary', description: 'description' }],
+  associations: {
+    articles: [{ document_id: 2 }],
+    books: [],
+    images: [],
+    outings: [],
+    routes: [],
+    users: [],
+    waypoints: [],
+    xreports: [],
+  },
+};
+
+const z = v.safeParse(ArticleEdit, {});
+if (z.success) {
+  const o = z.output;
+}*/
+
+export const ArticleFormAdd = v.omit(ArticleFormEdit, ['document_id']);
+export type ArticleFormAdd = v.InferOutput<typeof ArticleFormAdd>;
+export type ArticleAdd = Omit<ArticleEdit, 'document_id'>;
+export type ArticleFormAddInitial = SetOptional<
+  ArticleFormAdd,
+  'quality' | 'article_type' | 'locale.title' | 'locale.summary' | 'locale.description'
+>;
+
+export type DocumentFormEdit = ArticleFormEdit;

@@ -3,12 +3,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Document, DocumentListing } from '~/api/c2c.js';
+import type { ArticleFormEdit, Document, DocumentListing } from '~/api/c2c.js';
 import type { UiLang } from '~/api/lang.js';
 import type { VersionedDocument } from '~/types/common.js';
 
 const { document, uppercaseFirstLetter = false } = defineProps<{
-  document: Document | DocumentListing | VersionedDocument;
+  document: Document | DocumentListing | VersionedDocument | ArticleFormEdit;
   uppercaseFirstLetter?: boolean;
 }>();
 

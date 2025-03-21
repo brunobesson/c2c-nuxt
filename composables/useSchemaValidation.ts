@@ -12,6 +12,7 @@ export const useSchemaValidation = () => {
     }
     if (import.meta.dev) {
       try {
+        // TODO check + enhance
         await $fetch('/api/report-api-error', {
           method: 'POST',
           body: { url: response.url, issues: result.issues, response: response._data },

@@ -4,6 +4,7 @@ import type {
   ArticleListing,
   ArticleVersionDocument,
   Document,
+  DocumentFormEdit,
   DocumentListing,
   DocumentType,
   License,
@@ -11,6 +12,7 @@ import type {
 } from '~/api/c2c.js';
 import type { VersionedDocument } from '~/types/common.js';
 import {
+  isDocumentFormEdit,
   isImage,
   isImageListing,
   isOuting,
@@ -22,9 +24,10 @@ import {
   isWaypoint,
   isWhatnewDocument,
 } from '~/types/common.js';
-import docType from '~/utils/documentType.js';
 
-export const useDocument = (document: MaybeRef<Document | DocumentListing | VersionedDocument | WhatsnewDocument>) => {
+export const useDocument = (
+  document: MaybeRefOrGetter<Document | DocumentListing | VersionedDocument | WhatsnewDocument | DocumentFormEdit>,
+) => {
   const doc = toRef(document);
   const documentTitle = (lang?: string): string => {
     // profile does not have locale, get profile's name
@@ -43,11 +46,15 @@ export const useDocument = (document: MaybeRef<Document | DocumentListing | Vers
       return title_prefix + colon + title;
     }
 
+    if (isDocumentFormEdit(doc.value)) {
+      return doc.value['locale.title'];
+    }
+
     const { title } = useDocumentLocale().getLocaleSmart(doc.value, lang);
     return title ?? '';
   };
 
-  const documentType: ComputedRef<DocumentType> = computed(() => docType(doc.value.type));
+  const docType: ComputedRef<DocumentType> = computed(() => documentType(doc.value.type));
 
   const documentLicense: ComputedRef<License | undefined> = computed(() => {
     if (isWhatnewDocument(doc.value)) {
@@ -108,5 +115,5 @@ export const useDocument = (document: MaybeRef<Document | DocumentListing | Vers
     return orderedAreas.range.concat(orderedAreas.admin_limits).concat(orderedAreas.country).join(' - ');
   });
 
-  return { documentTitle, documentType, documentLicense, sortedAreaList };
+  return { documentTitle, documentType: docType, documentLicense, sortedAreaList };
 };

@@ -42,7 +42,7 @@ const {
 }>();
 
 const heightUp = computed(() => {
-  if (intersect(route.activities, ['skitouring', 'snowshoeing', 'hiking'] as Activity[])) {
+  if (intersects(route.activities, ['skitouring', 'snowshoeing', 'hiking'] as Activity[])) {
     if (route.height_diff_up) {
       return '+' + route.height_diff_up;
     }
@@ -57,7 +57,7 @@ const heightDiff = computed(() => {
   if (!showHeightDiffDifficulties) {
     return undefined;
   }
-  const isAlpinism = intersect(route.activities, [
+  const isAlpinism = intersects(route.activities, [
     'snow_ice_mixed',
     'mountain_climbing',
     'rock_climbing',
