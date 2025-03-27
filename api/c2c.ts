@@ -28,7 +28,7 @@ const AidRating = v.picklist(['A0', 'A0+', 'A1', 'A1+', 'A2', 'A2+', 'A3', 'A3+'
 export type AidRating = v.InferOutput<typeof AidRating>;
 const AreaType = v.picklist(['range', 'admin_limits', 'country']);
 export type AreaType = v.InferOutput<typeof AreaType>;
-const ArticleCategory = v.picklist([
+export const ARTICLE_CATEGORY_VALUES = [
   'mountain_environment',
   'gear',
   'technical',
@@ -40,9 +40,11 @@ const ArticleCategory = v.picklist([
   'tags',
   'site_info',
   'association',
-]);
+] as const;
+const ArticleCategory = v.picklist(ARTICLE_CATEGORY_VALUES);
 export type ArticleCategory = v.InferOutput<typeof ArticleCategory>;
-const ArticleType = v.picklist(['collab', 'personal']);
+export const ARTICLE_TYPE_VALUES = ['collab', 'personal'] as const;
+const ArticleType = v.picklist(ARTICLE_TYPE_VALUES);
 export type ArticleType = v.InferOutput<typeof ArticleType>;
 const AuthorStatus = v.picklist(['primary_impacted', 'secondary_impacted', 'internal_witness', 'external_witness']);
 export type AuthorStatus = v.InferOutput<typeof AuthorStatus>;
@@ -281,7 +283,8 @@ const PublicTransportationType = v.picklist(['train', 'bus', 'service_on_demand'
 export type PublicTransportationType = v.InferOutput<typeof PublicTransportationType>;
 const Qualification = v.picklist(['federal_supervisor', 'federal_trainer', 'professional_diploma']);
 export type Qualification = v.InferOutput<typeof Qualification>;
-const QualityType = v.picklist(['empty', 'draft', 'medium', 'fine', 'great']);
+export const QUALITY_TYPE_VALUES = ['empty', 'draft', 'medium', 'fine', 'great'] as const;
+const QualityType = v.picklist(QUALITY_TYPE_VALUES);
 export type QualityType = v.InferOutput<typeof QualityType>;
 const RainProofType = v.picklist(['exposed', 'partly_protected', 'protected', 'inside']);
 export type RainProofType = v.InferOutput<typeof RainProofType>;
@@ -1475,7 +1478,7 @@ export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
 
 // TODO à déplacer hors de l'API, dans l'API on veut seulement ce qu'on va envoyer
 // TODO les associations, il nous suffit d'avoir les document_id de chacun
-export const ArticleFormEdit = v.object({
+export const ArticleFormEdit = v.strictObject({
   ...v.entriesFromObjects([
     v.omit(Article, [
       'available_langs',
@@ -1488,36 +1491,36 @@ export const ArticleFormEdit = v.object({
       'associations',
     ]),
   ]),
-  'locale.lang': ApiLang,
-  'locale.title': v.pipe(v.string(), v.nonEmpty()),
-  'locale.description': v.nullable(v.string()),
-  'locale.summary': v.nullable(v.string()),
-  'associations.articles': v.array(v.union([Article, ArticleListing])),
-  'associations.books': v.array(v.union([Book, BookListing])),
-  'associations.outings': v.array(v.union([Outing, OutingListing])),
-  'associations.routes': v.array(v.union([Route, RouteListing])),
-  'associations.waypoints': v.array(v.union([Waypoint, WaypointListing])),
-  'associations.images': v.array(v.union([Image, ImageListing])),
-  'associations.users': v.array(v.union([Profile, ProfileListing])),
-  'associations.xreports': v.array(v.union([Xreport, XreportListing])),
+  locale_lang: ApiLang,
+  locale_title: v.pipe(v.string(), v.nonEmpty()),
+  locale_description: v.nullable(v.string()),
+  locale_summary: v.nullable(v.string()),
+  associations_articles: v.array(v.union([Article, ArticleListing])),
+  associations_books: v.array(v.union([Book, BookListing])),
+  associations_outings: v.array(v.union([Outing, OutingListing])),
+  associations_routes: v.array(v.union([Route, RouteListing])),
+  associations_waypoints: v.array(v.union([Waypoint, WaypointListing])),
+  associations_images: v.array(v.union([Image, ImageListing])),
+  associations_users: v.array(v.union([Profile, ProfileListing])),
+  associations_xreports: v.array(v.union([Xreport, XreportListing])),
 });
 
 export const ArticleEdit = v.pipe(
   ArticleFormEdit,
   v.transform(input => {
     const {
-      'locale.lang': lang,
-      'locale.title': title,
-      'locale.description': description,
-      'locale.summary': summary,
-      'associations.articles': articles,
-      'associations.books': books,
-      'associations.outings': outings,
-      'associations.routes': routes,
-      'associations.waypoints': waypoints,
-      'associations.images': images,
-      'associations.users': users,
-      'associations.xreports': xreports,
+      locale_lang: lang,
+      locale_title: title,
+      locale_description: description,
+      locale_summary: summary,
+      associations_articles: articles,
+      associations_books: books,
+      associations_outings: outings,
+      associations_routes: routes,
+      associations_waypoints: waypoints,
+      associations_images: images,
+      associations_users: users,
+      associations_xreports: xreports,
       ...rest
     } = input;
     return {
@@ -1547,18 +1550,18 @@ const x: v.InferInput<typeof ArticleEdit> = {
   quality: 'draft',
   activities: [],
   categories: [],
-  'locale.lang': 'fr',
-  'locale.title': 'title',
-  'locale.summary': 'summary',
-  'locale.description': 'description',
-  'associations.articles': [{ type: 'c' } as ArticleListing],
-  'associations.books': [],
-  'associations.images': [],
-  'associations.outings': [],
-  'associations.routes': [],
-  'associations.users': [],
-  'associations.waypoints': [],
-  'associations.xreports': [],
+  'locale_lang': 'fr',
+  'locale_title': 'title',
+  'locale_summary': 'summary',
+  'locale_description': 'description',
+  'associations_articles': [{ type: 'c' } as ArticleListing],
+  'associations_books': [],
+  'associations_images': [],
+  'associations_outings': [],
+  'associations_routes': [],
+  'associations_users': [],
+  'associations_waypoints': [],
+  'associations_xreports': [],
 };
 
 const y: v.InferOutput<typeof ArticleEdit> = {
@@ -1591,7 +1594,49 @@ export type ArticleFormAdd = v.InferOutput<typeof ArticleFormAdd>;
 export type ArticleAdd = Omit<ArticleEdit, 'document_id'>;
 export type ArticleFormAddInitial = SetOptional<
   ArticleFormAdd,
-  'quality' | 'article_type' | 'locale.title' | 'locale.summary' | 'locale.description'
+  'quality' | 'article_type' | 'locale_title' | 'locale_summary' | 'locale_description'
 >;
 
-export type DocumentFormEdit = ArticleFormEdit;
+// TODO
+export type AreaFormEdit = Area;
+export type AreaFormAddInitial = Area;
+export type BookFormEdit = Book;
+export type BookFormAddInitial = Book;
+export type ImageFormEdit = Image;
+export type ImageFormAddInitial = Image;
+export type MapFormEdit = Map;
+export type MapFormAddInitial = Map;
+export type OutingFormEdit = Outing;
+export type OutingFormAddInitial = Outing;
+export type ProfileFormEdit = Profile;
+export type ProfileFormAddInitial = Profile;
+export type RouteFormEdit = Route;
+export type RouteFormAddInitial = Route;
+export type WaypointFormEdit = Waypoint;
+export type WaypointFormAddInitial = Waypoint;
+export type XreportFormEdit = Xreport;
+export type XreportFormAddInitial = Xreport;
+
+export type DocumentFormEdit =
+  | AreaFormEdit
+  | ArticleFormEdit
+  | BookFormEdit
+  | ImageFormEdit
+  | MapFormEdit
+  | OutingFormEdit
+  | ProfileFormEdit
+  | RouteFormEdit
+  | WaypointFormEdit
+  | XreportFormEdit;
+
+export type DocumentFormAddInitial =
+  | AreaFormAddInitial
+  | ArticleFormAddInitial
+  | BookFormAddInitial
+  | ImageFormAddInitial
+  | MapFormAddInitial
+  | OutingFormAddInitial
+  | ProfileFormAddInitial
+  | RouteFormAddInitial
+  | WaypointFormAddInitial
+  | XreportFormAddInitial;

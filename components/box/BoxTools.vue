@@ -2,7 +2,7 @@
   <Box class="print:hidden">
     <div class="flex flex-col [&_hr]:my-3 [&_hr:first-child]:hidden [&_hr_+_hr]:hidden">
       <!-- TODO check this is working in all case (e.g. fundraiser, etc) -->
-      <BoxToolsAssociatedDocuments :document="document" />
+      <BoxToolsAssociatedDocuments :document />
 
       <hr />
 
@@ -11,7 +11,7 @@
         <div class="flex flex-wrap justify-center">
           <template v-for="(l, i) of availableLangs" :k="l">
             <span v-if="i" class="mx-1">•</span
-            ><LinkDocument :document="document" :lang="l!" class="link">{{ $t(`langs.${l}`) }}</LinkDocument>
+            ><LinkDocument :document :lang="l!" class="link">{{ $t(`langs.${l}`) }}</LinkDocument>
           </template>
         </div>
       </div>
@@ -136,7 +136,7 @@
 
       <hr />
 
-      <BoxToolsLicense :document="document" />
+      <BoxToolsLicense :document />
     </div>
   </Box>
   <DocumentAssociationModal ref="associationModal" />

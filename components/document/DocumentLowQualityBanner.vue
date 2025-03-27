@@ -1,7 +1,7 @@
 <template>
   <Message class="print:hidden">
     <i18n-t keypath="low-quality.banner" scope="global">
-      <LinkEdit :document="document" :lang="lang">
+      <LinkEdit :document :lang="lang">
         {{ $t('low-quality.edit') }}
       </LinkEdit>
     </i18n-t>

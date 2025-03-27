@@ -28,7 +28,7 @@
     <span v-else>{{ $t('version.first') }}</span>
     <template v-if="!isMaskedVersionedDocument(document)">
       |
-      <LinkDocument :document="document" :lang="lang">{{ $t('version.current') }}</LinkDocument>
+      <LinkDocument :document :lang="lang">{{ $t('version.current') }}</LinkDocument>
       (<LinkDocumentDiff
         :document-type="documentType"
         :id="documentId"

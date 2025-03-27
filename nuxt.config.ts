@@ -15,6 +15,7 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@nuxtjs/tailwindcss',
     '@primevue/nuxt-module',
+    '@vee-validate/nuxt',
   ],
 
   build: {

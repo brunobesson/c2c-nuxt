@@ -193,7 +193,7 @@ export const useC2cApi = () => {
           body: { document_id: document, lang, version_id: version },
         }),
       cook: async (content: Record<string, string>) =>
-        await checkResponse(CookerResponse, await $fetch('/cooker', { method: 'POST', body: { content } })),
+        await checkResponse(CookerResponse, await $fetch('/cooker', { method: 'POST', body: content })),
     },
 
     area: {

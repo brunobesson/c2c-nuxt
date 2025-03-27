@@ -1,13 +1,11 @@
 <template>
   <div class="flex flex-col gap-5">
     <!-- TODO <html-header v-if="!isDraftView && !isPrintingView" :title="title" /> -->
-    <DocumentVersionBanner
-      v-if="isVersionedDocument(document) || isMaskedVersionedDocument(document)"
-      :document="document" />
+    <DocumentVersionBanner v-if="isVersionedDocument(document) || isMaskedVersionedDocument(document)" :document />
     <div v-if="!isMaskedVersionedDocument(document)">
       <Box>
         <h1 class="text-3xl">
-          <IconDocument :type="documentType" />&nbsp;<DocumentTitle :document="document" />
+          <IconDocument :type="documentType" />&nbsp;<DocumentTitle :document />
           <span v-if="isOuting(document)">
             {{ outingDates(document.date_start, document.date_end) }}
           </span>
@@ -15,13 +13,13 @@
 
           <span v-if="!isDraftView" class="float-right print:hidden">
             <!-- TODO <gotop-button v-if="isPrintingView" />-->
-            <ButtonFollow v-if="!isPrintingView" :document="document" />
-            <ButtonTag v-if="!isPrintingView" :document="document" />
+            <ButtonFollow v-if="!isPrintingView" :document />
+            <ButtonTag v-if="!isPrintingView" :document />
             <!-- TODO social network sharing -->
             <!-- TODO image uploader -->
             <LinkEdit
               v-if="isEditable && documentType !== 'image'"
-              :document="document"
+              :document
               :lang="document.cooked.lang"
               :title="$t('link.edit')">
               <IconEdit />

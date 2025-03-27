@@ -3,7 +3,7 @@
     <h1>
       <IconEdit />
       <template v-if="isEdit(document)">
-        <DocumentTitle :document="document" />
+        <DocumentTitle :document />
         ({{ langDescr }})
       </template>
       <template v-else>
@@ -30,42 +30,55 @@
       </template>
     </h1>
 
-    <slot />
+    <form @submit="save" class="flex flex-col">
+      <slot />
 
-    <!-- TODO save -->
-    <div class="">
-      <!-- TODO loading -->
-      <Button :loading="saving" @click="save()">
-        {{ $t('edit.save') }}
-      </Button>
-      <Button>
-        <!-- TODO preview -->
-        <Icon icon="eye" /> {{ $t('edit.preview-mode') }}
-      </Button>
-      <InputText type="text" :placeholder="$t('edit.comment')" />
-    </div>
+      <!-- TODO save -->
+      <div class="">
+        <!-- TODO loading -->
+        <Button type="submit" :loading="isSubmitting" :disabled="isSubmitting">
+          {{ $t('edit.save') }}
+        </Button>
+        <Button type="button">
+          <!-- TODO preview -->
+          <Icon icon="eye" /> {{ $t('edit.preview-mode') }}
+        </Button>
+        <InputText type="text" :placeholder="$t('edit.comment')" />
+      </div>
 
+      {{ values }}
+      - {{ errors }}
+    </form>
+
+    <ConfirmDialog />
     <!-- TODO banners -->
   </div>
 </template>
 
 <script setup lang="ts">
-import type { ArticleFormAddInitial, ArticleFormEdit } from '~/api/c2c.js';
+import { toTypedSchema } from '@vee-validate/valibot';
+import type { ErrorMessage, ObjectEntries, StrictObjectIssue, StrictObjectSchema } from 'valibot';
+import type { DocumentFormAddInitial, DocumentFormEdit } from '~/api/c2c.js';
 import { type ApiLang } from '~/api/lang.js';
 
-const isEdit = (document: ArticleFormEdit | ArticleFormAddInitial): document is ArticleFormEdit =>
+const isEdit = (document: DocumentFormEdit | DocumentFormAddInitial): document is DocumentFormEdit =>
   'document_id' in document;
 
-const { document } = defineProps<{ document: ArticleFormEdit | ArticleFormAddInitial }>();
+const { document, schema } = defineProps<{
+  document: DocumentFormEdit | DocumentFormAddInitial;
+  schema: StrictObjectSchema<ObjectEntries, ErrorMessage<StrictObjectIssue> | undefined>;
+}>();
 
 const { t, locales } = useI18n();
 const edit = computed(() => isEdit(document));
 
-const lang = useRouteParams<ApiLang>('lang');
+const lang = ref(useRoute().params.lang as ApiLang);
 const langDescr = computed(() => locales.value.find(({ code }) => code === lang.value)?.name);
 const apiLocales = computed(() => locales.value.filter(({ code }) => useLang().isApiLang(code)));
 
+const { path } = useRoute();
 const setLang = (newLang: ApiLang) => {
+  window.history.replaceState({}, '', path.substring(0, path.lastIndexOf('/') + 1) + newLang);
   lang.value = newLang;
 };
 
@@ -75,17 +88,62 @@ useHead({
   title: t(edit.value ? 'edit.title.edit' : `edit.title.add.${docType.value}`),
 });
 
-const saving = ref(false);
+const { handleSubmit, isSubmitting, values, errors, meta } = useForm({
+  validationSchema: toTypedSchema(schema),
+  initialValues: document,
+});
+
 const api = useC2cApi();
-const save = async () => {
-  saving.value = true;
-  // TODO
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  if (edit) {
-    // api[docType.value].save();
+const save = handleSubmit(
+  values =>
+    new Promise(resolve => {
+      setTimeout(() => {
+        // TODO use correct lang
+        if (edit) {
+          // api[docType.value].save();
+        } else {
+          // api[docType.value].create();
+        }
+        alert(JSON.stringify(values, null, 2));
+        resolve(undefined);
+      }, 1000);
+    }),
+  ({ errors }) => {
+    const firstError = Object.keys(errors)[0];
+    const el = globalThis.document.querySelector(`label[for="${firstError}"]`);
+    el?.scrollIntoView({ behavior: 'smooth' });
+    console.log(firstError);
+  },
+);
+
+const confirm = useConfirm();
+onBeforeRouteLeave((_to, _from, next) => {
+  if (meta.value.dirty) {
+    confirm.require({
+      message: t('edit.quit.message'),
+      header: t('edit.quit.title'),
+      rejectProps: {
+        label: t('edit.quit.cancel'),
+        severity: 'secondary',
+      },
+      acceptProps: {
+        label: t('edi.quit.confirm'),
+      },
+      accept: () => next(),
+      reject: () => next(false),
+    });
   } else {
-    // api[docType.value].create();
+    next();
   }
-  saving.value = false;
+});
+
+onBeforeMount(() => window.addEventListener('beforeunload', beforeUnload));
+
+onBeforeUnmount(() => window.removeEventListener('beforeunload', beforeUnload));
+
+const beforeUnload = (event: Event) => {
+  if (meta.value.dirty) {
+    event.preventDefault();
+  }
 };
 </script>

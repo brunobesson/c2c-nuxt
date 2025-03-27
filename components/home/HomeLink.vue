@@ -1,11 +1,11 @@
 <template>
-  <LinkDocument :document="document" class="flex items-center hover:bg-hover">
+  <LinkDocument :document class="flex items-center hover:bg-hover">
     <Activities
       :activities="document.activities"
       class="shrink-0 text-2xl/7"
       :class="{ 'max-mobile:grid max-mobile:grid-cols-2': document.activities.length > 1 }" />
     <span class="grow px-1">
-      <DocumentTitle :document="document" /><span v-if="rangeAreas.length !== 0">&puncsp;&bull;&puncsp;</span>
+      <DocumentTitle :document /><span v-if="rangeAreas.length !== 0">&puncsp;&bull;&puncsp;</span>
       <span v-for="(area, index) of rangeAreas" :key="area.document_id" class="italic comma"
         ><DocumentTitle :document="area"
       /></span>

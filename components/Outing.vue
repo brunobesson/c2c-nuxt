@@ -1,13 +1,13 @@
 <template>
   <!-- TODO seo -->
-  <DocumentMaskedVersionBanner v-if="isMaskedVersionedDocument(document)" :document="document" />
-  <DocumentViewHeader v-else :document="document" :version="version" />
+  <DocumentMaskedVersionBanner v-if="isMaskedVersionedDocument(document)" :document />
+  <DocumentViewHeader v-else :document :version="version" />
   <template v-if="!isMaskedVersionedDocument(document)">
-    <BoxImages :document="document" />
+    <BoxImages :document />
     <div class="flex flex-col mobile:grid mobile:grid-cols-[25%_auto] print:flex gap-5">
       <div class="flex flex-col gap-5">
-        <BoxMap :document="document" />
-        <BoxTools :document="document" v-if="!isMobile" />
+        <BoxMap :document />
+        <BoxTools :document v-if="!isMobile" />
       </div>
       <div class="flex flex-col gap-5">
         <Box>
@@ -22,24 +22,24 @@
         </Box>
 
         <Box>
-          <MarkdownSection :document="document" field="route_description" />
-          <MarkdownSection :document="document" field="weather" />
-          <MarkdownSection :document="document" field="conditions" />
+          <MarkdownSection :document field="route_description" />
+          <MarkdownSection :document field="weather" />
+          <MarkdownSection :document field="conditions" />
 
           <ConditionLevels :levels="document.cooked.conditions_levels" />
 
-          <MarkdownSection :document="document" field="avalanches" />
-          <MarkdownSection :document="document" field="timing" />
-          <MarkdownSection :document="document" field="access_comment" />
-          <MarkdownSection :document="document" field="hut_comment" />
-          <MarkdownSection :document="document" field="description" :title="$t('markdown.outing.personal_comment')" />
+          <MarkdownSection :document field="avalanches" />
+          <MarkdownSection :document field="timing" />
+          <MarkdownSection :document field="access_comment" />
+          <MarkdownSection :document field="hut_comment" />
+          <MarkdownSection :document field="description" :title="$t('markdown.outing.personal_comment')" />
           <div class="clear-both" />
         </Box>
 
-        <BoxTools v-if="isMobile" :document="document" />
-        <BoxComments v-if="isDefaultView" :document="document" />
+        <BoxTools v-if="isMobile" :document />
+        <BoxComments v-if="isDefaultView" :document />
       </div>
-      <DocumentPrintLicense :document="document" />
+      <DocumentPrintLicense :document />
     </div>
   </template>
 </template>

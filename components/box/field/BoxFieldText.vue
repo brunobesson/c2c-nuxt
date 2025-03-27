@@ -8,6 +8,6 @@
 const { value, i18n } = defineProps<{ value: string | undefined; label: string; i18n?: string }>();
 
 const { t } = useI18n();
-const { hasValue } = useField(value);
+const { hasValue } = useBoxField(value);
 const output = computed(() => (i18n ? t(`${i18n}.${value}`) : value));
 </script>

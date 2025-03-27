@@ -16,6 +16,7 @@
   "area": "région",
   "areas": "régions",
   "article": "article",
+  "article_categories": "catégories",
   "article_categories-values": {
     "association": "association",
     "c2c_meetings": "réunions c2c",
@@ -29,6 +30,7 @@
     "technical": "technique",
     "topoguide_supplements": "suppléments du topoguide"
   },
+  "article_type": "type d'article",
   "article_type-values": {
     "collab": "collaboratif (CC by-sa)",
     "personal": "individuel (CC by-nc-nd)"
@@ -422,6 +424,30 @@
         "total-snow": "Épaisseur totale",
         "comment": "Commentaire"
       }
+    },
+    "editor": {
+      "strong": "Gras",
+      "italic": "Italique",
+      "heading": "Titre",
+      "image": "Insérer une image",
+      "link": "Insérer un lien",
+      "emoji": "Insérer une émoticone",
+      "hashtag": "Balise de description des longueurs",
+      "ol": "Liste ordonnée",
+      "ul": "Liste non ordonnée",
+      "code": "Texte brut",
+      "quote": "Citation",
+      "preview": {
+        "off": "Retour au code",
+        "on": "Prévisualiser"
+      },
+      "help": "Aide",
+      "fullscreen": {
+        "off": "Basculer en plein écran",
+        "on": "Quitter le plein écran"
+      },
+      "error": "Impossible de prévisualiser le champ 💩",
+      "loading": "Chargement en cours..."
     }
   },
   "edit": {
@@ -439,6 +465,17 @@
     },
     "preview-mode": "Prévisualiser",
     "save": "Enregistrer",
-    "comment": "Commentaire"
+    "comment": "Commentaire",
+    "leave": "Voulez-vous vraiment quitter cette page ? Des changements n'ont pas été sauvegardés !",
+    "quit": {
+      "title": "Quitter la page ?",
+      "message": "Les modifications que vous avez apportées ne seront pas enregistrées.",
+      "cancel": "Annuler"
+    }
+  },
+  "edi": {
+    "quit": {
+      "confirm": "Quitter"
+    }
   }
 }

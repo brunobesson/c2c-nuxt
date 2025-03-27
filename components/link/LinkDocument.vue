@@ -4,7 +4,7 @@
     :target="target"
     :title="documentTitle(lang)">
     <slot>
-      <DocumentTitle :document="document" :uppercase-first-letter="uppercaseFirstLetter" />
+      <DocumentTitle :document :uppercase-first-letter="uppercaseFirstLetter" />
     </slot>
   </NuxtLink>
 </template>
