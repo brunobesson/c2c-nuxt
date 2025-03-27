@@ -88,10 +88,14 @@ useHead({
   title: t(edit.value ? 'edit.title.edit' : `edit.title.add.${docType.value}`),
 });
 
-const { handleSubmit, isSubmitting, values, errors, meta } = useForm({
+const { handleSubmit, isSubmitting, values, errors, meta, resetForm } = useForm({
   validationSchema: toTypedSchema(schema),
-  initialValues: document,
 });
+watch(
+  () => document,
+  () => resetForm({ values: { document_id: undefined, ...document } }),
+  { immediate: true },
+);
 
 const api = useC2cApi();
 const save = handleSubmit(
