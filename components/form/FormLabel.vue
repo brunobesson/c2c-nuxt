@@ -7,5 +7,6 @@
 
 <script setup lang="ts">
 // TODO: marker helper
+// TODO vee-validate i18n
 defineProps<{ field: string; label?: string; errorMessage: string | undefined }>();
 </script>

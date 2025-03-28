@@ -13,7 +13,11 @@
       <FormQuality :document />
       <FormMarkdown field="locale_summary" label="summary" />
       <FormMarkdown field="locale_description" label="description" />
-      <!-- TODO associations-->
+       <FormAssociation field="associations_articles" documentType="article"/>
+       <FormAssociation field="associations_waypoints" documentType="waypoint"/>
+       <FormAssociation field="associations_outings" documentType="outing"/>
+       <FormAssociation field="associations_routes" documentType="route"/>
+       <FormAssociation field="associations_books" documentType="book"/>
     </EditionContainer>
   </div>
 </template>

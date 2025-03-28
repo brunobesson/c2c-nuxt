@@ -35,6 +35,7 @@ import {
   Route,
   RouteList,
   RouteVersion,
+  SearchResults,
   UserPreferences,
   Waypoint,
   WaypointList,
@@ -46,6 +47,7 @@ import {
   type ArticleAdd,
   type CreateImagesInput,
   type Document,
+  type LetterType,
 } from '~/api/c2c.js';
 import type { ApiLang, UiLang } from '~/api/lang.js';
 
@@ -86,7 +88,7 @@ export type AssociationsHistoryQuery = {
   d?: number;
 };
 
-export type Query = Record<string, any>; // TODO
+export type Query = { q: string; t?: LetterType[]; limit?: number };
 
 const { checkResponse } = useSchemaValidation();
 
@@ -182,7 +184,8 @@ export const useC2cApi = () => {
 
     document: {
       whatsnew: async (query: WhatsnewQuery) => checkResponse(Whatsnew, await $fetch('/documents/changes', { query })),
-      search: (params: unknown) => undefined, // TODO
+      search: async (query: Query, signal?: AbortSignal) =>
+        checkResponse(SearchResults, await $fetch('/search', { query, signal })),
       history: async (document: Document['document_id'], lang: ApiLang) =>
         checkResponse(DocumentHistory, await $fetch(`/document/${document}/history/${lang}`)),
       mask: async (document: Document['document_id'], lang: ApiLang, version: number) =>

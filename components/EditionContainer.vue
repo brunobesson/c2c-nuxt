@@ -34,8 +34,7 @@
       <slot />
 
       <!-- TODO save -->
-      <div class="">
-        <!-- TODO loading -->
+      <div>
         <Button type="submit" :loading="isSubmitting" :disabled="isSubmitting">
           {{ $t('edit.save') }}
         </Button>
