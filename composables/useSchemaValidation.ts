@@ -23,7 +23,7 @@ export const useSchemaValidation = () => {
         console.groupEnd();
       }
     }
-    return response.body as v.InferOutput<TSchema>;
+    return response.json() as v.InferOutput<TSchema>;
   };
   return {
     checkResponse,
