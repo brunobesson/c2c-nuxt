@@ -648,7 +648,7 @@ const BaseRoute = v.strictObject({
   height_diff_down: v.nullish(Uint), // NOT for slacklining
   height_diff_up: v.nullish(Uint), // NOT for slacklining
   activities: v.array(Activity),
-  orientations: v.array(OrientationType),
+  orientations: v.nullable(v.array(OrientationType)),
   ski_rating: v.nullish(SkiRating), // skitouring
   ski_exposition: v.nullish(ExpositionRating), // skitouring
   labande_global_rating: v.nullish(GlobalRating), // skitouring
@@ -1318,6 +1318,38 @@ export const XreportVersion = v.strictObject({
 });
 export type XreportVersion = v.InferOutput<typeof XreportVersion>;
 
+const resultsOfType = (
+  doc:
+    | typeof AreaListing
+    | typeof ArticleListing
+    | typeof BookListing
+    | typeof MapListing
+    | typeof ImageListing
+    | typeof OutingListing
+    | typeof RouteListing
+    | typeof WaypointListing
+    | typeof XreportListing,
+) =>
+  v.strictObject({
+    documents: v.array(doc),
+    total: v.pipe(v.number(), v.integer(), v.minValue(0)),
+  });
+export const SearchResults = v.pipe(
+  v.strictObject({
+    areas: v.optional(resultsOfType(AreaListing)),
+    articles: v.optional(resultsOfType(ArticleListing)),
+    books: v.optional(resultsOfType(BookListing)),
+    maps: v.optional(resultsOfType(MapListing)),
+    images: v.optional(resultsOfType(ImageListing)),
+    outings: v.optional(resultsOfType(OutingListing)),
+    routes: v.optional(resultsOfType(RouteListing)),
+    waypoints: v.optional(resultsOfType(WaypointListing)),
+    xreports: v.optional(resultsOfType(XreportListing)),
+  }),
+  v.transform(input => Object.fromEntries(Object.entries(input).filter(([, v]) => !!v && v.total))),
+);
+export type SearchResults = v.InferOutput<typeof SearchResults>;
+
 const FeedItem = v.strictObject({
   id: PositiveInt,
   time: IsoDateTime,
@@ -1477,7 +1509,6 @@ export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
 });*/
 
 // TODO à déplacer hors de l'API, dans l'API on veut seulement ce qu'on va envoyer
-// TODO les associations, il nous suffit d'avoir les document_id de chacun
 export const ArticleFormEdit = v.strictObject({
   ...v.entriesFromObjects([
     v.omit(Article, [
