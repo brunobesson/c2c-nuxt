@@ -31,7 +31,7 @@
     </h1>
 
     <form @submit="save" class="flex flex-col">
-      <slot />
+      <slot :handleSubmit />
 
       <!-- TODO save -->
       <div>
@@ -42,7 +42,7 @@
           <!-- TODO preview -->
           <Icon icon="eye" /> {{ $t('edit.preview-mode') }}
         </Button>
-        <InputText type="text" :placeholder="$t('edit.comment')" />
+        <InputText v-model="comment" type="text" :placeholder="$t('edit.comment')" :disabled="!isEditing" />
       </div>
 
       {{ values }}
@@ -57,15 +57,17 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/valibot';
 import type { ErrorMessage, ObjectEntries, StrictObjectIssue, StrictObjectSchema } from 'valibot';
-import type { DocumentFormAddInitial, DocumentFormEdit } from '~/api/c2c.js';
+import type { DocumentAdd, DocumentAddInitial, DocumentEdit } from '~/api/c2c.js';
 import { type ApiLang } from '~/api/lang.js';
 
-const isEdit = (document: DocumentFormEdit | DocumentFormAddInitial): document is DocumentFormEdit =>
+const isEdit = (document: DocumentEdit | DocumentAdd | DocumentAddInitial): document is DocumentEdit =>
   'document_id' in document;
 
-const { document, schema } = defineProps<{
-  document: DocumentFormEdit | DocumentFormAddInitial;
+const { document, schema, saveDocument, createDocument } = defineProps<{
+  document: DocumentEdit | DocumentAddInitial;
   schema: StrictObjectSchema<ObjectEntries, ErrorMessage<StrictObjectIssue> | undefined>;
+  saveDocument: (doc: DocumentEdit, comment: string) => Promise<number>;
+  createDocument: (doc: DocumentAdd) => Promise<number>;
 }>();
 
 const { t, locales } = useI18n();
@@ -79,6 +81,7 @@ const { path } = useRoute();
 const setLang = (newLang: ApiLang) => {
   window.history.replaceState({}, '', path.substring(0, path.lastIndexOf('/') + 1) + newLang);
   lang.value = newLang;
+  setValues({ 'locales[0].lang': newLang });
 };
 
 const docType = computed(() => documentType(document.type));
@@ -87,7 +90,8 @@ useHead({
   title: t(edit.value ? 'edit.title.edit' : `edit.title.add.${docType.value}`),
 });
 
-const { handleSubmit, isSubmitting, values, errors, meta, resetForm } = useForm({
+const comment = ref('');
+const { handleSubmit, isSubmitting, values, errors, meta, resetForm, setValues } = useForm({
   validationSchema: toTypedSchema(schema),
 });
 watch(
@@ -96,26 +100,21 @@ watch(
   { immediate: true },
 );
 
-const api = useC2cApi();
+const isEditing = computed(() => isEdit(values as DocumentEdit | DocumentAdd));
 const save = handleSubmit(
-  values =>
-    new Promise(resolve => {
-      setTimeout(() => {
-        // TODO use correct lang
-        if (edit) {
-          // api[docType.value].save();
-        } else {
-          // api[docType.value].create();
-        }
-        alert(JSON.stringify(values, null, 2));
-        resolve(undefined);
-      }, 1000);
-    }),
+  async values => {
+    // TODO lang OK for saving on create ?
+    const documentId = isEditing
+      ? await saveDocument(values as DocumentEdit, comment.value)
+      : await createDocument(values as DocumentAdd);
+
+    resetForm();
+    navigateTo({ name: docType.value, params: { id: documentId, lang: lang.value } });
+  },
   ({ errors }) => {
     const firstError = Object.keys(errors)[0];
     const el = globalThis.document.querySelector(`label[for="${firstError}"]`);
     el?.scrollIntoView({ behavior: 'smooth' });
-    console.log(firstError);
   },
 );
 

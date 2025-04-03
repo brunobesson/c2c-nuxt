@@ -12,6 +12,7 @@ import {
   BookList,
   BookVersion,
   CookerResponse,
+  CreateDocumentOutput,
   CreateImagesOutput,
   CreateTopicOutput,
   DocumentHistory,
@@ -35,6 +36,7 @@ import {
   Route,
   RouteList,
   RouteVersion,
+  SaveDocumentOutput,
   SearchResults,
   UserPreferences,
   Waypoint,
@@ -221,11 +223,11 @@ export const useC2cApi = () => {
         checkResponse(ArticleVersion, await $fetch(`/articles/${id}/${lang}/${version}`)),
       save: async (document: ArticleEdit, comment: string) =>
         checkResponse(
-          Article,
+          SaveDocumentOutput,
           await $fetch(`/articles/${document.document_id}`, { method: 'PUT', body: { document, message: comment } }),
         ),
       create: async (document: ArticleAdd) =>
-        checkResponse(Article, await $fetch('/articles', { method: 'POST', body: { document } })),
+        checkResponse(CreateDocumentOutput, await $fetch('/articles', { method: 'POST', body: { document } })),
     },
     book: {
       getAll: async (query: Query) => checkResponse(BookList, await $fetch(`/books`, { query })),

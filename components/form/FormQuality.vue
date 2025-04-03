@@ -24,19 +24,18 @@
 <script setup lang="ts">
 import {
   type Activity,
-  type ArticleFormAddInitial,
-  type ArticleFormEdit,
-  type DocumentFormAddInitial,
-  type DocumentFormEdit,
-  type ImageFormAddInitial,
-  type ImageFormEdit,
-  type OutingFormAddInitial,
-  type OutingFormEdit,
+  type ArticleAddInitial,
+  type ArticleEdit,
+  type DocumentAddInitial,
+  type DocumentEdit,
+  type ImageEdit,
+  type OutingAddInitial,
+  type OutingEdit,
   type QualityType,
   QUALITY_TYPE_VALUES,
 } from '~/api/c2c.js';
 
-const { document } = defineProps<{ document: DocumentFormEdit | DocumentFormAddInitial; label?: string }>();
+const { document } = defineProps<{ document: DocumentEdit | DocumentAddInitial; label?: string }>();
 
 const { value, errorMessage } = useField('quality');
 
@@ -72,7 +71,7 @@ const getQualityFromScore = (score: number) => {
   return 'fine'; // never compute great
 };
 
-const getImageQuality = (doc: ImageFormEdit | ImageFormAddInitial) => {
+const getImageQuality = (doc: ImageEdit) => {
   let score = 0;
 
   score += doc.geometry && doc.geometry.geom ? 1 : 0;
@@ -86,12 +85,12 @@ const getImageQuality = (doc: ImageFormEdit | ImageFormAddInitial) => {
   return getQualityFromScore(score);
 };
 
-const getArticleQuality = (doc: ArticleFormEdit | ArticleFormAddInitial) => {
-  const description = doc.locale_description || '';
+const getArticleQuality = (doc: ArticleEdit | ArticleAddInitial) => {
+  const description = doc.locales[0].description || '';
   let score = 0;
-  score += doc.associations_waypoints.length ? 1 : 0;
-  score += doc.associations_images.length ? 1 : 0;
-  score += doc.locale_summary ? 1 : 0;
+  score += doc.associations.waypoints.length ? 1 : 0;
+  score += doc.associations.images.length ? 1 : 0;
+  score += doc.locales[0].summary ? 1 : 0;
   score += description ? 1 : -1;
   score += description.search(/(^|\n)##/g) !== -1 ? 1 : 0; // title
   score += description.search(/\[img=/g) !== -1 ? 1 : 0; // img
@@ -99,7 +98,7 @@ const getArticleQuality = (doc: ArticleFormEdit | ArticleFormAddInitial) => {
   return getQualityFromScore(score);
 };
 
-const getOutingQuality = (doc: OutingFormEdit | OutingFormAddInitial) => {
+const getOutingQuality = (doc: OutingEdit | OutingAddInitial) => {
   const hasActivities = (activities: Activity[]) => intersects(activities, doc.activities);
 
   const hasSnowInfo = () =>

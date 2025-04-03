@@ -1,4 +1,4 @@
-import type { SetOptional } from 'type-fest';
+import type { OverrideProperties, SetOptional } from 'type-fest';
 import * as v from 'valibot';
 import { ApiLang, UiLang } from '~/api/lang.js';
 import { IsoDate, IsoDateTime, PositiveInt, Uint } from '~/types/common.js';
@@ -548,6 +548,7 @@ export type BookListing = v.InferOutput<typeof BookListing>;
 
 const BaseImage = v.strictObject({
   ...BaseDocument.entries,
+  locales: v.array(v.strictObject({ ...BaseLocale.entries, title: v.string() })),
   type: v.literal('i'),
   areas: v.array(AreaListing),
   author: v.nullable(v.string()),
@@ -1487,6 +1488,9 @@ export const CreateTopicOutput = v.object({
 
 export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
 
+export const SaveDocumentOutput = v.strictObject({});
+export const CreateDocumentOutput = v.strictObject({ document_id: PositiveInt });
+
 /*export const ArticleEdit2 = v.strictObject({
   ...v.entriesFromObjects([
     v.omit(Article, [
@@ -1509,165 +1513,78 @@ export type CreateTopicOutput = v.InferOutput<typeof CreateTopicOutput>;
 });*/
 
 // TODO à déplacer hors de l'API, dans l'API on veut seulement ce qu'on va envoyer
-export const ArticleFormEdit = v.strictObject({
+export const ArticleEdit = v.strictObject({
   ...v.entriesFromObjects([
-    v.omit(Article, [
-      'available_langs',
-      'version',
-      'protected',
-      'redirects_to',
-      'cooked',
-      'author',
-      'locales',
-      'associations',
-    ]),
+    v.omit(Article, ['available_langs', 'protected', 'redirects_to', 'cooked', 'author', 'associations']),
   ]),
-  locale_lang: ApiLang,
-  locale_title: v.pipe(v.string(), v.nonEmpty()),
-  locale_description: v.nullable(v.string()),
-  locale_summary: v.nullable(v.string()),
-  associations_articles: v.array(v.union([Article, ArticleListing])),
-  associations_books: v.array(v.union([Book, BookListing])),
-  associations_outings: v.array(v.union([Outing, OutingListing])),
-  associations_routes: v.array(v.union([Route, RouteListing])),
-  associations_waypoints: v.array(v.union([Waypoint, WaypointListing])),
-  associations_images: v.array(v.union([Image, ImageListing])),
-  associations_users: v.array(v.union([Profile, ProfileListing])),
-  associations_xreports: v.array(v.union([Xreport, XreportListing])),
-});
-
-export const ArticleEdit = v.pipe(
-  ArticleFormEdit,
-  v.transform(input => {
-    const {
-      locale_lang: lang,
-      locale_title: title,
-      locale_description: description,
-      locale_summary: summary,
-      associations_articles: articles,
-      associations_books: books,
-      associations_outings: outings,
-      associations_routes: routes,
-      associations_waypoints: waypoints,
-      associations_images: images,
-      associations_users: users,
-      associations_xreports: xreports,
-      ...rest
-    } = input;
-    return {
-      ...rest,
-      locales: [{ lang, title, description, summary }],
-      associations: {
-        articles: articles.map(({ document_id }) => ({ document_id })),
-        books: books.map(({ document_id }) => ({ document_id })),
-        outings: outings.map(({ document_id }) => ({ document_id })),
-        routes: routes.map(({ document_id }) => ({ document_id })),
-        waypoints: waypoints.map(({ document_id }) => ({ document_id })),
-        images: images.map(({ document_id }) => ({ document_id })),
-        users: users.map(({ document_id }) => ({ document_id })),
-        xreports: xreports.map(({ document_id }) => ({ document_id })),
-      },
-    };
+  associations: v.strictObject({
+    articles: v.array(v.union([Article, ArticleListing])),
+    books: v.array(v.union([Book, BookListing])),
+    outings: v.array(v.union([Outing, OutingListing])),
+    routes: v.array(v.union([Route, RouteListing])),
+    waypoints: v.array(v.union([Waypoint, WaypointListing])),
+    images: v.array(v.union([Image, ImageListing])),
+    users: v.array(v.union([Profile, ProfileListing])),
+    xreports: v.array(v.union([Xreport, XreportListing])),
   }),
-);
-export type ArticleFormEdit = v.InferOutput<typeof ArticleFormEdit>;
+});
 export type ArticleEdit = v.InferOutput<typeof ArticleEdit>;
+export const ArticleAdd = v.strictObject(v.entriesFromObjects([v.omit(ArticleEdit, ['document_id', 'version'])]));
+export type ArticleAdd = v.InferOutput<typeof ArticleAdd>;
 
-/*
-const x: v.InferInput<typeof ArticleEdit> = {
-  document_id: 1,
-  type: 'c',
-  article_type: 'collab',
-  quality: 'draft',
-  activities: [],
-  categories: [],
-  'locale_lang': 'fr',
-  'locale_title': 'title',
-  'locale_summary': 'summary',
-  'locale_description': 'description',
-  'associations_articles': [{ type: 'c' } as ArticleListing],
-  'associations_books': [],
-  'associations_images': [],
-  'associations_outings': [],
-  'associations_routes': [],
-  'associations_users': [],
-  'associations_waypoints': [],
-  'associations_xreports': [],
-};
-
-const y: v.InferOutput<typeof ArticleEdit> = {
-  document_id: 1,
-  type: 'c',
-  article_type: 'collab',
-  quality: 'draft',
-  activities: [],
-  categories: [],
-  locales: [{ lang: 'fr', title: 'title', summary: 'summary', description: 'description' }],
-  associations: {
-    articles: [{ document_id: 2 }],
-    books: [],
-    images: [],
-    outings: [],
-    routes: [],
-    users: [],
-    waypoints: [],
-    xreports: [],
-  },
-};
-
-const z = v.safeParse(ArticleEdit, {});
-if (z.success) {
-  const o = z.output;
-}*/
-
-export const ArticleFormAdd = v.omit(ArticleFormEdit, ['document_id']);
-export type ArticleFormAdd = v.InferOutput<typeof ArticleFormAdd>;
-export type ArticleAdd = Omit<ArticleEdit, 'document_id'>;
-export type ArticleFormAddInitial = SetOptional<
-  ArticleFormAdd,
-  'quality' | 'article_type' | 'locale_title' | 'locale_summary' | 'locale_description'
+const ArticleAddInitialLocaleWoOptional = v.omit(Article.entries.locales.item, ['topic_id', 'version']);
+export type ArticleAddInitial = SetOptional<
+  OverrideProperties<
+    ArticleAdd,
+    {
+      locales: SetOptional<
+        v.InferOutput<typeof ArticleAddInitialLocaleWoOptional>,
+        'title' | 'summary' | 'description'
+      >[];
+    }
+  >,
+  'quality' | 'article_type'
 >;
 
 // TODO
-export type AreaFormEdit = Area;
-export type AreaFormAddInitial = Area;
-export type BookFormEdit = Book;
-export type BookFormAddInitial = Book;
-export type ImageFormEdit = Image;
-export type ImageFormAddInitial = Image;
-export type MapFormEdit = Map;
-export type MapFormAddInitial = Map;
-export type OutingFormEdit = Outing;
-export type OutingFormAddInitial = Outing;
-export type ProfileFormEdit = Profile;
-export type ProfileFormAddInitial = Profile;
-export type RouteFormEdit = Route;
-export type RouteFormAddInitial = Route;
-export type WaypointFormEdit = Waypoint;
-export type WaypointFormAddInitial = Waypoint;
-export type XreportFormEdit = Xreport;
-export type XreportFormAddInitial = Xreport;
+export type AreaEdit = Area;
+export type BookEdit = Book;
+export type BookAdd = Book;
+export type BookAddInitial = Book;
+export type ImageEdit = Image;
+export type MapEdit = Map;
+export type OutingEdit = Outing;
+export type OutingAdd = Outing;
+export type OutingAddInitial = Outing;
+export type ProfileEdit = Profile;
+export type RouteEdit = Route;
+export type RouteAdd = Route;
+export type RouteAddInitial = Route;
+export type WaypointEdit = Waypoint;
+export type WaypointAdd = Waypoint;
+export type WaypointAddInitial = Waypoint;
+export type XreportEdit = Xreport;
+export type XreportAdd = Xreport;
+export type XreportAddInitial = Xreport;
 
-export type DocumentFormEdit =
-  | AreaFormEdit
-  | ArticleFormEdit
-  | BookFormEdit
-  | ImageFormEdit
-  | MapFormEdit
-  | OutingFormEdit
-  | ProfileFormEdit
-  | RouteFormEdit
-  | WaypointFormEdit
-  | XreportFormEdit;
+export type DocumentEdit =
+  | AreaEdit
+  | ArticleEdit
+  | BookEdit
+  | ImageEdit
+  | MapEdit
+  | OutingEdit
+  | ProfileEdit
+  | RouteEdit
+  | WaypointEdit
+  | XreportEdit;
 
-export type DocumentFormAddInitial =
-  | AreaFormAddInitial
-  | ArticleFormAddInitial
-  | BookFormAddInitial
-  | ImageFormAddInitial
-  | MapFormAddInitial
-  | OutingFormAddInitial
-  | ProfileFormAddInitial
-  | RouteFormAddInitial
-  | WaypointFormAddInitial
-  | XreportFormAddInitial;
+export type DocumentAdd = ArticleAdd | BookAdd | OutingAdd | RouteAdd | WaypointAdd | XreportAdd;
+
+export type DocumentAddInitial =
+  | ArticleAddInitial
+  | BookAddInitial
+  | OutingAddInitial
+  | RouteAddInitial
+  | WaypointAddInitial
+  | XreportAddInitial;

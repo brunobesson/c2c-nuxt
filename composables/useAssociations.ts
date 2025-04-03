@@ -4,7 +4,7 @@ import type { ApiLang } from '~/api/lang.js';
 export const useAssociations = () => {
   const addAssociations = async <D extends ArticleAddInitial>(
     document: MaybeRefOrGetter<D>,
-    key: keyof D,
+    key: keyof D['associations'],
     type: MaybeRefOrGetter<DocumentType>,
     ids: MaybeRefOrGetter<number[]>,
     lang: MaybeRefOrGetter<ApiLang>,

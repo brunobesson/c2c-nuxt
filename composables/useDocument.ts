@@ -4,7 +4,7 @@ import type {
   ArticleListing,
   ArticleVersionDocument,
   Document,
-  DocumentFormEdit,
+  DocumentEdit,
   DocumentListing,
   DocumentType,
   License,
@@ -12,7 +12,7 @@ import type {
 } from '~/api/c2c.js';
 import type { VersionedDocument } from '~/types/common.js';
 import {
-  isDocumentFormEdit,
+  isDocumentEdit,
   isImage,
   isImageListing,
   isOuting,
@@ -26,7 +26,7 @@ import {
 } from '~/types/common.js';
 
 export const useDocument = (
-  document: MaybeRefOrGetter<Document | DocumentListing | VersionedDocument | WhatsnewDocument | DocumentFormEdit>,
+  document: MaybeRefOrGetter<Document | DocumentListing | VersionedDocument | WhatsnewDocument | DocumentEdit>,
 ) => {
   const doc = toRef(document);
   const documentTitle = (lang?: string): string => {
@@ -46,8 +46,8 @@ export const useDocument = (
       return title_prefix + colon + title;
     }
 
-    if (isDocumentFormEdit(doc.value)) {
-      return doc.value['locale.title'];
+    if (isDocumentEdit(doc.value)) {
+      return doc.value.locales[0].title;
     }
 
     const { title } = useDocumentLocale().getLocaleSmart(doc.value, lang);

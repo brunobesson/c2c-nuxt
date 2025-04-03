@@ -22,7 +22,7 @@ import {
   type Book,
   type BookVersionDocument,
   type Document,
-  type DocumentFormEdit,
+  type DocumentEdit,
   type DocumentListing,
   type ImageVersionDocument,
   type Map,
@@ -97,88 +97,88 @@ export type VersionedDocument =
   | VersionedXreport;
 
 export const isDocumentListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is DocumentListing => doc instanceof Object && !('associations' in doc) && !('title' in doc);
 export const isAreaListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is AreaListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'a' && !('associations' in doc) && !('title' in doc);
 export const isArticleListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is ArticleListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'c' && !('associations' in doc) && !('title' in doc);
 export const isBookListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is BookListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'b' && !('associations' in doc) && !('title' in doc);
 export const isImageListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is ImageListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'i' && !('associations' in doc) && !('title' in doc);
 export const isMapListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is MapListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'm' && !('associations' in doc) && !('title' in doc);
 export const isOutingListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is OutingListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'o' && !('associations' in doc) && !('title' in doc);
 export const isProfileListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is ProfileListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'u' && !('associations' in doc) && !('title' in doc);
 export const isRouteListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is RouteListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'r' && !('associations' in doc) && !('title' in doc);
 export const isWaypointListing = (doc: unknown): doc is WaypointListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'w' && !('associations' in doc) && !('title' in doc);
 export const isXreportListing = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is XreportListing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'x' && !('associations' in doc) && !('title' in doc);
 
 export const isDocument = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Document => doc instanceof Object && 'associations' in doc && !('title' in doc);
 export const isArea = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Area =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'a' && 'associations' in doc && !('title' in doc);
 export const isArticle = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Article =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'c' && 'associations' in doc && !('title' in doc);
 export const isBook = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Book =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'b' && 'associations' in doc && !('title' in doc);
 export const isImage = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Image =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'i' && 'associations' in doc && !('title' in doc);
 export const isMap = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Map =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'm' && 'associations' in doc && !('title' in doc);
 export const isOuting = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Outing =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'o' && 'associations' in doc && !('title' in doc);
 export const isProfile = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Profile =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'u' && 'associations' in doc && !('title' in doc);
 export const isRoute = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Route =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'r' && 'associations' in doc && !('title' in doc);
 export const isWaypoint = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Waypoint =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'w' && 'associations' in doc && !('title' in doc);
 export const isXreport = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
 ): doc is Xreport =>
   doc instanceof Object && 'type' in doc && doc['type'] === 'x' && 'associations' in doc && !('title' in doc);
 
@@ -219,12 +219,12 @@ export function assertNotDocumentVersion(
   }
 }
 
-export const isDocumentFormEdit = (
-  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentFormEdit,
-): doc is DocumentFormEdit => doc instanceof Object && 'type' in doc && 'locale.title' in doc;
+export const isDocumentEdit = (
+  doc: Document | DocumentListing | WhatsnewDocument | VersionedDocument | DocumentEdit,
+): doc is DocumentEdit => doc instanceof Object && 'type' in doc && 'locale.title' in doc;
 
 export const isWhatnewDocument = (
-  doc: Document | DocumentListing | VersionedDocument | WhatsnewDocument | DocumentFormEdit,
+  doc: Document | DocumentListing | VersionedDocument | WhatsnewDocument | DocumentEdit,
 ): doc is WhatsnewDocument => doc instanceof Object && !('locales' in doc) && !('locale.title' in doc);
 
 export type Associations = {
